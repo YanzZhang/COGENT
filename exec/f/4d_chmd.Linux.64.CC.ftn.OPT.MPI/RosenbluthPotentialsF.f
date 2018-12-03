@@ -1,0 +1,473 @@
+/* Copyright (C) 1991-2015 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
+/* This header is separate from features.h so that the compiler can
+   include it implicitly at the start of every compilation.  It must
+   not itself include <features.h> or any other header that includes
+   <features.h> because the implicit include comes before any feature
+   test macros that may be defined in a source file before it first
+   explicitly includes a system header.  GCC knows the name of this
+   header in order to preinclude it.  */
+/* glibc's intent is to support the IEC 559 math functionality, real
+   and complex.  If the GCC (4.9 and later) predefined macros
+   specifying compiler intent are available, use them to determine
+   whether the overall intent is to support these features; otherwise,
+   presume an older compiler has intent to support these features and
+   define these macros by default.  */
+/* wchar_t uses Unicode 7.0.0.  Version 7.0 of the Unicode Standard is
+   synchronized with ISO/IEC 10646:2012, plus Amendments 1 (published
+   on April, 2013) and 2 (not yet published as of February, 2015).
+   Additionally, it includes the accelerated publication of U+20BD
+   RUBLE SIGN.  Therefore Unicode 7.0.0 is between 10646:2012 and
+   10646:2014, and so we use the date ISO/IEC 10646:2012 Amd.1 was
+   published.  */
+/* We do not support C11 <threads.h>.  */
+      subroutine IMPOSE_MULTIPOLE_BC1_4D(
+     & rhs
+     & ,irhslo0,irhslo1,irhslo2,irhslo3
+     & ,irhshi0,irhshi1,irhshi2,irhshi3
+     & ,mcoeff
+     & ,imcoefflo0,imcoefflo1,imcoefflo2,imcoefflo3
+     & ,imcoeffhi0,imcoeffhi1,imcoeffhi2,imcoeffhi3
+     & ,nmcoeffcomp
+     & ,bmag
+     & ,ibmaglo0,ibmaglo1,ibmaglo2,ibmaglo3
+     & ,ibmaghi0,ibmaghi1,ibmaghi2,ibmaghi3
+     & ,igridboxlo0,igridboxlo1,igridboxlo2,igridboxlo3
+     & ,igridboxhi0,igridboxhi1,igridboxhi2,igridboxhi3
+     & ,dx
+     & ,Nvpar
+     & ,Nmu
+     & ,p
+     & )
+      implicit none
+      integer*8 ch_flops
+      COMMON/ch_timer/ ch_flops
+      integer irhslo0,irhslo1,irhslo2,irhslo3
+      integer irhshi0,irhshi1,irhshi2,irhshi3
+      REAL*8 rhs(
+     & irhslo0:irhshi0,
+     & irhslo1:irhshi1,
+     & irhslo2:irhshi2,
+     & irhslo3:irhshi3)
+      integer nmcoeffcomp
+      integer imcoefflo0,imcoefflo1,imcoefflo2,imcoefflo3
+      integer imcoeffhi0,imcoeffhi1,imcoeffhi2,imcoeffhi3
+      REAL*8 mcoeff(
+     & imcoefflo0:imcoeffhi0,
+     & imcoefflo1:imcoeffhi1,
+     & imcoefflo2:imcoeffhi2,
+     & imcoefflo3:imcoeffhi3,
+     & 0:nmcoeffcomp-1)
+      integer ibmaglo0,ibmaglo1,ibmaglo2,ibmaglo3
+      integer ibmaghi0,ibmaghi1,ibmaghi2,ibmaghi3
+      REAL*8 bmag(
+     & ibmaglo0:ibmaghi0,
+     & ibmaglo1:ibmaghi1,
+     & ibmaglo2:ibmaghi2,
+     & ibmaglo3:ibmaghi3)
+      integer igridboxlo0,igridboxlo1,igridboxlo2,igridboxlo3
+      integer igridboxhi0,igridboxhi1,igridboxhi2,igridboxhi3
+      REAL*8 dx(0:3)
+      integer Nvpar
+      integer Nmu
+      REAL*8 p
+      integer i,j,k,l, n
+      double precision b, v_r, cos_theta, Y0, mult_coeff, mu_coeff_HiFac
+     &e
+      do l = igridboxlo3,igridboxhi3
+      do k = igridboxlo2,igridboxhi2
+      do j = igridboxlo1,igridboxhi1
+      do i = igridboxlo0,igridboxhi0
+         if ((k.eq.-Nvpar/2).or.(k.eq.Nvpar/2-1)) then
+           b = bmag(i,j,ibmaglo2,ibmaglo3)
+           if (k.eq.-Nvpar/2) then
+             v_r=sqrt((k-0.5)*(k-0.5)*dx(0)*dx(0)+(l+0.5)*dx(1)*b/p)
+             cos_theta = (k-0.5)*dx(0) / v_r
+           else
+             v_r=sqrt((k+1.5)*(k+1.5)*dx(0)*dx(0)+(l+0.5)*dx(1)*b/p)
+             cos_theta = (k+1.5)*dx(0) / v_r
+           endif
+           do n = 0, nmcoeffcomp-1
+             mult_coeff = mcoeff(i,j,imcoefflo2,imcoefflo3,n)
+             rhs(i,j,k,l) = rhs(i,j,k,l)
+     & - 1.0/(v_r**(n+1))/(2.0*n+1.0)
+     & * Y0(cos_theta,n) * (-mult_coeff) / (dx(0)*dx(0))
+           enddo
+         endif
+         if (l.eq.Nmu-1) then
+           b = bmag(i,j,ibmaglo2,ibmaglo3)
+           v_r=sqrt((k+0.5)*(k+0.5)*dx(0)*dx(0)+(l+1.5)*dx(1)*b/p)
+           cos_theta = (k+0.5)*dx(0) / v_r
+           mu_coeff_HiFace = 4.0 * (p/b) * (l+1) * dx(1);
+           do n = 0, nmcoeffcomp-1
+             mult_coeff = mcoeff(i,j,imcoefflo2,imcoefflo3,n)
+             rhs(i,j,k,l) = rhs(i,j,k,l)
+     & - 1.0/(v_r**(n+1))/(2.0*n+1.0) * mu_coeff_HiFace
+     & * Y0(cos_theta,n) * (-mult_coeff) / (dx(1)*dx(1))
+           enddo
+         endif
+      enddo
+      enddo
+      enddo
+      enddo
+      return
+      end
+      subroutine IMPOSE_MULTIPOLE_BC2_4D(
+     & rhs
+     & ,irhslo0,irhslo1,irhslo2,irhslo3
+     & ,irhshi0,irhshi1,irhshi2,irhshi3
+     & ,mcoeff_rho
+     & ,imcoeff_rholo0,imcoeff_rholo1,imcoeff_rholo2,imcoeff_rholo3
+     & ,imcoeff_rhohi0,imcoeff_rhohi1,imcoeff_rhohi2,imcoeff_rhohi3
+     & ,nmcoeff_rhocomp
+     & ,mcoeff_phi
+     & ,imcoeff_philo0,imcoeff_philo1,imcoeff_philo2,imcoeff_philo3
+     & ,imcoeff_phihi0,imcoeff_phihi1,imcoeff_phihi2,imcoeff_phihi3
+     & ,nmcoeff_phicomp
+     & ,bmag
+     & ,ibmaglo0,ibmaglo1,ibmaglo2,ibmaglo3
+     & ,ibmaghi0,ibmaghi1,ibmaghi2,ibmaghi3
+     & ,igridboxlo0,igridboxlo1,igridboxlo2,igridboxlo3
+     & ,igridboxhi0,igridboxhi1,igridboxhi2,igridboxhi3
+     & ,dx
+     & ,Nvpar
+     & ,Nmu
+     & ,p
+     & )
+      implicit none
+      integer*8 ch_flops
+      COMMON/ch_timer/ ch_flops
+      integer irhslo0,irhslo1,irhslo2,irhslo3
+      integer irhshi0,irhshi1,irhshi2,irhshi3
+      REAL*8 rhs(
+     & irhslo0:irhshi0,
+     & irhslo1:irhshi1,
+     & irhslo2:irhshi2,
+     & irhslo3:irhshi3)
+      integer nmcoeff_rhocomp
+      integer imcoeff_rholo0,imcoeff_rholo1,imcoeff_rholo2,imcoeff_rholo
+     &3
+      integer imcoeff_rhohi0,imcoeff_rhohi1,imcoeff_rhohi2,imcoeff_rhohi
+     &3
+      REAL*8 mcoeff_rho(
+     & imcoeff_rholo0:imcoeff_rhohi0,
+     & imcoeff_rholo1:imcoeff_rhohi1,
+     & imcoeff_rholo2:imcoeff_rhohi2,
+     & imcoeff_rholo3:imcoeff_rhohi3,
+     & 0:nmcoeff_rhocomp-1)
+      integer nmcoeff_phicomp
+      integer imcoeff_philo0,imcoeff_philo1,imcoeff_philo2,imcoeff_philo
+     &3
+      integer imcoeff_phihi0,imcoeff_phihi1,imcoeff_phihi2,imcoeff_phihi
+     &3
+      REAL*8 mcoeff_phi(
+     & imcoeff_philo0:imcoeff_phihi0,
+     & imcoeff_philo1:imcoeff_phihi1,
+     & imcoeff_philo2:imcoeff_phihi2,
+     & imcoeff_philo3:imcoeff_phihi3,
+     & 0:nmcoeff_phicomp-1)
+      integer ibmaglo0,ibmaglo1,ibmaglo2,ibmaglo3
+      integer ibmaghi0,ibmaghi1,ibmaghi2,ibmaghi3
+      REAL*8 bmag(
+     & ibmaglo0:ibmaghi0,
+     & ibmaglo1:ibmaghi1,
+     & ibmaglo2:ibmaghi2,
+     & ibmaglo3:ibmaghi3)
+      integer igridboxlo0,igridboxlo1,igridboxlo2,igridboxlo3
+      integer igridboxhi0,igridboxhi1,igridboxhi2,igridboxhi3
+      REAL*8 dx(0:3)
+      integer Nvpar
+      integer Nmu
+      REAL*8 p
+      integer i,j,k,l, n
+      double precision b, v_r, cos_theta, Y0, mult_coeff_phi, mult_coeff
+     &_rho, mu_coeff_HiFace
+      double precision vpar_max, vperp_max, inner_part, outer_part, vr_s
+     &ep
+      do l = igridboxlo3,igridboxhi3
+      do k = igridboxlo2,igridboxhi2
+      do j = igridboxlo1,igridboxhi1
+      do i = igridboxlo0,igridboxhi0
+         if ((k.eq.-Nvpar/2).or.(k.eq.Nvpar/2-1)) then
+           b = bmag(i,j,ibmaglo2,ibmaglo3)
+           if (k.eq.-Nvpar/2) then
+             v_r=sqrt((k-0.5)*(k-0.5)*dx(0)*dx(0)+(l+0.5)*dx(1)*b/p)
+             cos_theta = (k-0.5)*dx(0) / v_r
+           else
+             v_r=sqrt((k+1.5)*(k+1.5)*dx(0)*dx(0)+(l+0.5)*dx(1)*b/p)
+             cos_theta = (k+1.5)*dx(0) / v_r
+           endif
+           vpar_max = (Nvpar/2 - 0.5) * dx(0)
+           vperp_max = sqrt((Nmu - 0.5) * dx(1) * b / p)
+           vr_sep = MIN(vpar_max, vperp_max)
+           do n = 0, nmcoeff_phicomp-1
+              mult_coeff_phi = mcoeff_phi(i,j,imcoeff_philo2,imcoeff_phi
+     &lo3,n)
+              mult_coeff_rho = mcoeff_rho(i,j,imcoeff_philo2,imcoeff_phi
+     &lo3,n)
+              inner_part = 1.0/(v_r**(n+1))/(2.0*n+1.0)* (-mult_coeff_ph
+     &i)
+              outer_part = 0.5*(1/v_r**(n-1) - vr_sep**2/v_r**(n+1) + 2.
+     &0/v_r**(n-1)/(2.0*n-1.0)) * (mult_coeff_rho) /(2.0*n+1.0)**2
+              rhs(i,j,k,l) = rhs(i,j,k,l)
+     & - (inner_part + outer_part)
+     & * Y0(cos_theta,n) / (dx(0)*dx(0))
+           enddo
+         endif
+         if (l.eq.Nmu-1) then
+           b = bmag(i,j,ibmaglo2,ibmaglo3)
+           v_r=sqrt((k+0.5)*(k+0.5)*dx(0)*dx(0)+(l+1.5)*dx(1)*b/p)
+           cos_theta = (k+0.5)*dx(0) / v_r
+           mu_coeff_HiFace = 4.0 * (p/b) * (l+1) * dx(1)
+           vpar_max = (Nvpar/2 - 0.5) * dx(0)
+           vperp_max = sqrt((Nmu - 0.5) * dx(1) * b / p)
+           vr_sep = MIN(vpar_max, vperp_max)
+           do n = 0, nmcoeff_phicomp-1
+              mult_coeff_phi = mcoeff_phi(i,j,imcoeff_philo2,imcoeff_phi
+     &lo3,n)
+              mult_coeff_rho = mcoeff_rho(i,j,imcoeff_philo2,imcoeff_phi
+     &lo3,n)
+              inner_part = 1.0/(v_r**(n+1))/(2.0*n+1.0)* (-mult_coeff_ph
+     &i)
+              outer_part = 0.5*(1/v_r**(n-1) - vr_sep**2/v_r**(n+1) + 2.
+     &0/v_r**(n-1)/(2.0*n-1.0)) * (mult_coeff_rho) /(2.0*n+1.0)**2
+              rhs(i,j,k,l) = rhs(i,j,k,l)
+     & - (inner_part + outer_part)
+     & * Y0(cos_theta,n)* mu_coeff_HiFace / (dx(1)*dx(1))
+           enddo
+         endif
+      enddo
+      enddo
+      enddo
+      enddo
+      return
+      end
+      subroutine SEPARATE_PHI1_INNER_4D(
+     & phi_inner
+     & ,iphi_innerlo0,iphi_innerlo1,iphi_innerlo2,iphi_innerlo3
+     & ,iphi_innerhi0,iphi_innerhi1,iphi_innerhi2,iphi_innerhi3
+     & ,phi
+     & ,iphilo0,iphilo1,iphilo2,iphilo3
+     & ,iphihi0,iphihi1,iphihi2,iphihi3
+     & ,bmag
+     & ,ibmaglo0,ibmaglo1,ibmaglo2,ibmaglo3
+     & ,ibmaghi0,ibmaghi1,ibmaghi2,ibmaghi3
+     & ,igridboxlo0,igridboxlo1,igridboxlo2,igridboxlo3
+     & ,igridboxhi0,igridboxhi1,igridboxhi2,igridboxhi3
+     & ,dx
+     & ,Nvpar
+     & ,Nmu
+     & ,p
+     & )
+      implicit none
+      integer*8 ch_flops
+      COMMON/ch_timer/ ch_flops
+      integer iphi_innerlo0,iphi_innerlo1,iphi_innerlo2,iphi_innerlo3
+      integer iphi_innerhi0,iphi_innerhi1,iphi_innerhi2,iphi_innerhi3
+      REAL*8 phi_inner(
+     & iphi_innerlo0:iphi_innerhi0,
+     & iphi_innerlo1:iphi_innerhi1,
+     & iphi_innerlo2:iphi_innerhi2,
+     & iphi_innerlo3:iphi_innerhi3)
+      integer iphilo0,iphilo1,iphilo2,iphilo3
+      integer iphihi0,iphihi1,iphihi2,iphihi3
+      REAL*8 phi(
+     & iphilo0:iphihi0,
+     & iphilo1:iphihi1,
+     & iphilo2:iphihi2,
+     & iphilo3:iphihi3)
+      integer ibmaglo0,ibmaglo1,ibmaglo2,ibmaglo3
+      integer ibmaghi0,ibmaghi1,ibmaghi2,ibmaghi3
+      REAL*8 bmag(
+     & ibmaglo0:ibmaghi0,
+     & ibmaglo1:ibmaghi1,
+     & ibmaglo2:ibmaghi2,
+     & ibmaglo3:ibmaghi3)
+      integer igridboxlo0,igridboxlo1,igridboxlo2,igridboxlo3
+      integer igridboxhi0,igridboxhi1,igridboxhi2,igridboxhi3
+      REAL*8 dx(0:3)
+      integer Nvpar
+      integer Nmu
+      REAL*8 p
+      integer i,j,k,l
+      integer n, bnd_index_se, bnd_index_be
+      double precision b, v_r, vr_sep, vr_cent, vr_min, vr_max
+      double precision mu_min, mu_max, vpar_min, vpar_max
+      double precision mu_se, mu_be, vpar_se, vpar_be, area_coeff, vpar_
+     &global_max, vperp_global_max
+      do l = igridboxlo3,igridboxhi3
+      do k = igridboxlo2,igridboxhi2
+      do j = igridboxlo1,igridboxhi1
+      do i = igridboxlo0,igridboxhi0
+        b = bmag(i,j,ibmaglo2,ibmaglo3)
+        vpar_global_max = (Nvpar/2 - 0.5) * dx(0)
+        vperp_global_max = sqrt((Nmu - 0.5) * dx(1) * b / p)
+        vr_sep = MIN(vpar_global_max, vperp_global_max)
+        vr_cent = sqrt((k+0.5)*(k+0.5)*dx(0)*dx(0)+(l+0.5)*dx(1)*b/p)
+        mu_min = (l)*dx(1)
+        mu_max = (l+1)*dx(1)
+        if (k.lt.0) then
+           vpar_max=(k+1) * dx(0)
+           vpar_min=(k) * dx(0)
+        else
+           vpar_min=(-k-1) * dx(0)
+           vpar_max=(-k) * dx(0)
+        endif
+        vr_min =sqrt(vpar_max**2 + mu_min*b/p)
+        vr_max =sqrt(vpar_min**2 + mu_max*b/p)
+        if (vr_sep.gt.vr_max) then
+           phi_inner(i,j,k,l) = phi(i,j,k,l)
+        else if (vr_sep.lt.vr_min) then
+           phi_inner(i,j,k,l) = 0.0
+        else
+         mu_se = (p/b) * (vr_sep**2 - vpar_min**2)
+         if (mu_se.ge.mu_min) then
+            vpar_se = vpar_min
+            bnd_index_se = 0
+         else
+            mu_se = mu_min
+            vpar_se = -sqrt(vr_sep**2-mu_min*b/p)
+            bnd_index_se = 1
+         endif
+         mu_be = (p/b) * (vr_sep**2 - vpar_max**2)
+         if (mu_be.le.mu_max) then
+            vpar_be = vpar_max
+            bnd_index_be = 0
+         else
+            mu_be = mu_max
+            vpar_be = -sqrt(vr_sep**2-mu_max*b/p)
+            bnd_index_be = 1
+         endif
+         if (bnd_index_se.ne.bnd_index_be) then
+            if (mu_se.gt.mu_min) then
+              area_coeff=1.0-0.5/(dx(0)*dx(1))*(mu_be-mu_se)*(vpar_be-vp
+     &ar_se)
+            else
+              area_coeff =0.5/(dx(0)*dx(1))*(mu_be-mu_se)*(vpar_be-vpar_
+     &se)
+            endif
+         else
+            if (bnd_index_se.eq.0) then
+              area_coeff = 0.5*(mu_be-mu_se)/dx(1) + (mu_se-mu_min)/dx(1
+     &)
+            else
+              area_coeff = 0.5*(vpar_be-vpar_se)/dx(0) + (vpar_max-vpar_
+     &be)/dx(0)
+            endif
+         endif
+         phi_inner(i,j,k,l) = area_coeff * phi(i,j,k,l)
+        endif
+      enddo
+      enddo
+      enddo
+      enddo
+      return
+      end
+      subroutine COMPUTE_MULT_KERNELS_4D(
+     & kernel
+     & ,ikernello0,ikernello1,ikernello2,ikernello3
+     & ,ikernelhi0,ikernelhi1,ikernelhi2,ikernelhi3
+     & ,nkernelcomp
+     & ,rho
+     & ,irholo0,irholo1,irholo2,irholo3
+     & ,irhohi0,irhohi1,irhohi2,irhohi3
+     & ,bmag
+     & ,ibmaglo0,ibmaglo1,ibmaglo2,ibmaglo3
+     & ,ibmaghi0,ibmaghi1,ibmaghi2,ibmaghi3
+     & ,igridboxlo0,igridboxlo1,igridboxlo2,igridboxlo3
+     & ,igridboxhi0,igridboxhi1,igridboxhi2,igridboxhi3
+     & ,dx
+     & ,p
+     & )
+      implicit none
+      integer*8 ch_flops
+      COMMON/ch_timer/ ch_flops
+      integer nkernelcomp
+      integer ikernello0,ikernello1,ikernello2,ikernello3
+      integer ikernelhi0,ikernelhi1,ikernelhi2,ikernelhi3
+      REAL*8 kernel(
+     & ikernello0:ikernelhi0,
+     & ikernello1:ikernelhi1,
+     & ikernello2:ikernelhi2,
+     & ikernello3:ikernelhi3,
+     & 0:nkernelcomp-1)
+      integer irholo0,irholo1,irholo2,irholo3
+      integer irhohi0,irhohi1,irhohi2,irhohi3
+      REAL*8 rho(
+     & irholo0:irhohi0,
+     & irholo1:irhohi1,
+     & irholo2:irhohi2,
+     & irholo3:irhohi3)
+      integer ibmaglo0,ibmaglo1,ibmaglo2,ibmaglo3
+      integer ibmaghi0,ibmaghi1,ibmaghi2,ibmaghi3
+      REAL*8 bmag(
+     & ibmaglo0:ibmaghi0,
+     & ibmaglo1:ibmaghi1,
+     & ibmaglo2:ibmaghi2,
+     & ibmaglo3:ibmaghi3)
+      integer igridboxlo0,igridboxlo1,igridboxlo2,igridboxlo3
+      integer igridboxhi0,igridboxhi1,igridboxhi2,igridboxhi3
+      REAL*8 dx(0:3)
+      REAL*8 p
+      integer i,j,k,l
+      integer n
+      double precision b, v_r, cos_theta, Y0, pi, scale_factor
+      pi=3.14159265358979
+      do l = igridboxlo3,igridboxhi3
+      do k = igridboxlo2,igridboxhi2
+      do j = igridboxlo1,igridboxhi1
+      do i = igridboxlo0,igridboxhi0
+        b = bmag(i,j,ibmaglo2,ibmaglo3)
+        v_r=sqrt((k+0.5)*(k+0.5)*dx(0)*dx(0)+(l+0.5)*dx(1)*b/p)
+        cos_theta = (k+0.5)*dx(0) / v_r
+        scale_factor = (3.14159265358979323846264338327950288d0) * b
+        do n = 0, nkernelcomp-1
+          kernel(i,j,k,l,n) = scale_factor * v_r**n * Y0(cos_theta,n) * 
+     &rho(i,j,k,l)
+        enddo
+      enddo
+      enddo
+      enddo
+      enddo
+      return
+      end
+      function Y0(x,n)
+      implicit none
+      double precision Y0, x, pi
+      integer n
+      pi=3.14159265358979
+      SELECT CASE (n)
+         CASE(0)
+            Y0=1.0
+         CASE(1)
+            Y0=x
+         CASE(2)
+            Y0=1.0/2.0*(3.0*x**2-1.0)
+         CASE(3)
+            Y0=1.0/2.0*(5.0*x**3-3.0*x)
+         CASE(4)
+            Y0=1.0/8.0*(35.0*x**4-30.0*x**2+3.0)
+         CASE(5)
+            Y0=1.0/8.0*(63.0*x**5-70.0*x**3+15.0*x)
+         CASE(6)
+            Y0=1.0/16.0*(231.0*x**6-315.0*x**4+105.0*x**2-5.0)
+         CASE(7)
+            Y0=1.0/16.0*(429.0*x**7-693.0*x**5+315.0*x**3-35.0*x)
+         CASE(8)
+            Y0=1.0/128.0*(6435.0*x**8-12012.0*x**6+6930.0*x**4-1260.0*x*
+     &*2+35.0)
+      END SELECT
+      Y0=sqrt((2.0*n+1.0)/4.0/pi)*Y0
+      return
+      end

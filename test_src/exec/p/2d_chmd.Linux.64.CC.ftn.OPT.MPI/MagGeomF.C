@@ -1,0 +1,1054 @@
+#include "REAL.H"
+#include "SPACE.H"
+#include "CONSTANTS.H"
+
+      subroutine MULT_NJINVERSE_2D(
+     &           iboxlo0,iboxlo1
+     &           ,iboxhi0,iboxhi1
+     &           ,efield_mapped
+     &           ,iefield_mappedlo0,iefield_mappedlo1
+     &           ,iefield_mappedhi0,iefield_mappedhi1
+     &           ,nefield_mappedcomp
+     &           ,njinverse
+     &           ,injinverselo0,injinverselo1
+     &           ,injinversehi0,injinversehi1
+     &           ,nnjinversecomp
+     &           ,efield
+     &           ,iefieldlo0,iefieldlo1
+     &           ,iefieldhi0,iefieldhi1
+     &           ,nefieldcomp
+     &           )
+
+      implicit none
+      integer*8 ch_flops
+      COMMON/ch_timer/ ch_flops
+      integer iboxlo0,iboxlo1
+      integer iboxhi0,iboxhi1
+      integer nefield_mappedcomp
+      integer iefield_mappedlo0,iefield_mappedlo1
+      integer iefield_mappedhi0,iefield_mappedhi1
+      REAL_T efield_mapped(
+     &           iefield_mappedlo0:iefield_mappedhi0,
+     &           iefield_mappedlo1:iefield_mappedhi1,
+     &           0:nefield_mappedcomp-1)
+      integer nnjinversecomp
+      integer injinverselo0,injinverselo1
+      integer injinversehi0,injinversehi1
+      REAL_T njinverse(
+     &           injinverselo0:injinversehi0,
+     &           injinverselo1:injinversehi1,
+     &           0:nnjinversecomp-1)
+      integer nefieldcomp
+      integer iefieldlo0,iefieldlo1
+      integer iefieldhi0,iefieldhi1
+      REAL_T efield(
+     &           iefieldlo0:iefieldhi0,
+     &           iefieldlo1:iefieldhi1,
+     &           0:nefieldcomp-1)
+      integer i,j, m, row, col
+      double precision sum
+      
+      do j = iboxlo1,iboxhi1
+      do i = iboxlo0,iboxhi0
+
+         m = 0
+         do row = 0, CH_SPACEDIM-1
+            sum = zero
+            do col = 0, CH_SPACEDIM-1
+               sum = sum + njinverse(i,j,m) * efield_mapped(i,j,col)
+               m = m + 1
+            enddo
+            efield(i,j,row) = sum
+         enddo
+      
+      enddo
+      enddo
+      return
+      end
+      subroutine PROJECT_ONTO_PARALLEL_2D(
+     &           iboxlo0,iboxlo1
+     &           ,iboxhi0,iboxhi1
+     &           ,bunit
+     &           ,ibunitlo0,ibunitlo1
+     &           ,ibunithi0,ibunithi1
+     &           ,nbunitcomp
+     &           ,vector
+     &           ,ivectorlo0,ivectorlo1
+     &           ,ivectorhi0,ivectorhi1
+     &           ,nvectorcomp
+     &           )
+
+      implicit none
+      integer*8 ch_flops
+      COMMON/ch_timer/ ch_flops
+      integer iboxlo0,iboxlo1
+      integer iboxhi0,iboxhi1
+      integer nbunitcomp
+      integer ibunitlo0,ibunitlo1
+      integer ibunithi0,ibunithi1
+      REAL_T bunit(
+     &           ibunitlo0:ibunithi0,
+     &           ibunitlo1:ibunithi1,
+     &           0:nbunitcomp-1)
+      integer nvectorcomp
+      integer ivectorlo0,ivectorlo1
+      integer ivectorhi0,ivectorhi1
+      REAL_T vector(
+     &           ivectorlo0:ivectorhi0,
+     &           ivectorlo1:ivectorhi1,
+     &           0:nvectorcomp-1)
+      integer i,j,n
+      double precision fac
+      fac = 0  
+      
+      do j = iboxlo1,iboxhi1
+      do i = iboxlo0,iboxhi0
+
+#if CH_SPACEDIM==3
+        do n = 0, nvectorcomp-1
+         fac = fac + vector(i,j,n) * bunit(i,j,n) 
+        enddo
+        do n = 0, nvectorcomp-1
+          vector(i,j,n) = fac * bunit(i,j,n) 
+        enddo
+#else
+         fac = vector(i,j,0) * bunit(i,j,0) 
+     &       + vector(i,j,1) * bunit(i,j,2)                
+          vector(i,j,0) = fac * bunit(i,j,0) 
+          vector(i,j,1) = fac * bunit(i,j,2)       
+#endif
+      
+      enddo
+      enddo
+      return
+      end
+      subroutine COMPUTE_RADIAL_PROJECTION_2D(
+     &           iboxlo0,iboxlo1
+     &           ,iboxhi0,iboxhi1
+     &           ,bunit
+     &           ,ibunitlo0,ibunitlo1
+     &           ,ibunithi0,ibunithi1
+     &           ,nbunitcomp
+     &           ,vector
+     &           ,ivectorlo0,ivectorlo1
+     &           ,ivectorhi0,ivectorhi1
+     &           ,nvectorcomp
+     &           ,vector_r
+     &           ,ivector_rlo0,ivector_rlo1
+     &           ,ivector_rhi0,ivector_rhi1
+     &           )
+
+      implicit none
+      integer*8 ch_flops
+      COMMON/ch_timer/ ch_flops
+      integer iboxlo0,iboxlo1
+      integer iboxhi0,iboxhi1
+      integer nbunitcomp
+      integer ibunitlo0,ibunitlo1
+      integer ibunithi0,ibunithi1
+      REAL_T bunit(
+     &           ibunitlo0:ibunithi0,
+     &           ibunitlo1:ibunithi1,
+     &           0:nbunitcomp-1)
+      integer nvectorcomp
+      integer ivectorlo0,ivectorlo1
+      integer ivectorhi0,ivectorhi1
+      REAL_T vector(
+     &           ivectorlo0:ivectorhi0,
+     &           ivectorlo1:ivectorhi1,
+     &           0:nvectorcomp-1)
+      integer ivector_rlo0,ivector_rlo1
+      integer ivector_rhi0,ivector_rhi1
+      REAL_T vector_r(
+     &           ivector_rlo0:ivector_rhi0,
+     &           ivector_rlo1:ivector_rhi1)
+      integer i,j 
+      double precision fac
+      
+      do j = iboxlo1,iboxhi1
+      do i = iboxlo0,iboxhi0
+
+         fac = sqrt(bunit(i,j,0) * bunit(i,j,0) 
+     &             +bunit(i,j,2) * bunit(i,j,2))                
+         if (nvectorcomp. eq. 2) then 
+           vector_r(i,j) = vector(i,j,0) * bunit(i,j,2)/fac
+     &                             - vector(i,j,1) * bunit(i,j,0)/fac 
+         else  
+           vector_r(i,j) = vector(i,j,0) * bunit(i,j,2)/fac
+     &                             - vector(i,j,2) * bunit(i,j,0)/fac 
+         endif
+      
+      enddo
+      enddo
+      return
+      end
+      subroutine COMPUTE_POLOIDAL_PROJECTION_2D(
+     &           iboxlo0,iboxlo1
+     &           ,iboxhi0,iboxhi1
+     &           ,bunit
+     &           ,ibunitlo0,ibunitlo1
+     &           ,ibunithi0,ibunithi1
+     &           ,nbunitcomp
+     &           ,vector
+     &           ,ivectorlo0,ivectorlo1
+     &           ,ivectorhi0,ivectorhi1
+     &           ,nvectorcomp
+     &           ,vector_pol
+     &           ,ivector_pollo0,ivector_pollo1
+     &           ,ivector_polhi0,ivector_polhi1
+     &           )
+
+      implicit none
+      integer*8 ch_flops
+      COMMON/ch_timer/ ch_flops
+      integer iboxlo0,iboxlo1
+      integer iboxhi0,iboxhi1
+      integer nbunitcomp
+      integer ibunitlo0,ibunitlo1
+      integer ibunithi0,ibunithi1
+      REAL_T bunit(
+     &           ibunitlo0:ibunithi0,
+     &           ibunitlo1:ibunithi1,
+     &           0:nbunitcomp-1)
+      integer nvectorcomp
+      integer ivectorlo0,ivectorlo1
+      integer ivectorhi0,ivectorhi1
+      REAL_T vector(
+     &           ivectorlo0:ivectorhi0,
+     &           ivectorlo1:ivectorhi1,
+     &           0:nvectorcomp-1)
+      integer ivector_pollo0,ivector_pollo1
+      integer ivector_polhi0,ivector_polhi1
+      REAL_T vector_pol(
+     &           ivector_pollo0:ivector_polhi0,
+     &           ivector_pollo1:ivector_polhi1)
+      integer i,j 
+      double precision fac
+      
+      do j = iboxlo1,iboxhi1
+      do i = iboxlo0,iboxhi0
+
+         fac = sqrt(bunit(i,j,0) * bunit(i,j,0) 
+     &             +bunit(i,j,2) * bunit(i,j,2))                
+         if (nvectorcomp. eq. 2) then
+           vector_pol(i,j) = vector(i,j,0) * bunit(i,j,0)/fac
+     &                               + vector(i,j,1) * bunit(i,j,2)/fac 
+         else  
+           vector_pol(i,j) = vector(i,j,0) * bunit(i,j,0)/fac
+     &                               + vector(i,j,2) * bunit(i,j,2)/fac 
+         endif
+      
+      enddo
+      enddo
+      return
+      end
+      subroutine CELL_CENTERED_GRAD_COMPONENT_2D(
+     &           iboxlo0,iboxlo1
+     &           ,iboxhi0,iboxhi1
+     &           ,dir
+     &           ,phi
+     &           ,iphilo0,iphilo1
+     &           ,iphihi0,iphihi1
+     &           ,h
+     &           ,order
+     &           ,Efield
+     &           ,iEfieldlo0,iEfieldlo1
+     &           ,iEfieldhi0,iEfieldhi1
+     &           )
+
+      implicit none
+      integer*8 ch_flops
+      COMMON/ch_timer/ ch_flops
+      integer CHF_ID(0:5,0:5)
+      data CHF_ID/ 1,0,0,0,0,0 ,0,1,0,0,0,0 ,0,0,1,0,0,0 ,0,0,0,1,0,0 ,0,0,0,0,1,0 ,0,0,0,0,0,1 /
+
+
+      integer iboxlo0,iboxlo1
+      integer iboxhi0,iboxhi1
+      integer dir
+      integer iphilo0,iphilo1
+      integer iphihi0,iphihi1
+      REAL_T phi(
+     &           iphilo0:iphihi0,
+     &           iphilo1:iphihi1)
+      REAL_T h(0:1)
+      integer order
+      integer iEfieldlo0,iEfieldlo1
+      integer iEfieldhi0,iEfieldhi1
+      REAL_T Efield(
+     &           iEfieldlo0:iEfieldhi0,
+     &           iEfieldlo1:iEfieldhi1)
+      integer i,j, ii,jj
+      
+      ii = CHF_ID(0,dir)
+      jj = CHF_ID(1,dir)
+      if (order .eq. 4) then
+         
+      do j = iboxlo1,iboxhi1
+      do i = iboxlo0,iboxhi0
+
+            Efield(i,j) = (
+     &        phi(i-2*ii,j-2*jj)
+     &        - eight * phi(i-  ii,j-  jj)
+     &        + eight * phi(i+  ii,j+  jj)
+     &        - phi(i+2*ii,j+2*jj)
+     &        ) / (twelve * h(dir))
+         
+      enddo
+      enddo
+      else if (order .eq. 2) then
+         
+      do j = iboxlo1,iboxhi1
+      do i = iboxlo0,iboxhi0
+
+            Efield(i,j) = (
+     &        - phi(i-  ii,j-  jj)
+     &        + phi(i+  ii,j+  jj)
+     &        ) / (two * h(dir))
+         
+      enddo
+      enddo
+      endif
+      return
+      end
+      subroutine FACE_CENTERED_GRAD_COMPONENT_2D(
+     &           iboxlo0,iboxlo1
+     &           ,iboxhi0,iboxhi1
+     &           ,dir
+     &           ,phi
+     &           ,iphilo0,iphilo1
+     &           ,iphihi0,iphihi1
+     &           ,h
+     &           ,order
+     &           ,Efield
+     &           ,iEfieldlo0,iEfieldlo1
+     &           ,iEfieldhi0,iEfieldhi1
+     &           )
+
+      implicit none
+      integer*8 ch_flops
+      COMMON/ch_timer/ ch_flops
+      integer CHF_ID(0:5,0:5)
+      data CHF_ID/ 1,0,0,0,0,0 ,0,1,0,0,0,0 ,0,0,1,0,0,0 ,0,0,0,1,0,0 ,0,0,0,0,1,0 ,0,0,0,0,0,1 /
+
+
+      integer iboxlo0,iboxlo1
+      integer iboxhi0,iboxhi1
+      integer dir
+      integer iphilo0,iphilo1
+      integer iphihi0,iphihi1
+      REAL_T phi(
+     &           iphilo0:iphihi0,
+     &           iphilo1:iphihi1)
+      REAL_T h(0:1)
+      integer order
+      integer iEfieldlo0,iEfieldlo1
+      integer iEfieldhi0,iEfieldhi1
+      REAL_T Efield(
+     &           iEfieldlo0:iEfieldhi0,
+     &           iEfieldlo1:iEfieldhi1)
+      integer i,j, ii,jj
+      
+      ii = CHF_ID(0,dir)
+      jj = CHF_ID(1,dir)
+      if (order .eq. 4) then
+         
+      do j = iboxlo1,iboxhi1
+      do i = iboxlo0,iboxhi0
+
+            Efield(i,j) = (
+     &        27.d0 * (phi(i     ,j     )
+     &               - phi(i-  ii,j-  jj))
+     &               - phi(i+  ii,j+  jj)
+     &               + phi(i-2*ii,j-2*jj)
+     &        ) / (24.d0 * h(dir))
+         
+      enddo
+      enddo
+      else if (order .eq. 2) then
+         
+      do j = iboxlo1,iboxhi1
+      do i = iboxlo0,iboxhi0
+
+            Efield(i,j) = (
+     &        - phi(i-  ii,j-  jj)
+     &        + phi(i     ,j     )
+     &        ) / h(dir)
+         
+      enddo
+      enddo
+      endif
+      return
+      end
+      subroutine COMPUTE_FACE_BINVERSE_INTEGRALS_2D(
+     &           iboxlo0,iboxlo1
+     &           ,iboxhi0,iboxhi1
+     &           ,dir
+     &           ,dx
+     &           ,B
+     &           ,iBlo0,iBlo1
+     &           ,iBhi0,iBhi1
+     &           ,integral
+     &           ,iintegrallo0,iintegrallo1
+     &           ,iintegralhi0,iintegralhi1
+     &           )
+
+      implicit none
+      integer*8 ch_flops
+      COMMON/ch_timer/ ch_flops
+      integer iboxlo0,iboxlo1
+      integer iboxhi0,iboxhi1
+      integer dir
+      REAL_T dx(0:1)
+      integer iBlo0,iBlo1
+      integer iBhi0,iBhi1
+      REAL_T B(
+     &           iBlo0:iBhi0,
+     &           iBlo1:iBhi1)
+      integer iintegrallo0,iintegrallo1
+      integer iintegralhi0,iintegralhi1
+      REAL_T integral(
+     &           iintegrallo0:iintegralhi0,
+     &           iintegrallo1:iintegralhi1)
+      integer i,j
+      double precision area
+      area = dx(1-dir)
+      
+      do j = iboxlo1,iboxhi1
+      do i = iboxlo0,iboxhi0
+
+         integral(i,j) = area / B(i,j)
+      
+      enddo
+      enddo
+      return
+      end
+      subroutine COMPUTE_FACE_BXGRADB_INTEGRALS_2D(
+     &           iboxlo0,iboxlo1
+     &           ,iboxhi0,iboxhi1
+     &           ,dir
+     &           ,B
+     &           ,iBlo0,iBlo1
+     &           ,iBhi0,iBhi1
+     &           ,integral
+     &           ,iintegrallo0,iintegrallo1
+     &           ,iintegralhi0,iintegralhi1
+     &           )
+
+      implicit none
+      integer*8 ch_flops
+      COMMON/ch_timer/ ch_flops
+      integer CHF_ID(0:5,0:5)
+      data CHF_ID/ 1,0,0,0,0,0 ,0,1,0,0,0,0 ,0,0,1,0,0,0 ,0,0,0,1,0,0 ,0,0,0,0,1,0 ,0,0,0,0,0,1 /
+
+
+      integer iboxlo0,iboxlo1
+      integer iboxhi0,iboxhi1
+      integer dir
+      integer iBlo0,iBlo1
+      integer iBhi0,iBhi1
+      REAL_T B(
+     &           iBlo0:iBhi0,
+     &           iBlo1:iBhi1)
+      integer iintegrallo0,iintegrallo1
+      integer iintegralhi0,iintegralhi1
+      REAL_T integral(
+     &           iintegrallo0:iintegralhi0,
+     &           iintegrallo1:iintegralhi1)
+      integer i,j, ii,jj, tdir
+      tdir = 1 - dir
+      
+      ii = CHF_ID(0,tdir)
+      jj = CHF_ID(1,tdir)
+      
+      do j = iboxlo1,iboxhi1
+      do i = iboxlo0,iboxhi0
+
+         integral(i,j) = dlog(B(i,j)/B(i+ii,j+jj))
+      
+      enddo
+      enddo
+      return
+      end
+      subroutine COMPUTE_FACE_TRANSVERSE_E_2D(
+     &           iboxlo0,iboxlo1
+     &           ,iboxhi0,iboxhi1
+     &           ,dir
+     &           ,dx
+     &           ,phi
+     &           ,iphilo0,iphilo1
+     &           ,iphihi0,iphihi1
+     &           ,E
+     &           ,iElo0,iElo1
+     &           ,iEhi0,iEhi1
+     &           )
+
+      implicit none
+      integer*8 ch_flops
+      COMMON/ch_timer/ ch_flops
+      integer CHF_ID(0:5,0:5)
+      data CHF_ID/ 1,0,0,0,0,0 ,0,1,0,0,0,0 ,0,0,1,0,0,0 ,0,0,0,1,0,0 ,0,0,0,0,1,0 ,0,0,0,0,0,1 /
+
+
+      integer iboxlo0,iboxlo1
+      integer iboxhi0,iboxhi1
+      integer dir
+      REAL_T dx(0:1)
+      integer iphilo0,iphilo1
+      integer iphihi0,iphihi1
+      REAL_T phi(
+     &           iphilo0:iphihi0,
+     &           iphilo1:iphihi1)
+      integer iElo0,iElo1
+      integer iEhi0,iEhi1
+      REAL_T E(
+     &           iElo0:iEhi0,
+     &           iElo1:iEhi1)
+      integer i,j, ii,jj, tdir
+      tdir = 1 - dir
+      
+      ii = CHF_ID(0,tdir)
+      jj = CHF_ID(1,tdir)
+      
+      do j = iboxlo1,iboxhi1
+      do i = iboxlo0,iboxhi0
+
+         E(i,j) = (phi(i,j) - phi(i+ii,j+jj)) / dx(tdir)
+      
+      enddo
+      enddo
+      return
+      end
+      subroutine COMPUTE_VOLUME_B_INTEGRALS_2D(
+     &           iboxlo0,iboxlo1
+     &           ,iboxhi0,iboxhi1
+     &           ,dx
+     &           ,B
+     &           ,iBlo0,iBlo1
+     &           ,iBhi0,iBhi1
+     &           ,nBcomp
+     &           ,jacobian
+     &           ,ijacobianlo0,ijacobianlo1
+     &           ,ijacobianhi0,ijacobianhi1
+     &           ,integral
+     &           ,iintegrallo0,iintegrallo1
+     &           ,iintegralhi0,iintegralhi1
+     &           ,nintegralcomp
+     &           )
+
+      implicit none
+      integer*8 ch_flops
+      COMMON/ch_timer/ ch_flops
+      integer iboxlo0,iboxlo1
+      integer iboxhi0,iboxhi1
+      REAL_T dx(0:1)
+      integer nBcomp
+      integer iBlo0,iBlo1
+      integer iBhi0,iBhi1
+      REAL_T B(
+     &           iBlo0:iBhi0,
+     &           iBlo1:iBhi1,
+     &           0:nBcomp-1)
+      integer ijacobianlo0,ijacobianlo1
+      integer ijacobianhi0,ijacobianhi1
+      REAL_T jacobian(
+     &           ijacobianlo0:ijacobianhi0,
+     &           ijacobianlo1:ijacobianhi1)
+      integer nintegralcomp
+      integer iintegrallo0,iintegrallo1
+      integer iintegralhi0,iintegralhi1
+      REAL_T integral(
+     &           iintegrallo0:iintegralhi0,
+     &           iintegrallo1:iintegralhi1,
+     &           0:nintegralcomp-1)
+      integer i,j, comp
+      double precision sum, area
+      area = dx(0) * dx(1)
+      
+      do j = iboxlo1,iboxhi1
+      do i = iboxlo0,iboxhi0
+
+         do comp = 0, 2
+            integral(i,j,comp) = B(i,j,comp) * jacobian(i,j) * area
+         enddo
+      
+      enddo
+      enddo
+      return
+      end
+      subroutine COMPUTE_VOLUME_B_DOT_E_INTEGRALS_2D(
+     &           iboxlo0,iboxlo1
+     &           ,iboxhi0,iboxhi1
+     &           ,E
+     &           ,iElo0,iElo1
+     &           ,iEhi0,iEhi1
+     &           ,nEcomp
+     &           ,Bintegral
+     &           ,iBintegrallo0,iBintegrallo1
+     &           ,iBintegralhi0,iBintegralhi1
+     &           ,nBintegralcomp
+     &           ,integral
+     &           ,iintegrallo0,iintegrallo1
+     &           ,iintegralhi0,iintegralhi1
+     &           )
+
+      implicit none
+      integer*8 ch_flops
+      COMMON/ch_timer/ ch_flops
+      integer iboxlo0,iboxlo1
+      integer iboxhi0,iboxhi1
+      integer nEcomp
+      integer iElo0,iElo1
+      integer iEhi0,iEhi1
+      REAL_T E(
+     &           iElo0:iEhi0,
+     &           iElo1:iEhi1,
+     &           0:nEcomp-1)
+      integer nBintegralcomp
+      integer iBintegrallo0,iBintegrallo1
+      integer iBintegralhi0,iBintegralhi1
+      REAL_T Bintegral(
+     &           iBintegrallo0:iBintegralhi0,
+     &           iBintegrallo1:iBintegralhi1,
+     &           0:nBintegralcomp-1)
+      integer iintegrallo0,iintegrallo1
+      integer iintegralhi0,iintegralhi1
+      REAL_T integral(
+     &           iintegrallo0:iintegralhi0,
+     &           iintegrallo1:iintegralhi1)
+      integer i,j, comp
+      double precision sum
+      
+      do j = iboxlo1,iboxhi1
+      do i = iboxlo0,iboxhi0
+
+         sum = zero
+         do comp = 0, 2
+            sum = sum + E(i,j,comp) * Bintegral(i,j,comp) 
+         enddo
+         integral(i,j) = sum
+      
+      enddo
+      enddo
+      return
+      end
+      subroutine COMPUTE_VOLUME_B_DOT_E_INTEGRALS_FIELD_ALIGNED_2D(
+     &           iboxlo0,iboxlo1
+     &           ,iboxhi0,iboxhi1
+     &           ,phi_node
+     &           ,iphi_nodelo0,iphi_nodelo1
+     &           ,iphi_nodehi0,iphi_nodehi1
+     &           ,dx
+     &           ,njinverse
+     &           ,injinverselo0,injinverselo1
+     &           ,injinversehi0,injinversehi1
+     &           ,nnjinversecomp
+     &           ,Bintegral
+     &           ,iBintegrallo0,iBintegrallo1
+     &           ,iBintegralhi0,iBintegralhi1
+     &           ,nBintegralcomp
+     &           ,integral
+     &           ,iintegrallo0,iintegrallo1
+     &           ,iintegralhi0,iintegralhi1
+     &           )
+
+      implicit none
+      integer*8 ch_flops
+      COMMON/ch_timer/ ch_flops
+      integer iboxlo0,iboxlo1
+      integer iboxhi0,iboxhi1
+      integer iphi_nodelo0,iphi_nodelo1
+      integer iphi_nodehi0,iphi_nodehi1
+      REAL_T phi_node(
+     &           iphi_nodelo0:iphi_nodehi0,
+     &           iphi_nodelo1:iphi_nodehi1)
+      REAL_T dx(0:1)
+      integer nnjinversecomp
+      integer injinverselo0,injinverselo1
+      integer injinversehi0,injinversehi1
+      REAL_T njinverse(
+     &           injinverselo0:injinversehi0,
+     &           injinverselo1:injinversehi1,
+     &           0:nnjinversecomp-1)
+      integer nBintegralcomp
+      integer iBintegrallo0,iBintegrallo1
+      integer iBintegralhi0,iBintegralhi1
+      REAL_T Bintegral(
+     &           iBintegrallo0:iBintegralhi0,
+     &           iBintegrallo1:iBintegralhi1,
+     &           0:nBintegralcomp-1)
+      integer iintegrallo0,iintegrallo1
+      integer iintegralhi0,iintegralhi1
+      REAL_T integral(
+     &           iintegrallo0:iintegralhi0,
+     &           iintegrallo1:iintegralhi1)
+      integer i,j, comp, m, row, col
+      double precision sum, Epol_mapped(0:1), Epol_phys(0:1), E_phys(0:2)
+      
+      do j = iboxlo1,iboxhi1
+      do i = iboxlo0,iboxhi0
+
+         Epol_mapped(0) = 0.0
+         Epol_mapped(1) = -0.5 * (phi_node(i,j+1) - phi_node(i,j) + phi_node(i+1,j+1) - phi_node(i+1,j))
+         Epol_mapped(1) = Epol_mapped(1)/dx(1)
+         m = 0
+         do row = 0, CH_SPACEDIM-1
+            sum = zero
+            do col = 0, CH_SPACEDIM-1
+               sum = sum + njinverse(i,j,m) * Epol_mapped(col)
+	              m = m + 1
+            enddo
+            Epol_phys(row) = sum
+         enddo
+         E_phys(0) = Epol_phys(0)
+         E_phys(1) = 0.0
+         E_phys(2) = Epol_phys(1)
+         sum = zero
+         do comp = 0, 2
+            sum = sum + E_phys(comp) * Bintegral(i,j,comp) 
+         enddo
+         integral(i,j) = sum
+      
+      enddo
+      enddo
+      return
+      end
+      subroutine COMPUTE_VOLUME_B_DOT_GRADB_INTEGRALS_2D(
+     &           iboxlo0,iboxlo1
+     &           ,iboxhi0,iboxhi1
+     &           ,dx
+     &           ,B
+     &           ,iBlo0,iBlo1
+     &           ,iBhi0,iBhi1
+     &           ,nBcomp
+     &           ,gradB
+     &           ,igradBlo0,igradBlo1
+     &           ,igradBhi0,igradBhi1
+     &           ,ngradBcomp
+     &           ,jacobian
+     &           ,ijacobianlo0,ijacobianlo1
+     &           ,ijacobianhi0,ijacobianhi1
+     &           ,integral
+     &           ,iintegrallo0,iintegrallo1
+     &           ,iintegralhi0,iintegralhi1
+     &           )
+
+      implicit none
+      integer*8 ch_flops
+      COMMON/ch_timer/ ch_flops
+      integer iboxlo0,iboxlo1
+      integer iboxhi0,iboxhi1
+      REAL_T dx(0:1)
+      integer nBcomp
+      integer iBlo0,iBlo1
+      integer iBhi0,iBhi1
+      REAL_T B(
+     &           iBlo0:iBhi0,
+     &           iBlo1:iBhi1,
+     &           0:nBcomp-1)
+      integer ngradBcomp
+      integer igradBlo0,igradBlo1
+      integer igradBhi0,igradBhi1
+      REAL_T gradB(
+     &           igradBlo0:igradBhi0,
+     &           igradBlo1:igradBhi1,
+     &           0:ngradBcomp-1)
+      integer ijacobianlo0,ijacobianlo1
+      integer ijacobianhi0,ijacobianhi1
+      REAL_T jacobian(
+     &           ijacobianlo0:ijacobianhi0,
+     &           ijacobianlo1:ijacobianhi1)
+      integer iintegrallo0,iintegrallo1
+      integer iintegralhi0,iintegralhi1
+      REAL_T integral(
+     &           iintegrallo0:iintegralhi0,
+     &           iintegrallo1:iintegralhi1)
+      integer i,j, comp
+      double precision sum, area
+      area = dx(0) * dx(1)
+      
+      do j = iboxlo1,iboxhi1
+      do i = iboxlo0,iboxhi0
+
+         sum = zero
+         do comp = 0, 2
+            sum = sum - gradB(i,j,comp) * B(i,j,comp) 
+         enddo
+         integral(i,j) = sum * jacobian(i,j) * area
+      
+      enddo
+      enddo
+      return
+      end
+      subroutine COMPUTE_ELLIPTIC_OP_COEFF_2D(
+     &           iboxlo0,iboxlo1
+     &           ,iboxhi0,iboxhi1
+     &           ,bunit
+     &           ,ibunitlo0,ibunitlo1
+     &           ,ibunithi0,ibunithi1
+     &           ,nbunitcomp
+     &           ,perp_coef
+     &           ,iperp_coeflo0,iperp_coeflo1
+     &           ,iperp_coefhi0,iperp_coefhi1
+     &           ,nperp_coefcomp
+     &           ,par_coef
+     &           ,ipar_coeflo0,ipar_coeflo1
+     &           ,ipar_coefhi0,ipar_coefhi1
+     &           ,npar_coefcomp
+     &           )
+
+      implicit none
+      integer*8 ch_flops
+      COMMON/ch_timer/ ch_flops
+      integer iboxlo0,iboxlo1
+      integer iboxhi0,iboxhi1
+      integer nbunitcomp
+      integer ibunitlo0,ibunitlo1
+      integer ibunithi0,ibunithi1
+      REAL_T bunit(
+     &           ibunitlo0:ibunithi0,
+     &           ibunitlo1:ibunithi1,
+     &           0:nbunitcomp-1)
+      integer nperp_coefcomp
+      integer iperp_coeflo0,iperp_coeflo1
+      integer iperp_coefhi0,iperp_coefhi1
+      REAL_T perp_coef(
+     &           iperp_coeflo0:iperp_coefhi0,
+     &           iperp_coeflo1:iperp_coefhi1,
+     &           0:nperp_coefcomp-1)
+      integer npar_coefcomp
+      integer ipar_coeflo0,ipar_coeflo1
+      integer ipar_coefhi0,ipar_coefhi1
+      REAL_T par_coef(
+     &           ipar_coeflo0:ipar_coefhi0,
+     &           ipar_coeflo1:ipar_coefhi1,
+     &           0:npar_coefcomp-1)
+      integer i,j
+      
+      do j = iboxlo1,iboxhi1
+      do i = iboxlo0,iboxhi0
+
+#if CH_SPACEDIM==3
+         perp_coef(i,j,0) = one - bunit(i,j,0) * bunit(i,j,0)
+         perp_coef(i,j,1) =     - bunit(i,j,0) * bunit(i,j,1)
+         perp_coef(i,j,2) =     - bunit(i,j,0) * bunit(i,j,2)
+         perp_coef(i,j,3) =     - bunit(i,j,1) * bunit(i,j,0)
+         perp_coef(i,j,4) = one - bunit(i,j,1) * bunit(i,j,1)
+         perp_coef(i,j,5) =     - bunit(i,j,1) * bunit(i,j,2)
+         perp_coef(i,j,6) =     - bunit(i,j,2) * bunit(i,j,0)
+         perp_coef(i,j,7) =     - bunit(i,j,2) * bunit(i,j,1)
+         perp_coef(i,j,8) = one - bunit(i,j,2) * bunit(i,j,2)
+         par_coef(i,j,0) = bunit(i,j,0) * bunit(i,j,0)
+         par_coef(i,j,1) = bunit(i,j,0) * bunit(i,j,1)
+         par_coef(i,j,2) = bunit(i,j,0) * bunit(i,j,2)
+         par_coef(i,j,3) = bunit(i,j,1) * bunit(i,j,0)
+         par_coef(i,j,4) = bunit(i,j,1) * bunit(i,j,1)
+         par_coef(i,j,5) = bunit(i,j,1) * bunit(i,j,2)
+         par_coef(i,j,6) = bunit(i,j,2) * bunit(i,j,0)
+         par_coef(i,j,7) = bunit(i,j,2) * bunit(i,j,1)
+         par_coef(i,j,8) = bunit(i,j,2) * bunit(i,j,2)
+#else
+         perp_coef(i,j,0) =  one - bunit(i,j,0) * bunit(i,j,0)
+         perp_coef(i,j,1) =      - bunit(i,j,0) * bunit(i,j,2)
+         perp_coef(i,j,2) =      - bunit(i,j,2) * bunit(i,j,0)
+         perp_coef(i,j,3) =  one - bunit(i,j,2) * bunit(i,j,2)
+         par_coef(i,j,0) =   bunit(i,j,0) * bunit(i,j,0)
+         par_coef(i,j,1) =   bunit(i,j,0) * bunit(i,j,2)
+         par_coef(i,j,2) =   bunit(i,j,2) * bunit(i,j,0)
+         par_coef(i,j,3) =   bunit(i,j,2) * bunit(i,j,2)
+#endif
+      
+      enddo
+      enddo
+      return
+      end
+      subroutine COMPUTE_ELLIPTIC_OP_COEFF_MAPPED_2D(
+     &           iboxlo0,iboxlo1
+     &           ,iboxhi0,iboxhi1
+     &           ,n
+     &           ,inlo0,inlo1
+     &           ,inhi0,inhi1
+     &           ,nncomp
+     &           ,njinverse
+     &           ,injinverselo0,injinverselo1
+     &           ,injinversehi0,injinversehi1
+     &           ,nnjinversecomp
+     &           ,coef
+     &           ,icoeflo0,icoeflo1
+     &           ,icoefhi0,icoefhi1
+     &           ,ncoefcomp
+     &           )
+
+      implicit none
+      integer*8 ch_flops
+      COMMON/ch_timer/ ch_flops
+      integer iboxlo0,iboxlo1
+      integer iboxhi0,iboxhi1
+      integer nncomp
+      integer inlo0,inlo1
+      integer inhi0,inhi1
+      REAL_T n(
+     &           inlo0:inhi0,
+     &           inlo1:inhi1,
+     &           0:nncomp-1)
+      integer nnjinversecomp
+      integer injinverselo0,injinverselo1
+      integer injinversehi0,injinversehi1
+      REAL_T njinverse(
+     &           injinverselo0:injinversehi0,
+     &           injinverselo1:injinversehi1,
+     &           0:nnjinversecomp-1)
+      integer ncoefcomp
+      integer icoeflo0,icoeflo1
+      integer icoefhi0,icoefhi1
+      REAL_T coef(
+     &           icoeflo0:icoefhi0,
+     &           icoeflo1:icoefhi1,
+     &           0:ncoefcomp-1)
+      integer i,j, row, col, m
+      double precision n_mat(0:CH_SPACEDIM-1,0:CH_SPACEDIM-1), nji_mat(0:CH_SPACEDIM-1,0:CH_SPACEDIM-1),
+     &     d_mat(0:CH_SPACEDIM-1,0:CH_SPACEDIM-1), dnji_mat(0:CH_SPACEDIM-1,0:CH_SPACEDIM-1),
+     &     coef_mat(0:CH_SPACEDIM-1,0:CH_SPACEDIM-1)
+      
+      do j = iboxlo1,iboxhi1
+      do i = iboxlo0,iboxhi0
+
+#if CH_SPACEDIM==3
+         d_mat(0,0) = coef(i,j,0)
+         d_mat(0,1) = coef(i,j,1)
+         d_mat(0,2) = coef(i,j,2)
+         d_mat(1,0) = coef(i,j,3)
+         d_mat(1,1) = coef(i,j,4)
+         d_mat(1,2) = coef(i,j,5)
+         d_mat(2,0) = coef(i,j,6)
+         d_mat(2,1) = coef(i,j,7)
+         d_mat(2,2) = coef(i,j,8)
+         nji_mat(0,0) = njinverse(i,j,0)
+         nji_mat(0,1) = njinverse(i,j,1)
+         nji_mat(0,2) = njinverse(i,j,2)
+         nji_mat(1,0) = njinverse(i,j,3)
+         nji_mat(1,1) = njinverse(i,j,4)
+         nji_mat(1,2) = njinverse(i,j,5)
+         nji_mat(2,0) = njinverse(i,j,6)
+         nji_mat(2,1) = njinverse(i,j,7)
+         nji_mat(2,2) = njinverse(i,j,8)
+         n_mat(0,0) = n(i,j,0)
+         n_mat(0,1) = n(i,j,1)
+         n_mat(0,2) = n(i,j,2)
+         n_mat(1,0) = n(i,j,3)
+         n_mat(1,1) = n(i,j,4)
+         n_mat(1,2) = n(i,j,5)
+         n_mat(2,0) = n(i,j,6)
+         n_mat(2,1) = n(i,j,7)
+         n_mat(2,2) = n(i,j,8)
+#else
+         d_mat(0,0) = coef(i,j,0)
+         d_mat(0,1) = coef(i,j,1)
+         d_mat(1,0) = coef(i,j,2)
+         d_mat(1,1) = coef(i,j,3)
+         nji_mat(0,0) = njinverse(i,j,0)
+         nji_mat(0,1) = njinverse(i,j,1)
+         nji_mat(1,0) = njinverse(i,j,2)
+         nji_mat(1,1) = njinverse(i,j,3)
+         n_mat(0,0) = n(i,j,0)
+         n_mat(0,1) = n(i,j,1)
+         n_mat(1,0) = n(i,j,2)
+         n_mat(1,1) = n(i,j,3)
+#endif
+         do row = 0, CH_SPACEDIM-1
+            do col = 0, CH_SPACEDIM-1
+               dnji_mat(row,col) = zero
+               do m = 0, CH_SPACEDIM-1
+                  dnji_mat(row,col) = dnji_mat(row,col) + d_mat(row,m) * nji_mat(m,col)
+               enddo
+            enddo
+         enddo
+         do row = 0, CH_SPACEDIM-1
+            do col = 0, CH_SPACEDIM-1
+               coef_mat(row,col) = zero
+               do m = 0, CH_SPACEDIM-1
+                  coef_mat(row,col) = coef_mat(row,col) + n_mat(m,row) * dnji_mat(m,col)
+               enddo
+            enddo
+         enddo
+#if CH_SPACEDIM==3
+         coef(i,j,0) = coef_mat(0,0)
+         coef(i,j,1) = coef_mat(0,1)
+         coef(i,j,2) = coef_mat(0,2)
+         coef(i,j,3) = coef_mat(1,0)
+         coef(i,j,4) = coef_mat(1,1)
+         coef(i,j,5) = coef_mat(1,2)
+         coef(i,j,6) = coef_mat(2,0)
+         coef(i,j,7) = coef_mat(2,1)
+         coef(i,j,8) = coef_mat(2,2)
+#else
+         coef(i,j,0) = coef_mat(0,0)
+         coef(i,j,1) = coef_mat(0,1)
+         coef(i,j,2) = coef_mat(1,0)
+         coef(i,j,3) = coef_mat(1,1)
+#endif
+      
+      enddo
+      enddo
+      return
+      end
+      subroutine COMPUTE_RADIAL_ELLIPTIC_OP_COEFF_2D(
+     &           iboxlo0,iboxlo1
+     &           ,iboxhi0,iboxhi1
+     &           ,bunit
+     &           ,ibunitlo0,ibunitlo1
+     &           ,ibunithi0,ibunithi1
+     &           ,nbunitcomp
+     &           ,rad_coef
+     &           ,irad_coeflo0,irad_coeflo1
+     &           ,irad_coefhi0,irad_coefhi1
+     &           ,nrad_coefcomp
+     &           )
+
+      implicit none
+      integer*8 ch_flops
+      COMMON/ch_timer/ ch_flops
+      integer iboxlo0,iboxlo1
+      integer iboxhi0,iboxhi1
+      integer nbunitcomp
+      integer ibunitlo0,ibunitlo1
+      integer ibunithi0,ibunithi1
+      REAL_T bunit(
+     &           ibunitlo0:ibunithi0,
+     &           ibunitlo1:ibunithi1,
+     &           0:nbunitcomp-1)
+      integer nrad_coefcomp
+      integer irad_coeflo0,irad_coeflo1
+      integer irad_coefhi0,irad_coefhi1
+      REAL_T rad_coef(
+     &           irad_coeflo0:irad_coefhi0,
+     &           irad_coeflo1:irad_coefhi1,
+     &           0:nrad_coefcomp-1)
+      integer i,j
+      double precision fac
+      
+      do j = iboxlo1,iboxhi1
+      do i = iboxlo0,iboxhi0
+
+         fac = one/(bunit(i,j,0)**2 + bunit(i,j,2)**2)
+#if CH_SPACEDIM==3
+         rad_coef(i,j,0) = fac * bunit(i,j,2) * bunit(i,j,2)
+         rad_coef(i,j,1) = zero
+         rad_coef(i,j,2) =-fac * bunit(i,j,2) * bunit(i,j,0)
+         rad_coef(i,j,3) = zero
+         rad_coef(i,j,4) = zero
+         rad_coef(i,j,5) = zero
+         rad_coef(i,j,6) = -fac * bunit(i,j,2) * bunit(i,j,0)
+         rad_coef(i,j,7) = zero
+         rad_coef(i,j,8) = fac * bunit(i,j,0) * bunit(i,j,0)
+#else
+         rad_coef(i,j,0) = fac * bunit(i,j,2) * bunit(i,j,2)
+         rad_coef(i,j,1) =-fac * bunit(i,j,2) * bunit(i,j,0)
+         rad_coef(i,j,2) =-fac * bunit(i,j,0) * bunit(i,j,2)
+         rad_coef(i,j,3) = fac * bunit(i,j,0) * bunit(i,j,0)
+#endif
+      
+      enddo
+      enddo
+      return
+      end

@@ -1,0 +1,143 @@
+#ifndef _MAPPEDADVECTIONF_F_H_
+#define _MAPPEDADVECTIONF_F_H_
+
+#include "FORT_PROTO.H"
+#include "CH_Timer.H"
+#include "REAL.H"
+
+extern "C"
+{
+
+#ifndef GUARDINCREMENTFACEPROD 
+#define GUARDINCREMENTFACEPROD 
+// Prototype for Fortran procedure INCREMENTFACEPROD ...
+//
+void FORTRAN_NAME( INCREMENTFACEPROD ,incrementfaceprod )(
+      CHFp_FRA(prod)
+      ,CHFp_CONST_FRA(u)
+      ,CHFp_CONST_FRA(v)
+      ,CHFp_BOX(box) );
+
+#define FORT_INCREMENTFACEPROD FORTRAN_NAME( inlineINCREMENTFACEPROD, inlineINCREMENTFACEPROD)
+#define FORTNT_INCREMENTFACEPROD FORTRAN_NAME( INCREMENTFACEPROD, incrementfaceprod)
+
+inline void FORTRAN_NAME(inlineINCREMENTFACEPROD, inlineINCREMENTFACEPROD)(
+      CHFp_FRA(prod)
+      ,CHFp_CONST_FRA(u)
+      ,CHFp_CONST_FRA(v)
+      ,CHFp_BOX(box) )
+{
+ CH_TIMELEAF("FORT_INCREMENTFACEPROD");
+ FORTRAN_NAME( INCREMENTFACEPROD ,incrementfaceprod )(
+      CHFt_FRA(prod)
+      ,CHFt_CONST_FRA(u)
+      ,CHFt_CONST_FRA(v)
+      ,CHFt_BOX(box) );
+}
+#endif  // GUARDINCREMENTFACEPROD 
+
+#ifndef GUARDINCREMENTFACEPRODNORMAL 
+#define GUARDINCREMENTFACEPRODNORMAL 
+// Prototype for Fortran procedure INCREMENTFACEPRODNORMAL ...
+//
+void FORTRAN_NAME( INCREMENTFACEPRODNORMAL ,incrementfaceprodnormal )(
+      CHFp_FRA(prod)
+      ,CHFp_CONST_FRA(u)
+      ,CHFp_CONST_FRA(v)
+      ,CHFp_BOX(box) );
+
+#define FORT_INCREMENTFACEPRODNORMAL FORTRAN_NAME( inlineINCREMENTFACEPRODNORMAL, inlineINCREMENTFACEPRODNORMAL)
+#define FORTNT_INCREMENTFACEPRODNORMAL FORTRAN_NAME( INCREMENTFACEPRODNORMAL, incrementfaceprodnormal)
+
+inline void FORTRAN_NAME(inlineINCREMENTFACEPRODNORMAL, inlineINCREMENTFACEPRODNORMAL)(
+      CHFp_FRA(prod)
+      ,CHFp_CONST_FRA(u)
+      ,CHFp_CONST_FRA(v)
+      ,CHFp_BOX(box) )
+{
+ CH_TIMELEAF("FORT_INCREMENTFACEPRODNORMAL");
+ FORTRAN_NAME( INCREMENTFACEPRODNORMAL ,incrementfaceprodnormal )(
+      CHFt_FRA(prod)
+      ,CHFt_CONST_FRA(u)
+      ,CHFt_CONST_FRA(v)
+      ,CHFt_BOX(box) );
+}
+#endif  // GUARDINCREMENTFACEPRODNORMAL 
+
+#ifndef GUARDINCREMENTFACEPRODGRAD 
+#define GUARDINCREMENTFACEPRODGRAD 
+// Prototype for Fortran procedure INCREMENTFACEPRODGRAD ...
+//
+void FORTRAN_NAME( INCREMENTFACEPRODGRAD ,incrementfaceprodgrad )(
+      CHFp_FRA(prod)
+      ,CHFp_CONST_FRA(u)
+      ,CHFp_CONST_FRA(v)
+      ,CHFp_BOX(box)
+      ,CHFp_REAL(dx)
+      ,CHFp_REAL(factor)
+      ,CHFp_INT(dir) );
+
+#define FORT_INCREMENTFACEPRODGRAD FORTRAN_NAME( inlineINCREMENTFACEPRODGRAD, inlineINCREMENTFACEPRODGRAD)
+#define FORTNT_INCREMENTFACEPRODGRAD FORTRAN_NAME( INCREMENTFACEPRODGRAD, incrementfaceprodgrad)
+
+inline void FORTRAN_NAME(inlineINCREMENTFACEPRODGRAD, inlineINCREMENTFACEPRODGRAD)(
+      CHFp_FRA(prod)
+      ,CHFp_CONST_FRA(u)
+      ,CHFp_CONST_FRA(v)
+      ,CHFp_BOX(box)
+      ,CHFp_REAL(dx)
+      ,CHFp_REAL(factor)
+      ,CHFp_INT(dir) )
+{
+ CH_TIMELEAF("FORT_INCREMENTFACEPRODGRAD");
+ FORTRAN_NAME( INCREMENTFACEPRODGRAD ,incrementfaceprodgrad )(
+      CHFt_FRA(prod)
+      ,CHFt_CONST_FRA(u)
+      ,CHFt_CONST_FRA(v)
+      ,CHFt_BOX(box)
+      ,CHFt_REAL(dx)
+      ,CHFt_REAL(factor)
+      ,CHFt_INT(dir) );
+}
+#endif  // GUARDINCREMENTFACEPRODGRAD 
+
+#ifndef GUARDINCREMENTFACEPRODGRADNORMAL 
+#define GUARDINCREMENTFACEPRODGRADNORMAL 
+// Prototype for Fortran procedure INCREMENTFACEPRODGRADNORMAL ...
+//
+void FORTRAN_NAME( INCREMENTFACEPRODGRADNORMAL ,incrementfaceprodgradnormal )(
+      CHFp_FRA(prod)
+      ,CHFp_CONST_FRA(u)
+      ,CHFp_CONST_FRA(v)
+      ,CHFp_BOX(box)
+      ,CHFp_REAL(dx)
+      ,CHFp_REAL(factor)
+      ,CHFp_INT(dir) );
+
+#define FORT_INCREMENTFACEPRODGRADNORMAL FORTRAN_NAME( inlineINCREMENTFACEPRODGRADNORMAL, inlineINCREMENTFACEPRODGRADNORMAL)
+#define FORTNT_INCREMENTFACEPRODGRADNORMAL FORTRAN_NAME( INCREMENTFACEPRODGRADNORMAL, incrementfaceprodgradnormal)
+
+inline void FORTRAN_NAME(inlineINCREMENTFACEPRODGRADNORMAL, inlineINCREMENTFACEPRODGRADNORMAL)(
+      CHFp_FRA(prod)
+      ,CHFp_CONST_FRA(u)
+      ,CHFp_CONST_FRA(v)
+      ,CHFp_BOX(box)
+      ,CHFp_REAL(dx)
+      ,CHFp_REAL(factor)
+      ,CHFp_INT(dir) )
+{
+ CH_TIMELEAF("FORT_INCREMENTFACEPRODGRADNORMAL");
+ FORTRAN_NAME( INCREMENTFACEPRODGRADNORMAL ,incrementfaceprodgradnormal )(
+      CHFt_FRA(prod)
+      ,CHFt_CONST_FRA(u)
+      ,CHFt_CONST_FRA(v)
+      ,CHFt_BOX(box)
+      ,CHFt_REAL(dx)
+      ,CHFt_REAL(factor)
+      ,CHFt_INT(dir) );
+}
+#endif  // GUARDINCREMENTFACEPRODGRADNORMAL 
+
+}
+
+#endif

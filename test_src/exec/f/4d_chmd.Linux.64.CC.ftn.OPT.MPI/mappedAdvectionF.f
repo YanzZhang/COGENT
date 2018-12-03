@@ -1,0 +1,329 @@
+/* Copyright (C) 1991-2015 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
+/* This header is separate from features.h so that the compiler can
+   include it implicitly at the start of every compilation.  It must
+   not itself include <features.h> or any other header that includes
+   <features.h> because the implicit include comes before any feature
+   test macros that may be defined in a source file before it first
+   explicitly includes a system header.  GCC knows the name of this
+   header in order to preinclude it.  */
+/* glibc's intent is to support the IEC 559 math functionality, real
+   and complex.  If the GCC (4.9 and later) predefined macros
+   specifying compiler intent are available, use them to determine
+   whether the overall intent is to support these features; otherwise,
+   presume an older compiler has intent to support these features and
+   define these macros by default.  */
+/* wchar_t uses Unicode 7.0.0.  Version 7.0 of the Unicode Standard is
+   synchronized with ISO/IEC 10646:2012, plus Amendments 1 (published
+   on April, 2013) and 2 (not yet published as of February, 2015).
+   Additionally, it includes the accelerated publication of U+20BD
+   RUBLE SIGN.  Therefore Unicode 7.0.0 is between 10646:2012 and
+   10646:2014, and so we use the date ISO/IEC 10646:2012 Amd.1 was
+   published.  */
+/* We do not support C11 <threads.h>.  */
+      subroutine INCREMENTFACEPROD_4D(
+     & prod
+     & ,iprodlo0,iprodlo1,iprodlo2,iprodlo3
+     & ,iprodhi0,iprodhi1,iprodhi2,iprodhi3
+     & ,nprodcomp
+     & ,u
+     & ,iulo0,iulo1,iulo2,iulo3
+     & ,iuhi0,iuhi1,iuhi2,iuhi3
+     & ,nucomp
+     & ,v
+     & ,ivlo0,ivlo1,ivlo2,ivlo3
+     & ,ivhi0,ivhi1,ivhi2,ivhi3
+     & ,nvcomp
+     & ,iboxlo0,iboxlo1,iboxlo2,iboxlo3
+     & ,iboxhi0,iboxhi1,iboxhi2,iboxhi3
+     & )
+      implicit none
+      integer*8 ch_flops
+      COMMON/ch_timer/ ch_flops
+      integer nprodcomp
+      integer iprodlo0,iprodlo1,iprodlo2,iprodlo3
+      integer iprodhi0,iprodhi1,iprodhi2,iprodhi3
+      REAL*8 prod(
+     & iprodlo0:iprodhi0,
+     & iprodlo1:iprodhi1,
+     & iprodlo2:iprodhi2,
+     & iprodlo3:iprodhi3,
+     & 0:nprodcomp-1)
+      integer nucomp
+      integer iulo0,iulo1,iulo2,iulo3
+      integer iuhi0,iuhi1,iuhi2,iuhi3
+      REAL*8 u(
+     & iulo0:iuhi0,
+     & iulo1:iuhi1,
+     & iulo2:iuhi2,
+     & iulo3:iuhi3,
+     & 0:nucomp-1)
+      integer nvcomp
+      integer ivlo0,ivlo1,ivlo2,ivlo3
+      integer ivhi0,ivhi1,ivhi2,ivhi3
+      REAL*8 v(
+     & ivlo0:ivhi0,
+     & ivlo1:ivhi1,
+     & ivlo2:ivhi2,
+     & ivlo3:ivhi3,
+     & 0:nvcomp-1)
+      integer iboxlo0,iboxlo1,iboxlo2,iboxlo3
+      integer iboxhi0,iboxhi1,iboxhi2,iboxhi3
+      integer i,j,k,l, n
+      integer d, nn
+      do n=0, nucomp-1
+        do d=0, 4 -1
+          nn = n + d * nucomp
+      do l = iboxlo3,iboxhi3
+      do k = iboxlo2,iboxhi2
+      do j = iboxlo1,iboxhi1
+      do i = iboxlo0,iboxhi0
+          prod(i,j,k,l,nn) = prod(i,j,k,l,nn)
+     & +u(i,j,k,l,n)*v(i,j,k,l,d)
+      enddo
+      enddo
+      enddo
+      enddo
+       enddo
+      enddo
+      return
+      end
+      subroutine INCREMENTFACEPRODNORMAL_4D(
+     & prod
+     & ,iprodlo0,iprodlo1,iprodlo2,iprodlo3
+     & ,iprodhi0,iprodhi1,iprodhi2,iprodhi3
+     & ,nprodcomp
+     & ,u
+     & ,iulo0,iulo1,iulo2,iulo3
+     & ,iuhi0,iuhi1,iuhi2,iuhi3
+     & ,nucomp
+     & ,v
+     & ,ivlo0,ivlo1,ivlo2,ivlo3
+     & ,ivhi0,ivhi1,ivhi2,ivhi3
+     & ,nvcomp
+     & ,iboxlo0,iboxlo1,iboxlo2,iboxlo3
+     & ,iboxhi0,iboxhi1,iboxhi2,iboxhi3
+     & )
+      implicit none
+      integer*8 ch_flops
+      COMMON/ch_timer/ ch_flops
+      integer nprodcomp
+      integer iprodlo0,iprodlo1,iprodlo2,iprodlo3
+      integer iprodhi0,iprodhi1,iprodhi2,iprodhi3
+      REAL*8 prod(
+     & iprodlo0:iprodhi0,
+     & iprodlo1:iprodhi1,
+     & iprodlo2:iprodhi2,
+     & iprodlo3:iprodhi3,
+     & 0:nprodcomp-1)
+      integer nucomp
+      integer iulo0,iulo1,iulo2,iulo3
+      integer iuhi0,iuhi1,iuhi2,iuhi3
+      REAL*8 u(
+     & iulo0:iuhi0,
+     & iulo1:iuhi1,
+     & iulo2:iuhi2,
+     & iulo3:iuhi3,
+     & 0:nucomp-1)
+      integer nvcomp
+      integer ivlo0,ivlo1,ivlo2,ivlo3
+      integer ivhi0,ivhi1,ivhi2,ivhi3
+      REAL*8 v(
+     & ivlo0:ivhi0,
+     & ivlo1:ivhi1,
+     & ivlo2:ivhi2,
+     & ivlo3:ivhi3,
+     & 0:nvcomp-1)
+      integer iboxlo0,iboxlo1,iboxlo2,iboxlo3
+      integer iboxhi0,iboxhi1,iboxhi2,iboxhi3
+      integer i,j,k,l, n
+      do n=0, nucomp-1
+      do l = iboxlo3,iboxhi3
+      do k = iboxlo2,iboxhi2
+      do j = iboxlo1,iboxhi1
+      do i = iboxlo0,iboxhi0
+         prod(i,j,k,l,n) = prod(i,j,k,l,n)
+     & +u(i,j,k,l,n)*v(i,j,k,l,n)
+      enddo
+      enddo
+      enddo
+      enddo
+      enddo
+      return
+      end
+      subroutine INCREMENTFACEPRODGRAD_4D(
+     & prod
+     & ,iprodlo0,iprodlo1,iprodlo2,iprodlo3
+     & ,iprodhi0,iprodhi1,iprodhi2,iprodhi3
+     & ,nprodcomp
+     & ,u
+     & ,iulo0,iulo1,iulo2,iulo3
+     & ,iuhi0,iuhi1,iuhi2,iuhi3
+     & ,nucomp
+     & ,v
+     & ,ivlo0,ivlo1,ivlo2,ivlo3
+     & ,ivhi0,ivhi1,ivhi2,ivhi3
+     & ,nvcomp
+     & ,iboxlo0,iboxlo1,iboxlo2,iboxlo3
+     & ,iboxhi0,iboxhi1,iboxhi2,iboxhi3
+     & ,dx
+     & ,factor
+     & ,dir
+     & )
+      implicit none
+      integer*8 ch_flops
+      COMMON/ch_timer/ ch_flops
+      integer CHF_ID(0:5,0:5)
+      data CHF_ID/ 1,0,0,0,0,0 ,0,1,0,0,0,0 ,0,0,1,0,0,0 ,0,0,0,1,0,0 ,0
+     &,0,0,0,1,0 ,0,0,0,0,0,1 /
+      integer nprodcomp
+      integer iprodlo0,iprodlo1,iprodlo2,iprodlo3
+      integer iprodhi0,iprodhi1,iprodhi2,iprodhi3
+      REAL*8 prod(
+     & iprodlo0:iprodhi0,
+     & iprodlo1:iprodhi1,
+     & iprodlo2:iprodhi2,
+     & iprodlo3:iprodhi3,
+     & 0:nprodcomp-1)
+      integer nucomp
+      integer iulo0,iulo1,iulo2,iulo3
+      integer iuhi0,iuhi1,iuhi2,iuhi3
+      REAL*8 u(
+     & iulo0:iuhi0,
+     & iulo1:iuhi1,
+     & iulo2:iuhi2,
+     & iulo3:iuhi3,
+     & 0:nucomp-1)
+      integer nvcomp
+      integer ivlo0,ivlo1,ivlo2,ivlo3
+      integer ivhi0,ivhi1,ivhi2,ivhi3
+      REAL*8 v(
+     & ivlo0:ivhi0,
+     & ivlo1:ivhi1,
+     & ivlo2:ivhi2,
+     & ivlo3:ivhi3,
+     & 0:nvcomp-1)
+      integer iboxlo0,iboxlo1,iboxlo2,iboxlo3
+      integer iboxhi0,iboxhi1,iboxhi2,iboxhi3
+      REAL*8 dx
+      REAL*8 factor
+      integer dir
+      integer i,j,k,l, n, nn, d
+      integer ii,jj,kk,ll
+      REAL*8 qtrOnDx2, du, dv
+      ii = CHF_ID(0,dir)
+                jj = CHF_ID(1,dir)
+                kk = CHF_ID(2,dir)
+                ll = CHF_ID(3,dir)
+      qtrOnDx2 = ((0.500d0)/dx)**2;
+      do n=0, nucomp-1
+        do d=0, 4 -1
+          nn = n + d * nucomp
+      do l = iboxlo3,iboxhi3
+      do k = iboxlo2,iboxhi2
+      do j = iboxlo1,iboxhi1
+      do i = iboxlo0,iboxhi0
+            du = (u(i+ii,j+jj,k+kk,l+ll,n) - u(i-ii,j-jj,k-kk,l-ll,n))
+            dv = (v(i+ii,j+jj,k+kk,l+ll,d) - v(i-ii,j-jj,k-kk,l-ll,d))
+            prod(i,j,k,l,nn) = prod(i,j,k,l,nn)
+     & +factor*qtrOnDx2*du*dv
+      enddo
+      enddo
+      enddo
+      enddo
+        enddo
+      enddo
+      return
+      end
+      subroutine INCREMENTFACEPRODGRADNORMAL_4D(
+     & prod
+     & ,iprodlo0,iprodlo1,iprodlo2,iprodlo3
+     & ,iprodhi0,iprodhi1,iprodhi2,iprodhi3
+     & ,nprodcomp
+     & ,u
+     & ,iulo0,iulo1,iulo2,iulo3
+     & ,iuhi0,iuhi1,iuhi2,iuhi3
+     & ,nucomp
+     & ,v
+     & ,ivlo0,ivlo1,ivlo2,ivlo3
+     & ,ivhi0,ivhi1,ivhi2,ivhi3
+     & ,nvcomp
+     & ,iboxlo0,iboxlo1,iboxlo2,iboxlo3
+     & ,iboxhi0,iboxhi1,iboxhi2,iboxhi3
+     & ,dx
+     & ,factor
+     & ,dir
+     & )
+      implicit none
+      integer*8 ch_flops
+      COMMON/ch_timer/ ch_flops
+      integer CHF_ID(0:5,0:5)
+      data CHF_ID/ 1,0,0,0,0,0 ,0,1,0,0,0,0 ,0,0,1,0,0,0 ,0,0,0,1,0,0 ,0
+     &,0,0,0,1,0 ,0,0,0,0,0,1 /
+      integer nprodcomp
+      integer iprodlo0,iprodlo1,iprodlo2,iprodlo3
+      integer iprodhi0,iprodhi1,iprodhi2,iprodhi3
+      REAL*8 prod(
+     & iprodlo0:iprodhi0,
+     & iprodlo1:iprodhi1,
+     & iprodlo2:iprodhi2,
+     & iprodlo3:iprodhi3,
+     & 0:nprodcomp-1)
+      integer nucomp
+      integer iulo0,iulo1,iulo2,iulo3
+      integer iuhi0,iuhi1,iuhi2,iuhi3
+      REAL*8 u(
+     & iulo0:iuhi0,
+     & iulo1:iuhi1,
+     & iulo2:iuhi2,
+     & iulo3:iuhi3,
+     & 0:nucomp-1)
+      integer nvcomp
+      integer ivlo0,ivlo1,ivlo2,ivlo3
+      integer ivhi0,ivhi1,ivhi2,ivhi3
+      REAL*8 v(
+     & ivlo0:ivhi0,
+     & ivlo1:ivhi1,
+     & ivlo2:ivhi2,
+     & ivlo3:ivhi3,
+     & 0:nvcomp-1)
+      integer iboxlo0,iboxlo1,iboxlo2,iboxlo3
+      integer iboxhi0,iboxhi1,iboxhi2,iboxhi3
+      REAL*8 dx
+      REAL*8 factor
+      integer dir
+      integer i,j,k,l, n
+      integer ii,jj,kk,ll
+      REAL*8 qtrOnDx2, du, dv
+      ii = CHF_ID(0,dir)
+                jj = CHF_ID(1,dir)
+                kk = CHF_ID(2,dir)
+                ll = CHF_ID(3,dir)
+      qtrOnDx2 = ((0.500d0)/dx)**2;
+      do n=0, nucomp-1
+      do l = iboxlo3,iboxhi3
+      do k = iboxlo2,iboxhi2
+      do j = iboxlo1,iboxhi1
+      do i = iboxlo0,iboxhi0
+            du = (u(i+ii,j+jj,k+kk,l+ll,n) - u(i-ii,j-jj,k-kk,l-ll,n))
+            dv = (v(i+ii,j+jj,k+kk,l+ll,0) - v(i-ii,j-jj,k-kk,l-ll,0))
+            prod(i,j,k,l,n) = prod(i,j,k,l,n)
+     & +factor*qtrOnDx2*du*dv
+      enddo
+      enddo
+      enddo
+      enddo
+      enddo
+      return
+      end
