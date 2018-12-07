@@ -79,46 +79,6 @@ inline void FORTRAN_NAME(inlineEVALUATE_TP_LORENTZ, inlineEVALUATE_TP_LORENTZ)(
 }
 #endif  // GUARDEVALUATE_TP_LORENTZ 
 
-#ifndef GUARDEVALUATE_TP_LORENTZ_SPECIES 
-#define GUARDEVALUATE_TP_LORENTZ_SPECIES 
-// Prototype for Fortran procedure evaluate_tp_lorentz_species ...
-//
-void FORTRAN_NAME( EVALUATE_TP_LORENTZ_SPECIES ,evaluate_tp_lorentz_species )(
-      CHFp_FRA(ClsFlux)
-      ,CHFp_CONST_FRA1(f)
-      ,CHFp_CONST_FRA1(bmag)
-      ,CHFp_CONST_FRA1(T)
-      ,CHFp_BOX(gridbox)
-      ,CHFp_CONST_REALVECT(dx)
-      ,CHFp_CONST_REAL(m)
-      ,CHFp_CONST_REAL(mb) );
-
-#define FORT_EVALUATE_TP_LORENTZ_SPECIES FORTRAN_NAME( inlineEVALUATE_TP_LORENTZ_SPECIES, inlineEVALUATE_TP_LORENTZ_SPECIES)
-#define FORTNT_EVALUATE_TP_LORENTZ_SPECIES FORTRAN_NAME( EVALUATE_TP_LORENTZ_SPECIES, evaluate_tp_lorentz_species)
-
-inline void FORTRAN_NAME(inlineEVALUATE_TP_LORENTZ_SPECIES, inlineEVALUATE_TP_LORENTZ_SPECIES)(
-      CHFp_FRA(ClsFlux)
-      ,CHFp_CONST_FRA1(f)
-      ,CHFp_CONST_FRA1(bmag)
-      ,CHFp_CONST_FRA1(T)
-      ,CHFp_BOX(gridbox)
-      ,CHFp_CONST_REALVECT(dx)
-      ,CHFp_CONST_REAL(m)
-      ,CHFp_CONST_REAL(mb) )
-{
- CH_TIMELEAF("FORT_EVALUATE_TP_LORENTZ_SPECIES");
- FORTRAN_NAME( EVALUATE_TP_LORENTZ_SPECIES ,evaluate_tp_lorentz_species )(
-      CHFt_FRA(ClsFlux)
-      ,CHFt_CONST_FRA1(f)
-      ,CHFt_CONST_FRA1(bmag)
-      ,CHFt_CONST_FRA1(T)
-      ,CHFt_BOX(gridbox)
-      ,CHFt_CONST_REALVECT(dx)
-      ,CHFt_CONST_REAL(m)
-      ,CHFt_CONST_REAL(mb) );
-}
-#endif  // GUARDEVALUATE_TP_LORENTZ_SPECIES 
-
 #ifndef GUARDEVALUATE_TP_ENERG_DIFF 
 #define GUARDEVALUATE_TP_ENERG_DIFF 
 // Prototype for Fortran procedure evaluate_tp_energ_diff ...
@@ -155,46 +115,6 @@ inline void FORTRAN_NAME(inlineEVALUATE_TP_ENERG_DIFF, inlineEVALUATE_TP_ENERG_D
       ,CHFt_CONST_REAL(m) );
 }
 #endif  // GUARDEVALUATE_TP_ENERG_DIFF 
-
-#ifndef GUARDEVALUATE_TP_ENERG_DIFF_SPECIES 
-#define GUARDEVALUATE_TP_ENERG_DIFF_SPECIES 
-// Prototype for Fortran procedure evaluate_tp_energ_diff_species ...
-//
-void FORTRAN_NAME( EVALUATE_TP_ENERG_DIFF_SPECIES ,evaluate_tp_energ_diff_species )(
-      CHFp_FRA(ClsFlux)
-      ,CHFp_CONST_FRA1(f)
-      ,CHFp_CONST_FRA1(bmag)
-      ,CHFp_CONST_FRA1(T)
-      ,CHFp_BOX(gridbox)
-      ,CHFp_CONST_REALVECT(dx)
-      ,CHFp_CONST_REAL(m)
-      ,CHFp_CONST_REAL(mb) );
-
-#define FORT_EVALUATE_TP_ENERG_DIFF_SPECIES FORTRAN_NAME( inlineEVALUATE_TP_ENERG_DIFF_SPECIES, inlineEVALUATE_TP_ENERG_DIFF_SPECIES)
-#define FORTNT_EVALUATE_TP_ENERG_DIFF_SPECIES FORTRAN_NAME( EVALUATE_TP_ENERG_DIFF_SPECIES, evaluate_tp_energ_diff_species)
-
-inline void FORTRAN_NAME(inlineEVALUATE_TP_ENERG_DIFF_SPECIES, inlineEVALUATE_TP_ENERG_DIFF_SPECIES)(
-      CHFp_FRA(ClsFlux)
-      ,CHFp_CONST_FRA1(f)
-      ,CHFp_CONST_FRA1(bmag)
-      ,CHFp_CONST_FRA1(T)
-      ,CHFp_BOX(gridbox)
-      ,CHFp_CONST_REALVECT(dx)
-      ,CHFp_CONST_REAL(m)
-      ,CHFp_CONST_REAL(mb) )
-{
- CH_TIMELEAF("FORT_EVALUATE_TP_ENERG_DIFF_SPECIES");
- FORTRAN_NAME( EVALUATE_TP_ENERG_DIFF_SPECIES ,evaluate_tp_energ_diff_species )(
-      CHFt_FRA(ClsFlux)
-      ,CHFt_CONST_FRA1(f)
-      ,CHFt_CONST_FRA1(bmag)
-      ,CHFt_CONST_FRA1(T)
-      ,CHFt_BOX(gridbox)
-      ,CHFt_CONST_REALVECT(dx)
-      ,CHFt_CONST_REAL(m)
-      ,CHFt_CONST_REAL(mb) );
-}
-#endif  // GUARDEVALUATE_TP_ENERG_DIFF_SPECIES 
 
 #ifndef GUARDEVALUATE_COLL_FLUX_COMBINED 
 #define GUARDEVALUATE_COLL_FLUX_COMBINED 

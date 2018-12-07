@@ -14,8 +14,10 @@
 #include "FokkerPlanck.H"
 #include "ConsDragDiff.H"
 #include "NullCLS.H"
-#include <map>
+
 #include <string>
+#include <map>
+
 #include "NamespaceHeader.H"
 
 #define _CLS_KROOK_         "Krook"
@@ -24,11 +26,11 @@
 #define _CLS_LINEARIZED_    "Linearized"
 #define _CLS_FOKKERPLANCK_  "FokkerPlanck"
 #define _CLS_CONSDRAGDIFF_  "ConsDragDiff"
-
 #define _CLS_NONE_          "None"
 
 class GKVector;
 class GKOps;
+
 /**
  * Gyrokinetic collisions operator class.
 */
@@ -57,10 +59,6 @@ class GKCollisions
                                   const KineticSpeciesPtrVect& soln,
                                   const bool                   implicit,
                                   const Real                   time );
-
-      /*virtual void accumulateApproxRHS( KineticSpeciesPtrVect&       rhs,
-                                        const KineticSpeciesPtrVect& soln,
-                                        const Real                   time );*/
 
       /// Compute a stable time step.
       /**
@@ -101,13 +99,13 @@ class GKCollisions
       /**
        * @param[in] name String name of the species.
        */
-       CLSInterface& collisionModel( const std::string& a_name,const std::string& a_name_bkgr );
+      CLSInterface& collisionModel( const std::string& name, const std::string& name_bkgr );
 
       /// returns the collision model name associated with the input name
       /**
        * @param[in] name String name of the species.
        */
-       std::string collisionModelName( const std::string& a_name, const std::string& a_name_bkgr );
+      std::string collisionModelName( const std::string& name, const std::string& name_bkgr );
 
       bool isLinear();
 
@@ -120,16 +118,21 @@ class GKCollisions
       GKCollisions( const GKCollisions& );
       const GKCollisions& operator=( const GKCollisions& );
 
-
+      inline
+      int getCollisionModelIndex( std::map<std::string,int>::iterator& it )
+      {
+         return it->second;
+      }
+   
       bool m_verbose;
-      int  m_num_species;
-      std::map<std::string,int> m_species_map;
-      std::vector<std::string> m_species_name;
+      int m_num_species;
+      std::vector<std::string>  m_species_name;
       std::vector<CLSInterface*> m_collision_model;
-      //std::map<std::string,int> m_collision_model_name;
-      std::vector<int> m_collision_species_bkgr;
-      std::vector<int> m_collision_species;
-      std::vector<std::string> m_collision_model_name;
+      std::vector<std::string>  m_collision_model_name;
+      std::vector<int>          m_collision_species;
+      std::vector<int>          m_collision_species_bkgr;
+      std::map<std::string,int> m_species_map;
+      
 };
 
 #include "NamespaceFooter.H"

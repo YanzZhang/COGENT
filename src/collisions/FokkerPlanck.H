@@ -71,39 +71,33 @@ public:
                            const int                    species_bkgr,
                            const Real                   time );
 
-/*  virtual void evalClsApproxRHS(KineticSpeciesPtrVect&       rhs,
-                                const KineticSpeciesPtrVect& soln,
-                                const int                    species,
-                                const int                    species_bkgr,
-                                const Real                   time );*/
 
-
-inline
-virtual void evalClsRHSExplicit( KineticSpeciesPtrVect&        a_rhs,
+  inline
+  virtual void evalClsRHSExplicit( KineticSpeciesPtrVect&      a_rhs,
                                  const KineticSpeciesPtrVect&  a_soln,
                                  const int                     a_species,
                                  const int                     a_species_bkgr,
                                  const Real                    a_time )
-{
-      if (!m_time_implicit) evalClsRHS(a_rhs, a_soln, a_species,a_species_bkgr, a_time);
-}
+  {
+    if (!m_time_implicit) evalClsRHS(a_rhs, a_soln, a_species,a_species_bkgr, a_time);
+  }
 
-inline
-virtual void evalClsRHSImplicit( KineticSpeciesPtrVect&        a_rhs,
-  const KineticSpeciesPtrVect&  a_soln,
-  const int                     a_species,
-  const int                     a_species_bkgr,
-  const Real                    a_time )
-{
+  inline
+  virtual void evalClsRHSImplicit( KineticSpeciesPtrVect&      a_rhs,
+                                 const KineticSpeciesPtrVect&  a_soln,
+                                 const int                     a_species,
+                                 const int                     a_species_bkgr,
+                                 const Real                    a_time )
+  {
     if (m_time_implicit) evalClsRHS(a_rhs, a_soln, a_species,a_species_bkgr, a_time);
-}
+  }
 
   /// Compute a stable time step.
   /**
    * Computes and returns an estimate of the maximum stable time step.
    */
-  Real computeDt(const KineticSpeciesPtrVect&, const int,const int);
-  Real TimeScale(const KineticSpeciesPtrVect&, const int,const int);
+  Real computeDt(const KineticSpeciesPtrVect&, const int, const int);
+  Real TimeScale(const KineticSpeciesPtrVect&, const int, const int);
 
   /// Report that collision operator is nonlinear
   /**
@@ -115,7 +109,6 @@ virtual void evalClsRHSImplicit( KineticSpeciesPtrVect&        a_rhs,
     if (m_time_implicit)  return(m_nbands);
     else                  return(0);
   }
-
 
     void defineBlockPC( std::vector<Preconditioner<GKVector,GKOps>*>&,
                         std::vector<DOFList>&,
@@ -210,7 +203,7 @@ private:
    * Computes the normalization factor
    *
    * cls_norm = dfn_norm[s^3/m^6] * tau_norm[s] *
-   *            Coulomb_Lg * a_charge^4 * ech[SI]^4 / (a_mass * M[kg] * eps0 )^2
+   *            Coulomb_Lg * a_charge_a^2* a_charge_b^2* ech[SI]^4 / (a_mass * M[kg] * eps0 )^2
    *
    * dfn_norm = (1/Pi) * N[1/m^3] / (T[J]/M[kg])^(3/2)
    *
@@ -220,7 +213,7 @@ private:
   void computeClsNorm(Real&                       a_cls_norm,
                       const double                a_mass,
                       const double                a_charge,
-		                  const double 		            a_charge_bkgr ) const;
+                      const double                a_charge_bkgr ) const;
 
 
    /// Parse parameters.

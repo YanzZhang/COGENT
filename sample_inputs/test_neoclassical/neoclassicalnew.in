@@ -157,10 +157,10 @@ CLS.hydrogen.hydrogen.ref_function_a = "maxwellian_tanh_0"
 CLS.hydrogen.hydrogen.ref_function_b = "maxwellian_tanh_0"
 CLS.hydrogen.hydrogen.ref_temperature = "T0"
 CLS.hydrogen.hydrogen.ref_density = "N0"
-CLS.hydrogen.hydrogen.subtract_background = false
+CLS.hydrogen.hydrogen.subtract_background = true
 CLS.hydrogen.hydrogen.compute_maxwellian = false
 CLS.hydrogen.hydrogen.rosenbluth_skip_stage =true
-CLS.hydrogen.hydrogen.time_implicit = false
+CLS.hydrogen.hydrogen.time_implicit = true
 #####################################################
 # Kinetic Function Definitions
 #####################################################

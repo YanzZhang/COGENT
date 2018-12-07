@@ -12,6 +12,7 @@
 
 #include "FokkerPlanckF_F.H"
 #include "FPLimitersF_F.H"
+
 #include "GKVector.H"
 #include "GKOps.H"
 
@@ -161,7 +162,7 @@ void FokkerPlanck::assemblePrecondMatrix( void                            *a_P,
                                           const Real                      a_shift )
 {
   /*
-   * To ensure that the entries of the preconditioning matrix are correct, do the
+   * To ensure that the entries of the preconditioning matrix are correct, do the 
    * following:-
    * 1) Comment out convertToCellCenters() and convertToCellAverages() in evalClsRHS().
    * 2) Set efac = 1.0 in eval_rhs() in FokkerPlanckF.ChF
@@ -170,348 +171,350 @@ void FokkerPlanck::assemblePrecondMatrix( void                            *a_P,
    * 4) Comment out all fillGhostCellsDfn*() function calls.
    * 5) Ensure that the option "rosenbluth_skip_stage" for this collision operator is
    *    set to "true" in the input file.
-   * Then, the preconditioning matrix assembled here will be the exact Jacobian, and
+   * Then, the preconditioning matrix assembled here will be the exact Jacobian, and 
    * if solved exactly (say, with large number of Gauss-Seidel iterations), will cause
    * GMRES to converge in 1 iteration.
   */
-    if (m_time_implicit) {
 
-      BandedMatrix *Pmat = (BandedMatrix*) a_P;
+  if (m_time_implicit) {
 
-      const LevelData<FArrayBox>& soln_dfn    (a_species.distributionFunction());
-      const DisjointBoxLayout&    grids       (soln_dfn.disjointBoxLayout());
-      const PhaseGeom&            phase_geom  (a_species.phaseSpaceGeometry());
-      const int                   n_comp      (soln_dfn.nComp());
-      const VEL::VelCoordSys&     vel_coords  (phase_geom.velSpaceCoordSys());
-      const VEL::RealVect&        vel_dx      (vel_coords.dx());
-      //    const VEL::ProblemDomain&   vel_domain  = vel_coords.domain();
-      //    const VEL::Box&             domain_box  = vel_domain.domainBox();
-      const LevelData<FArrayBox>& pMapping    (a_global_dofs.data());
-
-      //    const int nvpar = domain_box.size(0);
-      //    const int nmu   = domain_box.size(1);
-
-      Real  dv = 1.0/vel_dx[0], dmu = 1.0/vel_dx[1], dv_sq = dv*dv, dmu_sq = dmu*dmu;
-
-      DataIterator dit = grids.dataIterator();
-      for (dit.begin(); dit.ok(); ++dit) {
-        const Box& grid = grids[dit];
-        const FArrayBox& pMap = pMapping[dit];
-
-        /* grid size */
-        IntVect bigEnd   = grid.bigEnd(),
-                smallEnd = grid.smallEnd();
-        IntVect gridSize(bigEnd); gridSize -= smallEnd; gridSize += 1;
-
-        FArrayBox *Dv, *Dmu, *Dvv, *Dmumu, *Dvmu;
-        Dv    = m_coeffs.D_v[dit].dataPtr();
-        Dmu   = m_coeffs.D_mu[dit].dataPtr();
-        Dvv   = m_coeffs.D_vv[dit].dataPtr();
-        Dmumu = m_coeffs.D_mumu[dit].dataPtr();
-        Dvmu  = m_coeffs.D_vmu[dit].dataPtr();
-
-        FArrayBox *Dv_F0, *Dmu_F0, *Dvv_F0, *Dmumu_F0, *Dvmu_F0;
+    BandedMatrix *Pmat = (BandedMatrix*) a_P;
+  
+    const LevelData<FArrayBox>& soln_dfn    (a_species.distributionFunction());
+    const DisjointBoxLayout&    grids       (soln_dfn.disjointBoxLayout());
+    const PhaseGeom&            phase_geom  (a_species.phaseSpaceGeometry());
+    const int                   n_comp      (soln_dfn.nComp());
+    const VEL::VelCoordSys&     vel_coords  (phase_geom.velSpaceCoordSys());
+    const VEL::RealVect&        vel_dx      (vel_coords.dx());
+    //    const VEL::ProblemDomain&   vel_domain  = vel_coords.domain();
+    //    const VEL::Box&             domain_box  = vel_domain.domainBox();
+    const LevelData<FArrayBox>& pMapping    (a_global_dofs.data()); 
+  
+    //    const int nvpar = domain_box.size(0);
+    //    const int nmu   = domain_box.size(1);
+  
+    Real  dv = 1.0/vel_dx[0], dmu = 1.0/vel_dx[1], dv_sq = dv*dv, dmu_sq = dmu*dmu;
+  
+    DataIterator dit = grids.dataIterator();
+    for (dit.begin(); dit.ok(); ++dit) {
+      const Box& grid = grids[dit];
+      const FArrayBox& pMap = pMapping[dit];
+  
+      /* grid size */
+      IntVect bigEnd   = grid.bigEnd(),
+              smallEnd = grid.smallEnd();
+      IntVect gridSize(bigEnd); gridSize -= smallEnd; gridSize += 1;
+  
+      FArrayBox *Dv, *Dmu, *Dvv, *Dmumu, *Dvmu;
+      Dv    = m_coeffs.D_v[dit].dataPtr();
+      Dmu   = m_coeffs.D_mu[dit].dataPtr();
+      Dvv   = m_coeffs.D_vv[dit].dataPtr();
+      Dmumu = m_coeffs.D_mumu[dit].dataPtr();
+      Dvmu  = m_coeffs.D_vmu[dit].dataPtr();
+  
+      FArrayBox *Dv_F0, *Dmu_F0, *Dvv_F0, *Dmumu_F0, *Dvmu_F0;
+      if (m_subtract_background) {
+        Dv_F0    = m_coeffs_F0.D_v[dit].dataPtr();
+        Dmu_F0   = m_coeffs_F0.D_mu[dit].dataPtr();
+        Dvv_F0   = m_coeffs_F0.D_vv[dit].dataPtr();
+        Dmumu_F0 = m_coeffs_F0.D_mumu[dit].dataPtr();
+        Dvmu_F0  = m_coeffs_F0.D_vmu[dit].dataPtr();
+      } else {
+        Dv_F0 = Dmu_F0 = Dvv_F0 = Dmumu_F0 = Dvmu_F0 = NULL;
+      }
+  
+      BoxIterator bit(grid);
+      for (bit.begin(); bit.ok(); ++bit) {
+        /* this point */
+        IntVect ic = bit();
+        /* neighboring points */
+        IntVect ie(ic);
+        IntVect iw(ic);
+        IntVect in(ic);
+        IntVect is(ic);
+        IntVect ine(ic);
+        IntVect inw(ic);
+        IntVect ise(ic);
+        IntVect isw(ic);
+        /* north-south is along mu; east-west is along v|| */
+        ie[_VPAR_DIM_]++;                     /* east  */
+        iw[_VPAR_DIM_]--;                     /* west  */
+        in[_MU_DIM_]++;                       /* north */
+        is[_MU_DIM_]--;                       /* south */
+        ine[_VPAR_DIM_]++; ine[_MU_DIM_]++;   /* northeast */
+        inw[_VPAR_DIM_]--; inw[_MU_DIM_]++;   /* northwest */
+        ise[_VPAR_DIM_]++; ise[_MU_DIM_]--;   /* southeast */
+        isw[_VPAR_DIM_]--; isw[_MU_DIM_]--;   /* southwest */
+  
+        Real DvL, DvR, DmuL, DmuR, DvvL, DvvR, DmumuL, DmumuR;
+        Real DvmuWS, DvmuES, DvmuWN, DvmuEN;
+  
+        DvL  = Dv->get(ic,0);
+        DvR  = Dv->get(ie,0);
+        DmuL = Dmu->get(ic,0);
+        DmuR = Dmu->get(in,0);
+  
+        DvvL   = Dvv->get(ic,0);
+        DvvR   = Dvv->get(ie,0);
+        DmumuL = Dmumu->get(ic,0);
+        DmumuR = Dmumu->get(in,0);
+  
+        DvmuWS = Dvmu->get(ic ,0);
+        DvmuES = Dvmu->get(ie ,0);
+        DvmuWN = Dvmu->get(in ,0);
+        DvmuEN = Dvmu->get(ine,0);
+  
+        Real DvL_F0, DvR_F0, DmuL_F0, DmuR_F0, DvvL_F0, DvvR_F0, DmumuL_F0, DmumuR_F0;
+        Real DvmuWS_F0, DvmuES_F0, DvmuWN_F0, DvmuEN_F0;
+  
         if (m_subtract_background) {
-          Dv_F0    = m_coeffs_F0.D_v[dit].dataPtr();
-          Dmu_F0   = m_coeffs_F0.D_mu[dit].dataPtr();
-          Dvv_F0   = m_coeffs_F0.D_vv[dit].dataPtr();
-          Dmumu_F0 = m_coeffs_F0.D_mumu[dit].dataPtr();
-          Dvmu_F0  = m_coeffs_F0.D_vmu[dit].dataPtr();
+          DvL_F0  = Dv_F0->get(ic,0);
+          DvR_F0  = Dv_F0->get(ie,0);
+          DmuL_F0 = Dmu_F0->get(ic,0);
+          DmuR_F0 = Dmu_F0->get(in,0);
+  
+          DvvL_F0   = Dvv_F0->get(ic,0);
+          DvvR_F0   = Dvv_F0->get(ie,0);
+          DmumuL_F0 = Dmumu_F0->get(ic,0);
+          DmumuR_F0 = Dmumu_F0->get(in,0);
+  
+          DvmuWS_F0 = Dvmu_F0->get(ic ,0);
+          DvmuES_F0 = Dvmu_F0->get(ie ,0);
+          DvmuWN_F0 = Dvmu_F0->get(in ,0);
+          DvmuEN_F0 = Dvmu_F0->get(ine,0);
         } else {
-          Dv_F0 = Dmu_F0 = Dvv_F0 = Dmumu_F0 = Dvmu_F0 = NULL;
+          DvL_F0  = 0.0;
+          DvR_F0  = 0.0;
+          DmuL_F0 = 0.0;
+          DmuR_F0 = 0.0;
+  
+          DvvL_F0   = 0.0;
+          DvvR_F0   = 0.0;
+          DmumuL_F0 = 0.0;
+          DmumuR_F0 = 0.0;
+  
+          DvmuWS_F0 = 0.0;
+          DvmuES_F0 = 0.0;
+          DvmuWN_F0 = 0.0;
+          DvmuEN_F0 = 0.0;
         }
-
-        BoxIterator bit(grid);
-        for (bit.begin(); bit.ok(); ++bit) {
-          /* this point */
-          IntVect ic = bit();
-          /* neighboring points */
-          IntVect ie(ic);
-          IntVect iw(ic);
-          IntVect in(ic);
-          IntVect is(ic);
-          IntVect ine(ic);
-          IntVect inw(ic);
-          IntVect ise(ic);
-          IntVect isw(ic);
-          /* north-south is along mu; east-west is along v|| */
-          ie[_VPAR_DIM_]++;                     /* east  */
-          iw[_VPAR_DIM_]--;                     /* west  */
-          in[_MU_DIM_]++;                       /* north */
-          is[_MU_DIM_]--;                       /* south */
-          ine[_VPAR_DIM_]++; ine[_MU_DIM_]++;   /* northeast */
-          inw[_VPAR_DIM_]--; inw[_MU_DIM_]++;   /* northwest */
-          ise[_VPAR_DIM_]++; ise[_MU_DIM_]--;   /* southeast */
-          isw[_VPAR_DIM_]--; isw[_MU_DIM_]--;   /* southwest */
-
-          Real DvL, DvR, DmuL, DmuR, DvvL, DvvR, DmumuL, DmumuR;
-          Real DvmuWS, DvmuES, DvmuWN, DvmuEN;
-
-          DvL  = Dv->get(ic,0);
-          DvR  = Dv->get(ie,0);
-          DmuL = Dmu->get(ic,0);
-          DmuR = Dmu->get(in,0);
-
-          DvvL   = Dvv->get(ic,0);
-          DvvR   = Dvv->get(ie,0);
-          DmumuL = Dmumu->get(ic,0);
-          DmumuR = Dmumu->get(in,0);
-
-          DvmuWS = Dvmu->get(ic ,0);
-          DvmuES = Dvmu->get(ie ,0);
-          DvmuWN = Dvmu->get(in ,0);
-          DvmuEN = Dvmu->get(ine,0);
-
-          Real DvL_F0, DvR_F0, DmuL_F0, DmuR_F0, DvvL_F0, DvvR_F0, DmumuL_F0, DmumuR_F0;
-          Real DvmuWS_F0, DvmuES_F0, DvmuWN_F0, DvmuEN_F0;
-
-          if (m_subtract_background) {
-            DvL_F0  = Dv_F0->get(ic,0);
-            DvR_F0  = Dv_F0->get(ie,0);
-            DmuL_F0 = Dmu_F0->get(ic,0);
-            DmuR_F0 = Dmu_F0->get(in,0);
-
-            DvvL_F0   = Dvv_F0->get(ic,0);
-            DvvR_F0   = Dvv_F0->get(ie,0);
-            DmumuL_F0 = Dmumu_F0->get(ic,0);
-            DmumuR_F0 = Dmumu_F0->get(in,0);
-
-            DvmuWS_F0 = Dvmu_F0->get(ic ,0);
-            DvmuES_F0 = Dvmu_F0->get(ie ,0);
-            DvmuWN_F0 = Dvmu_F0->get(in ,0);
-            DvmuEN_F0 = Dvmu_F0->get(ine,0);
+  
+        for (int n(0); n < n_comp; n++) {
+          /* global row/column numbers */
+          int pc, pe, pw, pn, ps, pne, pnw, pse, psw;//, pee, pww, pnn, pss;
+          pc  = (int) pMap.get(ic ,n);
+          pn  = (int) pMap.get(in ,n);
+          ps  = (int) pMap.get(is ,n);
+          pe  = (int) pMap.get(ie ,n);
+          pw  = (int) pMap.get(iw ,n);
+          pne = (int) pMap.get(ine,n);
+          pnw = (int) pMap.get(inw,n);
+          pse = (int) pMap.get(ise,n);
+          psw = (int) pMap.get(isw,n);
+  
+          /* coefficients */
+          Real nu = (m_fixed_cls_freq ? m_cls_freq : m_cls_norm);
+  
+          Real ac = 0;
+          Real an = 0;
+          Real as = 0;
+          Real ae = 0;
+          Real aw = 0;
+          Real ane = 0;
+          Real anw = 0;
+          Real ase = 0;
+          Real asw = 0;
+          
+          /* Advection terms along vpar */
+          if ((DvL < 0.0) && (DvR < 0.0)) {
+            ac += nu * DvR * dv;
+            aw -= nu * DvL * dv;
+          } else if ((DvL >= 0.0) && (DvR < 0.0)) {
+            ac += nu * (DvR - DvL) * dv;
+          } else if ((DvL < 0.0) && (DvR >= 0.0)) {
+            ae += nu * DvR * dv;
+            aw -= nu * DvL * dv;
           } else {
-            DvL_F0  = 0.0;
-            DvR_F0  = 0.0;
-            DmuL_F0 = 0.0;
-            DmuR_F0 = 0.0;
-
-            DvvL_F0   = 0.0;
-            DvvR_F0   = 0.0;
-            DmumuL_F0 = 0.0;
-            DmumuR_F0 = 0.0;
-
-            DvmuWS_F0 = 0.0;
-            DvmuES_F0 = 0.0;
-            DvmuWN_F0 = 0.0;
-            DvmuEN_F0 = 0.0;
+            ae += nu * DvR * dv;
+            ac -= nu * DvL * dv;
           }
-
-          for (int n(0); n < n_comp; n++) {
-            /* global row/column numbers */
-            int pc, pe, pw, pn, ps, pne, pnw, pse, psw;//, pee, pww, pnn, pss;
-            pc  = (int) pMap.get(ic ,n);
-            pn  = (int) pMap.get(in ,n);
-            ps  = (int) pMap.get(is ,n);
-            pe  = (int) pMap.get(ie ,n);
-            pw  = (int) pMap.get(iw ,n);
-            pne = (int) pMap.get(ine,n);
-            pnw = (int) pMap.get(inw,n);
-            pse = (int) pMap.get(ise,n);
-            psw = (int) pMap.get(isw,n);
-
-            /* coefficients */
-            Real nu = (m_fixed_cls_freq ? m_cls_freq : m_cls_norm);
-
-            Real ac = 0;
-            Real an = 0;
-            Real as = 0;
-            Real ae = 0;
-            Real aw = 0;
-            Real ane = 0;
-            Real anw = 0;
-            Real ase = 0;
-            Real asw = 0;
-
-            /* Advection terms along vpar */
-            if ((DvL < 0.0) && (DvR < 0.0)) {
-              ac += nu * DvR * dv;
-              aw -= nu * DvL * dv;
-            } else if ((DvL >= 0.0) && (DvR < 0.0)) {
-              ac += nu * (DvR - DvL) * dv;
-            } else if ((DvL < 0.0) && (DvR >= 0.0)) {
-              ae += nu * DvR * dv;
-              aw -= nu * DvL * dv;
+          if (m_subtract_background) {
+            if ((DvL_F0 < 0.0) && (DvR_F0 < 0.0)) {
+              ac += nu * DvR_F0 * dv;
+              aw -= nu * DvL_F0 * dv;
+            } else if ((DvL_F0 >= 0.0) && (DvR_F0 < 0.0)) {
+              ac += nu * (DvR_F0 - DvL_F0) * dv;
+            } else if ((DvL_F0 < 0.0) && (DvR_F0 >= 0.0)) {
+              ae += nu * DvR_F0 * dv;
+              aw -= nu * DvL_F0 * dv;
             } else {
-              ae += nu * DvR * dv;
-              ac -= nu * DvL * dv;
+              ae += nu * DvR_F0 * dv;
+              ac -= nu * DvL_F0 * dv;
             }
-            if (m_subtract_background) {
-              if ((DvL_F0 < 0.0) && (DvR_F0 < 0.0)) {
-                ac += nu * DvR_F0 * dv;
-                aw -= nu * DvL_F0 * dv;
-              } else if ((DvL_F0 >= 0.0) && (DvR_F0 < 0.0)) {
-                ac += nu * (DvR_F0 - DvL_F0) * dv;
-              } else if ((DvL_F0 < 0.0) && (DvR_F0 >= 0.0)) {
-                ae += nu * DvR_F0 * dv;
-                aw -= nu * DvL_F0 * dv;
-              } else {
-                ae += nu * DvR_F0 * dv;
-                ac -= nu * DvL_F0 * dv;
-              }
-            }
-
-            /* Advection terms along mu */
-            if ((DmuL < 0.0) && (DmuR < 0.0)) {
-              ac += 2.0 * nu * DmuR * dmu;
-              as -= 2.0 * nu * DmuL * dmu;
-            } else if ((DmuL >= 0.0) && (DmuR < 0.0)) {
-              ac += 2.0 * nu * (DmuR - DmuL) * dmu;
-            } else if ((DmuL < 0.0) && (DmuR >= 0.0)) {
-              an += 2.0 * nu * DmuR * dmu;
-              as -= 2.0 * nu * DmuL * dmu;
+          }
+          
+          /* Advection terms along mu */
+          if ((DmuL < 0.0) && (DmuR < 0.0)) {
+            ac += 2.0 * nu * DmuR * dmu;
+            as -= 2.0 * nu * DmuL * dmu;
+          } else if ((DmuL >= 0.0) && (DmuR < 0.0)) {
+            ac += 2.0 * nu * (DmuR - DmuL) * dmu;
+          } else if ((DmuL < 0.0) && (DmuR >= 0.0)) {
+            an += 2.0 * nu * DmuR * dmu;
+            as -= 2.0 * nu * DmuL * dmu;
+          } else {
+            an += 2.0 * nu * DmuR * dmu;
+            ac -= 2.0 * nu * DmuL * dmu;
+          }
+          if (m_subtract_background) {
+            if ((DmuL_F0 < 0.0) && (DmuR_F0 < 0.0)) {
+              ac += 2.0 * nu * DmuR_F0 * dmu;
+              as -= 2.0 * nu * DmuL_F0 * dmu;
+            } else if ((DmuL_F0 >= 0.0) && (DmuR_F0 < 0.0)) {
+              ac += 2.0 * nu * (DmuR_F0 - DmuL_F0) * dmu;
+            } else if ((DmuL_F0 < 0.0) && (DmuR_F0 >= 0.0)) {
+              an += 2.0 * nu * DmuR_F0 * dmu;
+              as -= 2.0 * nu * DmuL_F0 * dmu;
             } else {
-              an += 2.0 * nu * DmuR * dmu;
-              ac -= 2.0 * nu * DmuL * dmu;
+              an += 2.0 * nu * DmuR_F0 * dmu;
+              ac -= 2.0 * nu * DmuL_F0 * dmu;
             }
-            if (m_subtract_background) {
-              if ((DmuL_F0 < 0.0) && (DmuR_F0 < 0.0)) {
-                ac += 2.0 * nu * DmuR_F0 * dmu;
-                as -= 2.0 * nu * DmuL_F0 * dmu;
-              } else if ((DmuL_F0 >= 0.0) && (DmuR_F0 < 0.0)) {
-                ac += 2.0 * nu * (DmuR_F0 - DmuL_F0) * dmu;
-              } else if ((DmuL_F0 < 0.0) && (DmuR_F0 >= 0.0)) {
-                an += 2.0 * nu * DmuR_F0 * dmu;
-                as -= 2.0 * nu * DmuL_F0 * dmu;
-              } else {
-                an += 2.0 * nu * DmuR_F0 * dmu;
-                ac -= 2.0 * nu * DmuL_F0 * dmu;
-              }
-            }
-
-            /* Laplacian term along vpar */
-            ae += nu * DvvR * dv_sq;
-            aw += nu * DvvL * dv_sq;
-            ac -= nu * (DvvR + DvvL) * dv_sq;
-            if (m_subtract_background) {
-              ae += nu * DvvR_F0 * dv_sq;
-              aw += nu * DvvL_F0 * dv_sq;
-              ac -= nu * (DvvR_F0 + DvvL_F0) * dv_sq;
-            }
-
-            /* Laplacian term along mu */
-            an += 4.0 * nu * DmumuR * dmu_sq;
-            as += 4.0 * nu * DmumuL * dmu_sq;
-            ac -= 4.0 * nu * (DmumuR + DmumuL) * dmu_sq;
-            if (m_subtract_background) {
-              an += 4.0 * nu * DmumuR_F0 * dmu_sq;
-              as += 4.0 * nu * DmumuL_F0 * dmu_sq;
-              ac -= 4.0 * nu * (DmumuR_F0 + DmumuL_F0) * dmu_sq;
-            }
-
-            /* Cross term 1: d/dv(Dvmu df/dmu) */
-            ac  += 0.5 * nu * dv * dmu * (DvmuES - DvmuEN - DvmuWS + DvmuWN);
-            ae  += 0.5 * nu * dv * dmu * (DvmuES - DvmuEN);
-            aw  += 0.5 * nu * dv * dmu * (-DvmuWS + DvmuWN);
-            an  += 0.5 * nu * dv * dmu * (DvmuEN - DvmuWN);
-            as  += 0.5 * nu * dv * dmu * (-DvmuES + DvmuWS);
-            asw += 0.5 * nu * dv * dmu * (DvmuWS);
-            ase += 0.5 * nu * dv * dmu * (-DvmuES);
-            anw += 0.5 * nu * dv * dmu * (-DvmuWN);
-            ane += 0.5 * nu * dv * dmu * (DvmuEN);
-            if (m_subtract_background) {
-              ac  += 0.5 * nu * dv * dmu * (DvmuES_F0 - DvmuEN_F0 - DvmuWS_F0 + DvmuWN_F0);
-              ae  += 0.5 * nu * dv * dmu * (DvmuES_F0 - DvmuEN_F0);
-              aw  += 0.5 * nu * dv * dmu * (-DvmuWS_F0 + DvmuWN_F0);
-              an  += 0.5 * nu * dv * dmu * (DvmuEN_F0 - DvmuWN_F0);
-              as  += 0.5 * nu * dv * dmu * (-DvmuES_F0 + DvmuWS_F0);
-              asw += 0.5 * nu * dv * dmu * (DvmuWS_F0);
-              ase += 0.5 * nu * dv * dmu * (-DvmuES_F0);
-              anw += 0.5 * nu * dv * dmu * (-DvmuWN_F0);
-              ane += 0.5 * nu * dv * dmu * (DvmuEN_F0);
-            }
-
-            /* Cross term 2: d/dmu(Dvmu df/dv) */
-            ac  += 0.5 * nu * dv * dmu * (DvmuWN - DvmuEN - DvmuWS + DvmuES);
-            ae  += 0.5 * nu * dv * dmu * (DvmuEN - DvmuES);
-            aw  += 0.5 * nu * dv * dmu * (-DvmuWN + DvmuWS);
-            an  += 0.5 * nu * dv * dmu * (DvmuWN - DvmuEN);
-            as  += 0.5 * nu * dv * dmu * (-DvmuWS + DvmuES);
-            asw += 0.5 * nu * dv * dmu * (DvmuWS);
-            ase += 0.5 * nu * dv * dmu * (-DvmuES);
-            anw += 0.5 * nu * dv * dmu * (-DvmuWN);
-            ane += 0.5 * nu * dv * dmu * (DvmuEN);
-            if (m_subtract_background) {
-              ac  += 0.5 * nu * dv * dmu * (DvmuWN_F0 - DvmuEN_F0 - DvmuWS_F0 + DvmuES_F0);
-              ae  += 0.5 * nu * dv * dmu * (DvmuEN_F0 - DvmuES_F0);
-              aw  += 0.5 * nu * dv * dmu * (-DvmuWN_F0 + DvmuWS_F0);
-              an  += 0.5 * nu * dv * dmu * (DvmuWN_F0 - DvmuEN_F0);
-              as  += 0.5 * nu * dv * dmu * (-DvmuWS_F0 + DvmuES_F0);
-              asw += 0.5 * nu * dv * dmu * (DvmuWS_F0);
-              ase += 0.5 * nu * dv * dmu * (-DvmuES_F0);
-              anw += 0.5 * nu * dv * dmu * (-DvmuWN_F0);
-              ane += 0.5 * nu * dv * dmu * (DvmuEN_F0);
-            }
-
-            int  ncols = m_nbands, ix = 0;
-            int  *icols = (int*)  calloc (ncols,sizeof(int));
-            Real *data  = (Real*) calloc (ncols,sizeof(Real));
-
-            /* center element */
-            icols[ix] = pc;
-            data[ix] = a_shift - ac;
+          }
+  
+          /* Laplacian term along vpar */
+          ae += nu * DvvR * dv_sq;
+          aw += nu * DvvL * dv_sq;
+          ac -= nu * (DvvR + DvvL) * dv_sq;
+          if (m_subtract_background) {
+            ae += nu * DvvR_F0 * dv_sq;
+            aw += nu * DvvL_F0 * dv_sq;
+            ac -= nu * (DvvR_F0 + DvvL_F0) * dv_sq;
+          }
+          
+          /* Laplacian term along mu */
+          an += 4.0 * nu * DmumuR * dmu_sq;
+          as += 4.0 * nu * DmumuL * dmu_sq;
+          ac -= 4.0 * nu * (DmumuR + DmumuL) * dmu_sq;
+          if (m_subtract_background) {
+            an += 4.0 * nu * DmumuR_F0 * dmu_sq;
+            as += 4.0 * nu * DmumuL_F0 * dmu_sq;
+            ac -= 4.0 * nu * (DmumuR_F0 + DmumuL_F0) * dmu_sq;
+          }
+  
+          /* Cross term 1: d/dv(Dvmu df/dmu) */
+          ac  += 0.5 * nu * dv * dmu * (DvmuES - DvmuEN - DvmuWS + DvmuWN);
+          ae  += 0.5 * nu * dv * dmu * (DvmuES - DvmuEN);
+          aw  += 0.5 * nu * dv * dmu * (-DvmuWS + DvmuWN);
+          an  += 0.5 * nu * dv * dmu * (DvmuEN - DvmuWN);
+          as  += 0.5 * nu * dv * dmu * (-DvmuES + DvmuWS);
+          asw += 0.5 * nu * dv * dmu * (DvmuWS);
+          ase += 0.5 * nu * dv * dmu * (-DvmuES);
+          anw += 0.5 * nu * dv * dmu * (-DvmuWN);
+          ane += 0.5 * nu * dv * dmu * (DvmuEN);
+          if (m_subtract_background) {
+            ac  += 0.5 * nu * dv * dmu * (DvmuES_F0 - DvmuEN_F0 - DvmuWS_F0 + DvmuWN_F0);
+            ae  += 0.5 * nu * dv * dmu * (DvmuES_F0 - DvmuEN_F0);
+            aw  += 0.5 * nu * dv * dmu * (-DvmuWS_F0 + DvmuWN_F0);
+            an  += 0.5 * nu * dv * dmu * (DvmuEN_F0 - DvmuWN_F0);
+            as  += 0.5 * nu * dv * dmu * (-DvmuES_F0 + DvmuWS_F0);
+            asw += 0.5 * nu * dv * dmu * (DvmuWS_F0);
+            ase += 0.5 * nu * dv * dmu * (-DvmuES_F0);
+            anw += 0.5 * nu * dv * dmu * (-DvmuWN_F0);
+            ane += 0.5 * nu * dv * dmu * (DvmuEN_F0);
+          }
+  
+          /* Cross term 2: d/dmu(Dvmu df/dv) */
+          ac  += 0.5 * nu * dv * dmu * (DvmuWN - DvmuEN - DvmuWS + DvmuES);
+          ae  += 0.5 * nu * dv * dmu * (DvmuEN - DvmuES);
+          aw  += 0.5 * nu * dv * dmu * (-DvmuWN + DvmuWS);
+          an  += 0.5 * nu * dv * dmu * (DvmuWN - DvmuEN);
+          as  += 0.5 * nu * dv * dmu * (-DvmuWS + DvmuES);
+          asw += 0.5 * nu * dv * dmu * (DvmuWS);
+          ase += 0.5 * nu * dv * dmu * (-DvmuES);
+          anw += 0.5 * nu * dv * dmu * (-DvmuWN);
+          ane += 0.5 * nu * dv * dmu * (DvmuEN);
+          if (m_subtract_background) {
+            ac  += 0.5 * nu * dv * dmu * (DvmuWN_F0 - DvmuEN_F0 - DvmuWS_F0 + DvmuES_F0);
+            ae  += 0.5 * nu * dv * dmu * (DvmuEN_F0 - DvmuES_F0);
+            aw  += 0.5 * nu * dv * dmu * (-DvmuWN_F0 + DvmuWS_F0);
+            an  += 0.5 * nu * dv * dmu * (DvmuWN_F0 - DvmuEN_F0);
+            as  += 0.5 * nu * dv * dmu * (-DvmuWS_F0 + DvmuES_F0);
+            asw += 0.5 * nu * dv * dmu * (DvmuWS_F0);
+            ase += 0.5 * nu * dv * dmu * (-DvmuES_F0);
+            anw += 0.5 * nu * dv * dmu * (-DvmuWN_F0);
+            ane += 0.5 * nu * dv * dmu * (DvmuEN_F0);
+          }
+          
+          int  ncols = m_nbands, ix = 0;
+          int  *icols = (int*)  calloc (ncols,sizeof(int));
+          Real *data  = (Real*) calloc (ncols,sizeof(Real));
+  
+          /* center element */
+          icols[ix] = pc; 
+          data[ix] = a_shift - ac;
+          ix++;
+  
+          /* east element */
+          if (pe >= 0) {
+            icols[ix] = pe;
+            data[ix] = -ae;
             ix++;
-
-            /* east element */
-            if (pe >= 0) {
-              icols[ix] = pe;
-              data[ix] = -ae;
-              ix++;
-            }
-            /* west element */
-            if (pw >= 0) {
-              icols[ix] = pw;
-              data[ix] = -aw;
-              ix++;
-            }
-            /* north element */
-            if (pn >= 0) {
-              icols[ix] = pn;
-              data[ix] = -an;
-              ix++;
-            }
-            /* south element */
-            if (ps >= 0) {
-              icols[ix] = ps;
-              data[ix] = -as;
-              ix++;
-            }
-            /* north east element */
-            if (pne >= 0) {
-              icols[ix] = pne;
-              data[ix] = -ane;
-              ix++;
-            }
-            /* north west element */
-            if (pnw >= 0) {
-              icols[ix] = pnw;
-              data[ix] = -anw;
-              ix++;
-            }
-            /* south east element */
-            if (pse >= 0) {
-              icols[ix] = pse;
-              data[ix] = -ase;
-              ix++;
-            }
-            /* south west element */
-            if (psw >= 0) {
-              icols[ix] = psw;
-              data[ix] = -asw;
-              ix++;
-            }
-
-            CH_assert(ix <= m_nbands);
-            CH_assert(ix <= Pmat->getNBands());
-            Pmat->setRowValues(pc,ix,icols,data);
-            free(data);
-            free(icols);
           }
+          /* west element */
+          if (pw >= 0) {
+            icols[ix] = pw;
+            data[ix] = -aw;
+            ix++;
+          }
+          /* north element */
+          if (pn >= 0) {
+            icols[ix] = pn;
+            data[ix] = -an;
+            ix++;
+          }
+          /* south element */
+          if (ps >= 0) {
+            icols[ix] = ps;
+            data[ix] = -as;
+            ix++;
+          }
+          /* north east element */
+          if (pne >= 0) {
+            icols[ix] = pne;
+            data[ix] = -ane;
+            ix++;
+          }
+          /* north west element */
+          if (pnw >= 0) {
+            icols[ix] = pnw;
+            data[ix] = -anw;
+            ix++;
+          }
+          /* south east element */
+          if (pse >= 0) {
+            icols[ix] = pse;
+            data[ix] = -ase;
+            ix++;
+          }
+          /* south west element */
+          if (psw >= 0) {
+            icols[ix] = psw;
+            data[ix] = -asw;
+            ix++;
+          }
+  
+          CH_assert(ix <= m_nbands);
+          CH_assert(ix <= Pmat->getNBands());
+          Pmat->setRowValues(pc,ix,icols,data);
+          free(data);
+          free(icols);
         }
       }
     }
-    return;
   }
+  return;
+}
+
 
 void FokkerPlanck::preTimeStep( const KineticSpeciesPtrVect& a_soln_mapped,
                                 const int a_species_a,
@@ -522,14 +525,14 @@ void FokkerPlanck::preTimeStep( const KineticSpeciesPtrVect& a_soln_mapped,
   //static bool first_call = true;
   if(m_subtract_background){
 
-   if(!m_compute_maxwellian){
+    if(!m_compute_maxwellian){
 	   if(!m_F0_a.isDefined()){
    	   const KineticSpecies& soln_species_a(*(a_soln_physical[a_species_a]));
    	   const PhaseGeom&      phase_geom_a(soln_species_a.phaseSpaceGeometry());
    	   m_F0_a.define( phase_geom_a.gridsFull(), 1, IntVect::Zero );
 
 
-	    KineticSpeciesPtr ref_species_a( soln_species_a.clone( IntVect::Unit, false ) );
+	   KineticSpeciesPtr ref_species_a( soln_species_a.clone( IntVect::Unit, false ) );
      	   m_ref_func_a->assign( *ref_species_a, a_time );
      	   LevelData<FArrayBox>& ref_dfn_a( ref_species_a->distributionFunction() );
            for (DataIterator dit(m_F0_a.dataIterator()); dit.ok(); ++dit) {
@@ -537,56 +540,55 @@ void FokkerPlanck::preTimeStep( const KineticSpeciesPtrVect& a_soln_mapped,
            }
            convertToCellCenters(phase_geom_a, m_F0_a);
 	     }
-     } else{
+     }else{
 	   if(!m_F0_a.isDefined()){
 	     const KineticSpecies& soln_species_a(*(a_soln_physical[a_species_a]));
-   	   const PhaseGeom&      phase_geom_a(soln_species_a.phaseSpaceGeometry());
-   	   m_F0_a.define( phase_geom_a.gridsFull(), 1, IntVect::Zero );
+   	     const PhaseGeom&      phase_geom_a(soln_species_a.phaseSpaceGeometry());
+   	     m_F0_a.define( phase_geom_a.gridsFull(), 1, IntVect::Zero );
 	    }
 	   computeReferenceSolution( a_soln_physical,m_F0_a, a_species_a, a_time);
     }
 
    if(!m_compute_maxwellian){
-	  if(!m_F0_b.isDefined()){
+	if(!m_F0_b.isDefined()){
    	   const KineticSpecies& soln_species_b(*(a_soln_physical[a_species_b]));
    	   const PhaseGeom&      phase_geom_b(soln_species_b.phaseSpaceGeometry());
    	   m_F0_b.define( phase_geom_b.gridsFull(), 1, IntVect::Zero );
 
 
-	     KineticSpeciesPtr ref_species_b( soln_species_b.clone( IntVect::Unit, false ) );
-     	 m_ref_func_b->assign( *ref_species_b, a_time );
-     	 LevelData<FArrayBox>& ref_dfn_b( ref_species_b->distributionFunction() );
-       for (DataIterator dit(m_F0_b.dataIterator()); dit.ok(); ++dit) {
-          m_F0_b[dit].copy(ref_dfn_b[dit]);
-        }
-       convertToCellCenters(phase_geom_b, m_F0_b);
-       m_ref_updated = true;
-	    } else{
-	     m_ref_updated=false;
-	    }
-    } else{
+	   KineticSpeciesPtr ref_species_b( soln_species_b.clone( IntVect::Unit, false ) );
+     	   m_ref_func_b->assign( *ref_species_b, a_time );
+     	   LevelData<FArrayBox>& ref_dfn_b( ref_species_b->distributionFunction() );
+           for (DataIterator dit(m_F0_b.dataIterator()); dit.ok(); ++dit) {
+            m_F0_b[dit].copy(ref_dfn_b[dit]);
+           }
+           convertToCellCenters(phase_geom_b, m_F0_b);
+           m_ref_updated = true;
+	} else{
+	   m_ref_updated=false;
+	}
+   }else{
 
      if(!m_F0_b.isDefined()){
-	     const KineticSpecies& soln_species_b(*(a_soln_physical[a_species_b]));
-   	   const PhaseGeom&      phase_geom_b(soln_species_b.phaseSpaceGeometry());
-   	   m_F0_b.define( phase_geom_b.gridsFull(), 1, IntVect::Zero );
-	   }
-	   computeReferenceSolution( a_soln_physical,m_F0_b, a_species_b, a_time);
-	   m_ref_updated = true;
+	 const KineticSpecies& soln_species_b(*(a_soln_physical[a_species_b]));
+   	 const PhaseGeom&      phase_geom_b(soln_species_b.phaseSpaceGeometry());
+   	 m_F0_b.define( phase_geom_b.gridsFull(), 1, IntVect::Zero );
+     }
+     computeReferenceSolution( a_soln_physical,m_F0_b, a_species_b, a_time);
+     m_ref_updated = true;
    }
-}
+ }
 
-  const KineticSpecies&       soln_species_m_a(*(a_soln_mapped[a_species_a]));
-  const PhaseGeom&            phase_geom(soln_species_m_a.phaseSpaceGeometry());
-  const CFG::MagGeom&         mag_geom(phase_geom.magGeom());
+  const KineticSpecies& soln_species_m_a(*(a_soln_mapped[a_species_a]));
+  const PhaseGeom&      phase_geom(soln_species_m_a.phaseSpaceGeometry());
+  const CFG::MagGeom&   mag_geom(phase_geom.magGeom());
 
   const KineticSpecies&       soln_species_m_b(*(a_soln_mapped[a_species_b]));
   const LevelData<FArrayBox>& soln_dfn_m_b(soln_species_m_b.distributionFunction());
   const DisjointBoxLayout&    grids_m_b(soln_dfn_m_b.getBoxes());
   const PhaseGeom&            phase_geom_m_b(soln_species_m_b.phaseSpaceGeometry());
   const int                   n_comp_m_b(soln_dfn_m_b.nComp());
-  const RefCountedPtr<PhaseGeom>& phase_geom_ptr_bkgr(soln_species_m_b.phaseSpaceGeometryPtr());
-
+  
   if (!m_fp_kinetic_energy.isDefined()) {
 
     m_fp_kinetic_energy.define(mag_geom.gridsFull(), 2, CFG::IntVect::Zero);
@@ -601,6 +603,8 @@ void FokkerPlanck::preTimeStep( const KineticSpeciesPtrVect& a_soln_mapped,
     for (CFG::DataIterator dit(m_energy_cons.dataIterator()); dit.ok(); ++dit) {
       m_energy_cons[dit].setVal(1.0);
     }
+
+
    //compute the constant Cls coefficients in the Pretimestep
     computeClsNorm(m_cls_norm, soln_species_m_a.mass(), soln_species_m_a.charge(),soln_species_m_b.charge());
   }
@@ -612,10 +616,12 @@ void FokkerPlanck::preTimeStep( const KineticSpeciesPtrVect& a_soln_mapped,
   }
   convertToCellCenters(phase_geom_m_b,dfn_m_b);
 
+  const RefCountedPtr<PhaseGeom>& phase_geom_ptr_bkgr(soln_species_m_b.phaseSpaceGeometryPtr());
+
   computePotentialsAndCoeffs( soln_species_m_b, dfn_m_b, grids_m_b, phase_geom_ptr_bkgr,soln_species_m_a.mass());
 
   m_it_counter+=1;
- // first_call = false;
+
   return;
 }
 
@@ -640,6 +646,7 @@ void FokkerPlanck::evalRosenbluthPotentials( LevelData<FArrayBox>&        a_phi,
    RosenbluthPotentials RosenbluthPotentials(phi_one, phi_two, a_dfn, a_phase_geom,
                                              a_mass, m_pcg_tol, m_pcg_maxiter, m_mult_num, m_verbosity);
 
+
    for (DataIterator dit( a_phi.dataIterator() ); dit.ok(); ++dit) {
       a_phi[dit].copy(phi_one[dit], grids[dit], 0 , grids[dit], 0, 1);
       a_phi[dit].copy(phi_two[dit], grids[dit], 0 , grids[dit], 1, 1);
@@ -649,7 +656,7 @@ void FokkerPlanck::evalRosenbluthPotentials( LevelData<FArrayBox>&        a_phi,
 void FokkerPlanck::computeClsNorm(Real&                       a_cls_norm,
                                   const double                a_mass,
                                   const double                a_charge,
-			          const double 	            a_charge_bkgr	) const
+				  const double                a_charge_bkgr) const
 {
     //Get normalization parameters (units)
     double N, T, L, M;
@@ -1213,9 +1220,9 @@ void FokkerPlanck::fillGhostCellsDfnMu( const PhaseGeom& a_phase_geom, LevelData
 
 
 void FokkerPlanck::computeReferenceSolution(const KineticSpeciesPtrVect& a_soln,
-					                                  LevelData<FArrayBox>& a_F0,
-					                                  const int a_species,
-                                            const Real a_time)
+					    LevelData<FArrayBox>&        a_F0,
+					    const int                    a_species,
+                                            const Real                   a_time)
 {
   //static bool first_call = true;
   const KineticSpecies& soln_species( *(a_soln[a_species]) );
@@ -1377,20 +1384,18 @@ void FokkerPlanck::evalCoefficients(  FokkerPlanckCoeffs&         a_coeffs,
   return;
 }
 
-void FokkerPlanck::computePotentialsAndCoeffs(const KineticSpecies&	        a_species,
-                                              const LevelData<FArrayBox>&       a_dfn,
-                                              const DisjointBoxLayout&          a_grids,
-                                              const RefCountedPtr<PhaseGeom>&   a_phase_geom,
-                                              const double                      a_mass )
+void FokkerPlanck::computePotentialsAndCoeffs(const KineticSpecies&	    a_species,
+                                              const LevelData<FArrayBox>&   a_dfn,
+                                              const DisjointBoxLayout&      a_grids,
+                                              const RefCountedPtr<PhaseGeom>&  a_phase_geom,
+                                              const double                  a_mass )
 {
-  //static bool first_call = true;
-
-  //Get test-particle (tp) and field-particle (fp) masses
+   //Get test-particle (tp) and field-particle (fp) masses
   const double mass_tp = a_mass;
   const double mass_fp = a_species.mass();
 
   if (m_first_call_pc) {
-  
+
     // Define the data structures for potentials
     m_phi.define(a_grids, 2, IntVect::Zero);
     for (DataIterator dit(a_dfn.dataIterator()); dit.ok(); ++dit) {
@@ -1452,7 +1457,7 @@ void FokkerPlanck::computePotentialsAndCoeffs(const KineticSpecies&	        a_sp
       }
       if (m_ref_updated || m_first_call_pc) {
         if (!procID() && m_verbosity) {
-          std::cout<<"  Note: Reference distribution function updated (by recomputing Maxwellian).\n";
+          std::cout<<"  Note: Reference distribution function updated.\n";
           std::cout<<"  Note: Recomputing Rosenbluth potentials for reference distribution function.\n";
         }
         evalRosenbluthPotentials(m_phi_F0, a_phase_geom, m_F0_b, mass_fp);
@@ -1644,12 +1649,7 @@ void FokkerPlanck::computeEnergyConservationFactor( const KineticSpecies&       
 
 }
 
-/*void FokkerPlanck::disableEnergyConservationFactor()
-{
-  for (CFG::DataIterator dit(m_energy_cons.dataIterator()); dit.ok(); ++dit) {
-    m_energy_cons[dit].setVal(1.0);
-  }
-}*/
+
 
 void FokkerPlanck::computeFokkerPlanckRHS(  LevelData<FArrayBox>&       a_rhs,
                                             const LevelData<FaceBox>&   a_flux_vpar,
@@ -1697,8 +1697,6 @@ void FokkerPlanck::evalClsRHS(  KineticSpeciesPtrVect&        a_rhs,
 {
   const KineticSpecies&       soln_species(*(a_soln[a_species]));
   const LevelData<FArrayBox>& soln_dfn(soln_species.distributionFunction());
-
-
   const DisjointBoxLayout&    grids(soln_dfn.getBoxes());
   const PhaseGeom&            phase_geom(soln_species.phaseSpaceGeometry());
   const RefCountedPtr<PhaseGeom>& phase_geom_ptr(soln_species.phaseSpaceGeometryPtr());
@@ -1714,8 +1712,6 @@ void FokkerPlanck::evalClsRHS(  KineticSpeciesPtrVect&        a_rhs,
   if (!m_rosenbluth_skip_stage) {
     const KineticSpecies&	soln_species_bkgr(*(a_soln[a_species_bkgr]));
     const LevelData<FArrayBox>& soln_dfn_bkgr(soln_species_bkgr.distributionFunction());
-
-
     const DisjointBoxLayout&    grids_bkgr(soln_dfn_bkgr.getBoxes());
     const PhaseGeom&            phase_geom_bkgr(soln_species_bkgr.phaseSpaceGeometry());
     const RefCountedPtr<PhaseGeom>& phase_geom_ptr_bkgr(soln_species_bkgr.phaseSpaceGeometryPtr());

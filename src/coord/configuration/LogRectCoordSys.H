@@ -101,6 +101,23 @@ private:
                            double& xiSW_dst,
                            double& xiSE_dst,
 			   double& xi0_dst) const;
+
+   void getInterpolationCoefficients(Vector<Real>&    coeff,
+				     const RealVect&  xi0_dst,
+				     const IntVect&   iv0_dst,
+				     const RealVect&  dx_dst,
+				     const int        order) const;
+
+
+   void getInterpolationCoefficients(Vector<Real>&   coeff,
+				     const Real&     xiNW_dst,
+				     const Real&     xiNE_dst,
+				     const Real&     xiSW_dst,
+				     const Real&     xiSE_dst,
+				     const IntVect&  iv0_dst,
+				     const RealVect& dx_dst) const;
+
+
 #endif
 };
 

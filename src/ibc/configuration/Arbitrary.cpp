@@ -77,7 +77,7 @@ void Arbitrary::assign( LevelData<FArrayBox>& a_data,
 
    for (DataIterator dit( grids.dataIterator() ); dit.ok(); ++dit) {
       const int block_number( coord_sys.whichBlock( grids[dit] ) );
-      if (a_cell_averages) {
+      if (a_cell_averages && !((MagGeom&)a_geometry).secondOrder()) {
  	 setCellAverages( a_data[dit], getCoordSys( a_geometry, grids[dit] ), block_number );
       }
       else {
@@ -100,7 +100,7 @@ void Arbitrary::assign( LevelData<FluxBox>& a_data,
    for (DataIterator dit( grids.dataIterator() ); dit.ok(); ++dit) {
       const int block_number( coord_sys.whichBlock( grids[dit] ) );
       for (int dir=0; dir<SpaceDim; ++dir) {
-         if (a_cell_averages) {
+ 	 if (a_cell_averages && !((MagGeom&)a_geometry).secondOrder()) {
             setCellAverages( a_data[dit][dir], getCoordSys( a_geometry, grids[dit] ), block_number );
          }
          else {
@@ -171,11 +171,14 @@ void Arbitrary::assign( LevelData<FArrayBox>& a_data,
       const int block_number( coords.whichBlock( grids[dit] ) );
       setPointwise( data_tmp[dit], coord_sys, block_number );
    }
-   for (DataIterator dit( grids ); dit.ok(); ++dit) {
-      Box domain_box( data_tmp[dit].box() );
-      domain_box.growDir( a_bdry_layout.dir(), a_bdry_layout.side(), -1 );
-      ProblemDomain domain( domain_box );
-      fourthOrderAverageCell( data_tmp[dit], domain, grids[dit] );
+
+   if (!((MagGeom&)a_geometry).secondOrder()) {
+     for (DataIterator dit( grids ); dit.ok(); ++dit) {
+       Box domain_box( data_tmp[dit].box() );
+       domain_box.growDir( a_bdry_layout.dir(), a_bdry_layout.side(), -1 );
+       ProblemDomain domain( domain_box );
+       fourthOrderAverageCell( data_tmp[dit], domain, grids[dit] );
+     }
    }
    data_tmp.copyTo( a_data );
    a_data.exchange();

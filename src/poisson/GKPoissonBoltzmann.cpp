@@ -153,12 +153,6 @@ GKPoissonBoltzmann::GKPoissonBoltzmann( ParmParse&                  a_pp,
    if ( a_pp.contains("linear_solve") ) {
       a_pp.get("linear_solve", m_linear_solve);
       if (m_linear_solve) CH_assert(m_linear_response);
-      if ( a_pp.contains("zero_initial_solution") ) {
-         a_pp.get("zero_intial_solution", m_zero_initial_solution);
-      }
-      else {
-         m_zero_initial_solution = false;
-      }
    }
    else {
       m_linear_solve = false;
@@ -186,6 +180,13 @@ GKPoissonBoltzmann::GKPoissonBoltzmann( ParmParse&                  a_pp,
 
    if (m_radial_solve_only && m_subspace_iteration_solve) {
       MayDay::Error("Specify either radial or subspace iteration solve, but not both");
+   }
+
+   if ( a_pp.contains("zero_initial_solution") ) {
+     a_pp.get("zero_initial_solution", m_zero_initial_solution);
+   }
+   else {
+     m_zero_initial_solution = false;
    }
 
    int precond_order = 2;

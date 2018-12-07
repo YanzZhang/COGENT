@@ -1,0 +1,31 @@
+Chombo MPI Error handler called 
+ !!!
+Chombo MPI Error handler called 
+ !!!
+Chombo MPI Error handler called 
+ !!!
+Chombo MPI Error handler called 
+ !!!
+Chombo MPI Error handler called 
+ !!!
+Chombo MPI Error handler called 
+ !!!
+Chombo MPI Error handler called 
+ !!!
+Chombo MPI Error handler called 
+ !!!
+Chombo MPI Error handler called 
+ !!!
+Chombo MPI Error handler called 
+ !!!
+srun: error: nid00468: task 20: Aborted
+srun: Terminating job step 11679733.0
+slurmstepd: error: *** STEP 11679733.0 ON nid00468 CANCELLED AT 2018-12-07T11:15:02 ***
+srun: error: nid00494: tasks 24,32,44: Aborted
+srun: error: nid00511: tasks 48,56,68: Aborted
+srun: error: nid00511: tasks 49-55,57-67,69-71: Terminated
+srun: error: nid01565: tasks 72,80,92: Aborted
+srun: error: nid01565: tasks 73-79,81-91,93-95: Terminated
+srun: error: nid00494: tasks 25-31,33-43,45-47: Terminated
+srun: error: nid00468: tasks 0-19,21-23: Terminated
+srun: Force Terminated job step 11679733.0

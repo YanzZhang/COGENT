@@ -456,6 +456,8 @@ public:
 
    enum velocity_option {FULL_VELOCITY, PARALLEL_STREAMING_VELOCITY, DRIFT_VELOCITY, EXB_DRIFT_VELOCITY,
                          MAGNETIC_DRIFT_VELOCITY, NO_ZERO_ORDER_PARALLEL_VELOCITY};
+   
+   double getLarmorNumber() const {return m_larmor_number;}
 
 protected:
 

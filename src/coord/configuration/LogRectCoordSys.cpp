@@ -385,12 +385,12 @@ LogRectCoordSys::toroidalBlockRemapping(IntVect& a_ivDst,
    }
    
    const MagBlockCoordSys* src_coord_sys = (MagBlockCoordSys*)getCoordSys(a_nSrc);
-   const RealVect& m_dx_src = src_coord_sys->getMappedCellSize();
+   const RealVect& dx_src = src_coord_sys->getMappedCellSize();
    
    const MagBlockCoordSys* dst_coord_sys = (MagBlockCoordSys*)getCoordSys(nDst);
-   const RealVect& m_dx_dst = dst_coord_sys->getMappedCellSize();
+   const RealVect& dx_dst = dst_coord_sys->getMappedCellSize();
    
-   CH_assert(m_dx_src==m_dx_dst);
+   CH_assert(dx_src==dx_dst);
    
    //Get mapped cell-centered coord in dst block
    RealVect x_src = src_coord_sys->realCoord(a_xiSrc);
@@ -399,8 +399,8 @@ LogRectCoordSys::toroidalBlockRemapping(IntVect& a_ivDst,
    
    //Get mapped lower-left coord in dst block
    RealVect xiSW_src(a_xiSrc);
-   xiSW_src[RADIAL_DIR] += -0.5 * m_dx_src[RADIAL_DIR];
-   xiSW_src[POLOIDAL_DIR] += -0.5 * m_dx_src[POLOIDAL_DIR];
+   xiSW_src[RADIAL_DIR] += -0.5 * dx_src[RADIAL_DIR];
+   xiSW_src[POLOIDAL_DIR] += -0.5 * dx_src[POLOIDAL_DIR];
 
    RealVect xSW_src = src_coord_sys->realCoord(xiSW_src);
    applyPeriodicity(xSW_src);
@@ -408,8 +408,8 @@ LogRectCoordSys::toroidalBlockRemapping(IntVect& a_ivDst,
    
    //Get mapped upper-left coord in dst block
    RealVect xiNW_src(a_xiSrc);
-   xiNW_src[RADIAL_DIR] += -0.5 * m_dx_src[RADIAL_DIR];
-   xiNW_src[POLOIDAL_DIR] += 0.5 * m_dx_src[POLOIDAL_DIR];
+   xiNW_src[RADIAL_DIR] += -0.5 * dx_src[RADIAL_DIR];
+   xiNW_src[POLOIDAL_DIR] += 0.5 * dx_src[POLOIDAL_DIR];
 
    RealVect xNW_src = src_coord_sys->realCoord(xiNW_src);
    applyPeriodicity(xNW_src);
@@ -417,8 +417,8 @@ LogRectCoordSys::toroidalBlockRemapping(IntVect& a_ivDst,
    
    //Get mapped upper-right coord in dst block
    RealVect xiNE_src(a_xiSrc);
-   xiNE_src[RADIAL_DIR] += 0.5 * m_dx_src[RADIAL_DIR];
-   xiNE_src[POLOIDAL_DIR] += 0.5 * m_dx_src[POLOIDAL_DIR];
+   xiNE_src[RADIAL_DIR] += 0.5 * dx_src[RADIAL_DIR];
+   xiNE_src[POLOIDAL_DIR] += 0.5 * dx_src[POLOIDAL_DIR];
 
    RealVect xNE_src = src_coord_sys->realCoord(xiNE_src);
    applyPeriodicity(xNE_src);
@@ -426,8 +426,8 @@ LogRectCoordSys::toroidalBlockRemapping(IntVect& a_ivDst,
    
    //Get mapped lower-right coord in dst block
    RealVect xiSE_src(a_xiSrc);
-   xiSE_src[RADIAL_DIR] += 0.5 * m_dx_src[RADIAL_DIR];
-   xiSE_src[POLOIDAL_DIR] += -0.5 * m_dx_src[POLOIDAL_DIR];
+   xiSE_src[RADIAL_DIR] += 0.5 * dx_src[RADIAL_DIR];
+   xiSE_src[POLOIDAL_DIR] += -0.5 * dx_src[POLOIDAL_DIR];
    
    RealVect xSE_src = src_coord_sys->realCoord(xiSE_src);
    applyPeriodicity(xSE_src);
@@ -439,8 +439,8 @@ LogRectCoordSys::toroidalBlockRemapping(IntVect& a_ivDst,
    }
   
    //Check the remapping properties
-   if (   (xiNE_dst - xiSE_dst) > 3.0 * m_dx_dst[POLOIDAL_DIR]
-       || (xiNW_dst - xiSW_dst) > 3.0 * m_dx_dst[POLOIDAL_DIR]
+   if (   (xiNE_dst - xiSE_dst) > 3.0 * dx_dst[POLOIDAL_DIR]
+       || (xiNW_dst - xiSW_dst) > 3.0 * dx_dst[POLOIDAL_DIR]
        || (xiNE_dst - xiSE_dst) < 0.0
        || (xiNW_dst - xiSW_dst) < 0.0 )
    {
@@ -450,119 +450,17 @@ LogRectCoordSys::toroidalBlockRemapping(IntVect& a_ivDst,
    //Get the global index of the dst cell center
    IntVect iv0_dst;
    for (int dir=0; dir<SpaceDim; ++dir) {
-      iv0_dst[dir] = floor(xi0_dst[dir]/m_dx_dst[dir]);
+      iv0_dst[dir] = floor(xi0_dst[dir]/dx_dst[dir]);
    }
-   //High and low poloida_dir ends of the central dst cell
-   double hi_end = (iv0_dst[POLOIDAL_DIR] + 1) * m_dx_dst[POLOIDAL_DIR];
-   double lo_end = (iv0_dst[POLOIDAL_DIR]) * m_dx_dst[POLOIDAL_DIR];
-   
-   //second-order interpolation stencil
-   double interpCoeffHi(0.0);
-   double interpCoeffCent(m_dx_dst[POLOIDAL_DIR]);
-   double interpCoeffLo(0.0);
-   
-   //Handle hi and cent cells
-   if (((xiNW_dst - hi_end) >= 0) && ((xiNE_dst - hi_end) > 0)) {
-      
-      double area1 = (xiNW_dst - hi_end);
-      double area2 = (xiNE_dst - hi_end);
-      
-      interpCoeffHi += (area2 + area1)/2.0 ;
-      
-   }
-   
-   else if (((xiNW_dst - hi_end) <= 0) && ((xiNE_dst - hi_end) < 0)) {
-      
-      double area1 = (hi_end - xiNW_dst);
-      double area2 = (hi_end - xiNE_dst);
-      
-      interpCoeffCent -= (area2 + area1)/2.0 ;
-   }
-   
-   else {
-      
-      double rad_inters_frac = abs(xiNE_dst - hi_end)/abs(xiNW_dst-hi_end);
-      double rad_inters_dist = 1.0 / (1.0 + rad_inters_frac);
-      
-      double area1 = (xiNW_dst - hi_end) * rad_inters_dist;
-      if (area1 < 0) {
-         interpCoeffCent += area1;
-      }
-      else {
-         interpCoeffHi += area1;
-      }
-      
-      double area2 = (xiNE_dst - hi_end) * (1.0 - rad_inters_dist);
-      if (area2 < 0) {
-         interpCoeffCent += area2;
-      }
-      else {
-         interpCoeffHi += area2;
-      }
-      
-   }
-   
-   //Handle lo and cent cells
-   if (((xiSW_dst - lo_end) <= 0) && ((xiSE_dst - lo_end) < 0)) {
-      
-      double area1 = (lo_end - xiSW_dst);
-      double area2 = (lo_end - xiSE_dst);
-      
-      interpCoeffLo += (area2 + area1)/2.0 ;
-      
-   }
-   
-   else if (((xiSW_dst - lo_end) >= 0) && ((xiSE_dst - lo_end) > 0)) {
-      
-      double area1 = (xiSW_dst - lo_end);
-      double area2 = (xiSE_dst - lo_end);
-      
-      interpCoeffCent -= (area2 + area1)/2.0 ;
-   }
-   
-   else {
-      
-      double rad_inters_frac = abs(xiSE_dst - lo_end)/abs(xiSW_dst-lo_end);
-      double rad_inters_dist = 1.0 / (1.0 + rad_inters_frac);
-      
-      double area1 = (lo_end - xiSW_dst) * rad_inters_dist;
-      if (area1 < 0) {
-         interpCoeffCent += area1;
-      }
-      else {
-         interpCoeffLo += area1;
-      }
-      
-      double area2 = (lo_end - xiSE_dst) * (1.0 - rad_inters_dist);
-      if (area2 < 0) {
-         interpCoeffCent += area2;
-      }
-      else {
-         interpCoeffLo += area2;
-      }
-      
-   }
-   
-   //Use this overwrite for the case where the ghost cell is
-   //conformal to the destination cell (e.g., By = 0 case)
-   if ((abs(xiSW_dst - lo_end) < 1.0e-10) && (abs(xiSE_dst - lo_end) < 1.0e-10)
-    && (abs(xiNW_dst - hi_end) < 1.0e-10) && (abs(xiNW_dst - hi_end) < 1.0e-10)) {
 
-     interpCoeffLo = 0.0;
-     interpCoeffHi = 0.0;
-     interpCoeffCent = 1.0;
-   }
-   
-   double interpSum = interpCoeffLo + interpCoeffCent + interpCoeffHi;
-   
-   a_interpStecil[0] = interpCoeffLo/interpSum;
-   a_interpStecil[1] = interpCoeffCent/interpSum;
-   a_interpStecil[2] = interpCoeffHi/interpSum;
-   
    for (int dir=0; dir<SpaceDim; ++dir) {
       a_ivDst[dir] = iv0_dst[dir];
    }
    
+   //Get interpolation coefficients
+   int order = 3;
+   getInterpolationCoefficients(a_interpStecil, xi0_dst, iv0_dst, dx_dst, order);
+
 }
 
 void
@@ -627,7 +525,7 @@ LogRectCoordSys::enforcePoloidalCut(const RealVect& a_xiSrc,
                                     double& a_xiNE_dst,
                                     double& a_xiSW_dst,
                                     double& a_xiSE_dst,
-				    double& a_xi0_dst) const
+                                    double& a_xi0_dst) const
 {
    
    Vector<double> poloidalNodes(5,0);
@@ -652,6 +550,185 @@ LogRectCoordSys::enforcePoloidalCut(const RealVect& a_xiSrc,
    a_xi0_dst = poloidalNodes[4];
 }
 
+
+void
+LogRectCoordSys::getInterpolationCoefficients(Vector<Real>&    a_coeff,
+                                              const RealVect&  a_xi0_dst,
+                                              const IntVect&   a_iv0_dst,
+					      const RealVect&  a_dx_dst,
+                                              const int        a_order) const
+
+{
+   Real h = a_dx_dst[POLOIDAL_DIR];
+   
+   Real cent = (a_iv0_dst[POLOIDAL_DIR] + 0.5) * a_dx_dst[POLOIDAL_DIR];
+   Real lo = cent - h;
+   Real hi = cent + h;
+
+   Real coeffLo(0.0);
+   Real coeffCent(1.0);
+   Real coeffHi(0.0);
+   
+   Real point = a_xi0_dst[POLOIDAL_DIR];
+
+   if (a_order == 3) {
+      if (abs(cent - point) > 1.0e-10) {
+
+         Real d0 = lo - point;
+         Real d1 = cent - point;
+         Real d2 = hi - point;
+   
+         coeffLo = d1*d2/(d0-d1)/(d0-d2);
+         coeffCent = d2*d0/(d1-d2)/(d1-d0);
+         coeffHi = d0*d1/(d2-d0)/(d2-d1);
+      }
+   }
+   
+   else if (a_order == 2) {
+      if (point > cent) {
+         coeffLo = 0.0;
+         coeffCent = 1.0 - (point - cent)/h;
+         coeffHi = (point - cent)/h;
+      }
+      else {
+         coeffLo = (cent - point)/h;
+         coeffCent =  1.0 - (cent - point)/h;
+         coeffHi = 0.0;
+      }
+   }
+   
+   else {
+      MayDay::Error("getInterpolationCoefficients:: only order = 2 or 3 is currently supported");
+   }
+   
+   a_coeff[0] = coeffLo;
+   a_coeff[1] = coeffCent;
+   a_coeff[2] = coeffHi;
+
+   
+}
+
+/*
+ This is an experimental implementation (presently not used). It seems to be 
+ only first order in the poloidal dir, but includes some radial variations
+ in the remapping coefficeints (by taking advantage of the nodal values).
+ */
+void
+LogRectCoordSys::getInterpolationCoefficients(Vector<Real>&   a_coeff,
+                                              const Real&     a_xiNW_dst,
+                                              const Real&     a_xiNE_dst,
+                                              const Real&     a_xiSW_dst,
+                                              const Real&     a_xiSE_dst,
+                                              const IntVect&  a_iv0_dst,
+					      const RealVect& a_dx_dst) const
+{
+   //High and low poloida_dir ends of the central dst cell
+   double hi_end = (a_iv0_dst[POLOIDAL_DIR] + 1) * a_dx_dst[POLOIDAL_DIR];
+   double lo_end = (a_iv0_dst[POLOIDAL_DIR]) * a_dx_dst[POLOIDAL_DIR];
+   
+   //second-order interpolation stencil
+   double interpCoeffHi(0.0);
+   double interpCoeffCent(a_dx_dst[POLOIDAL_DIR]);
+   double interpCoeffLo(0.0);
+   
+   //Handle hi and cent cells
+   if (((a_xiNW_dst - hi_end) >= 0) && ((a_xiNE_dst - hi_end) > 0)) {
+      
+      double area1 = (a_xiNW_dst - hi_end);
+      double area2 = (a_xiNE_dst - hi_end);
+      
+      interpCoeffHi += (area2 + area1)/2.0 ;
+      
+   }
+   
+   else if (((a_xiNW_dst - hi_end) <= 0) && ((a_xiNE_dst - hi_end) < 0)) {
+      
+      double area1 = (hi_end - a_xiNW_dst);
+      double area2 = (hi_end - a_xiNE_dst);
+      
+      interpCoeffCent -= (area2 + area1)/2.0 ;
+   }
+   
+   else {
+      
+      double rad_inters_frac = abs(a_xiNE_dst - hi_end)/abs(a_xiNW_dst-hi_end);
+      double rad_inters_dist = 1.0 / (1.0 + rad_inters_frac);
+      
+      double area1 = 0.5 * (a_xiNW_dst - hi_end) * rad_inters_dist;
+      if (area1 < 0) {
+         interpCoeffCent += area1;
+      }
+      else {
+         interpCoeffHi += area1;
+      }
+      
+      double area2 = 0.5 * (a_xiNE_dst - hi_end) * (1.0 - rad_inters_dist);
+      if (area2 < 0) {
+         interpCoeffCent += area2;
+      }
+      else {
+         interpCoeffHi += area2;
+      }
+      
+   }
+   
+   //Handle lo and cent cells
+   if (((a_xiSW_dst - lo_end) <= 0) && ((a_xiSE_dst - lo_end) < 0)) {
+      
+      double area1 = (lo_end - a_xiSW_dst);
+      double area2 = (lo_end - a_xiSE_dst);
+      
+      interpCoeffLo += (area2 + area1)/2.0 ;
+      
+   }
+   
+   else if (((a_xiSW_dst - lo_end) >= 0) && ((a_xiSE_dst - lo_end) > 0)) {
+      
+      double area1 = (a_xiSW_dst - lo_end);
+      double area2 = (a_xiSE_dst - lo_end);
+      
+      interpCoeffCent -= (area2 + area1)/2.0 ;
+   }
+   
+   else {
+      
+      double rad_inters_frac = abs(a_xiSE_dst - lo_end)/abs(a_xiSW_dst-lo_end);
+      double rad_inters_dist = 1.0 / (1.0 + rad_inters_frac);
+      
+      double area1 = 0.5 * (lo_end - a_xiSW_dst) * rad_inters_dist;
+      if (area1 < 0) {
+         interpCoeffCent += area1;
+      }
+      else {
+         interpCoeffLo += area1;
+      }
+      
+      double area2 = 0.5 * (lo_end - a_xiSE_dst) * (1.0 - rad_inters_dist);
+      if (area2 < 0) {
+         interpCoeffCent += area2;
+      }
+      else {
+         interpCoeffLo += area2;
+      }
+      
+   }
+   
+   //Use this overwrite for the case where the ghost cell is
+   //conformal to the destination cell (e.g., By = 0 case)
+   if ((abs(a_xiSW_dst - lo_end) < 1.0e-10) && (abs(a_xiSE_dst - lo_end) < 1.0e-10)
+       && (abs(a_xiNW_dst - hi_end) < 1.0e-10) && (abs(a_xiNE_dst - hi_end) < 1.0e-10)) {
+      
+      interpCoeffLo = 0.0;
+      interpCoeffHi = 0.0;
+      interpCoeffCent = 1.0;
+   }
+
+   double interpSum = interpCoeffLo + interpCoeffCent + interpCoeffHi;
+
+   a_coeff[0] = interpCoeffLo/interpSum;
+   a_coeff[1] = interpCoeffCent/interpSum;
+   a_coeff[2] = interpCoeffHi/interpSum;
+}
 
 #endif
 

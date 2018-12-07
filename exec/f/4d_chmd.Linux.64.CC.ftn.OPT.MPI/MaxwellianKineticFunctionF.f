@@ -147,3 +147,141 @@
       enddo
       return
       end
+      subroutine SET_CANONICAL_MAXWELL_4D(
+     & f
+     & ,iflo0,iflo1,iflo2,iflo3
+     & ,ifhi0,ifhi1,ifhi2,ifhi3
+     & ,nfcomp
+     & ,iboxlo0,iboxlo1,iboxlo2,iboxlo3
+     & ,iboxhi0,iboxhi1,iboxhi2,iboxhi3
+     & ,coords
+     & ,icoordslo0,icoordslo1,icoordslo2,icoordslo3
+     & ,icoordshi0,icoordshi1,icoordshi2,icoordshi3
+     & ,ncoordscomp
+     & ,toroidal_coords
+     & ,itoroidal_coordslo0,itoroidal_coordslo1,itoroidal_coordslo2,itor
+     &oidal_coordslo3
+     & ,itoroidal_coordshi0,itoroidal_coordshi1,itoroidal_coordshi2,itor
+     &oidal_coordshi3
+     & ,ntoroidal_coordscomp
+     & ,B_inj
+     & ,iB_injlo0,iB_injlo1,iB_injlo2,iB_injlo3
+     & ,iB_injhi0,iB_injhi1,iB_injhi2,iB_injhi3
+     & ,psi_inj
+     & ,ipsi_injlo0,ipsi_injlo1,ipsi_injlo2,ipsi_injlo3
+     & ,ipsi_injhi0,ipsi_injhi1,ipsi_injhi2,ipsi_injhi3
+     & ,RBtor
+     & ,psi_p
+     & ,dpsidr_p
+     & ,n_val
+     & ,n_kappa
+     & ,n_width
+     & ,T_val
+     & ,T_kappa
+     & ,T_width
+     & ,mode_coeff
+     & ,mass
+     & ,charge
+     & ,larmor
+     & )
+      implicit none
+      integer*8 ch_flops
+      COMMON/ch_timer/ ch_flops
+      integer nfcomp
+      integer iflo0,iflo1,iflo2,iflo3
+      integer ifhi0,ifhi1,ifhi2,ifhi3
+      REAL*8 f(
+     & iflo0:ifhi0,
+     & iflo1:ifhi1,
+     & iflo2:ifhi2,
+     & iflo3:ifhi3,
+     & 0:nfcomp-1)
+      integer iboxlo0,iboxlo1,iboxlo2,iboxlo3
+      integer iboxhi0,iboxhi1,iboxhi2,iboxhi3
+      integer ncoordscomp
+      integer icoordslo0,icoordslo1,icoordslo2,icoordslo3
+      integer icoordshi0,icoordshi1,icoordshi2,icoordshi3
+      REAL*8 coords(
+     & icoordslo0:icoordshi0,
+     & icoordslo1:icoordshi1,
+     & icoordslo2:icoordshi2,
+     & icoordslo3:icoordshi3,
+     & 0:ncoordscomp-1)
+      integer ntoroidal_coordscomp
+      integer itoroidal_coordslo0,itoroidal_coordslo1,itoroidal_coordslo
+     &2,itoroidal_coordslo3
+      integer itoroidal_coordshi0,itoroidal_coordshi1,itoroidal_coordshi
+     &2,itoroidal_coordshi3
+      REAL*8 toroidal_coords(
+     & itoroidal_coordslo0:itoroidal_coordshi0,
+     & itoroidal_coordslo1:itoroidal_coordshi1,
+     & itoroidal_coordslo2:itoroidal_coordshi2,
+     & itoroidal_coordslo3:itoroidal_coordshi3,
+     & 0:ntoroidal_coordscomp-1)
+      integer iB_injlo0,iB_injlo1,iB_injlo2,iB_injlo3
+      integer iB_injhi0,iB_injhi1,iB_injhi2,iB_injhi3
+      REAL*8 B_inj(
+     & iB_injlo0:iB_injhi0,
+     & iB_injlo1:iB_injhi1,
+     & iB_injlo2:iB_injhi2,
+     & iB_injlo3:iB_injhi3)
+      integer ipsi_injlo0,ipsi_injlo1,ipsi_injlo2,ipsi_injlo3
+      integer ipsi_injhi0,ipsi_injhi1,ipsi_injhi2,ipsi_injhi3
+      REAL*8 psi_inj(
+     & ipsi_injlo0:ipsi_injhi0,
+     & ipsi_injlo1:ipsi_injhi1,
+     & ipsi_injlo2:ipsi_injhi2,
+     & ipsi_injlo3:ipsi_injhi3)
+      REAL*8 RBtor
+      REAL*8 psi_p
+      REAL*8 dpsidr_p
+      REAL*8 n_val
+      REAL*8 n_kappa
+      REAL*8 n_width
+      REAL*8 T_val
+      REAL*8 T_kappa
+      REAL*8 T_width
+      REAL*8 mode_coeff(0:3)
+      REAL*8 mass
+      REAL*8 charge
+      REAL*8 larmor
+      integer i,j,k,l,n
+      integer ivp,imu
+      REAL*8 den, temp, B, psi
+      REAL*8 psi_inv, vpar, mu, phi, theta
+      REAL*8 eparnorm, munorm
+      REAL*8 factor, norm, val, arg, pi
+      pi = (4.0d0)*datan((1.0d0))
+      norm = larmor * mass / charge
+      factor = dsqrt((3.14159265358979323846264338327950288D0)*((2.0d0)/
+     &mass)**3)
+      ivp = ncoordscomp-2
+      imu = ncoordscomp-1
+      do n=0,nfcomp-1
+      do l = iboxlo3,iboxhi3
+      do k = iboxlo2,iboxhi2
+      do j = iboxlo1,iboxhi1
+      do i = iboxlo0,iboxhi0
+         B = B_inj(i,j,iB_injlo2,iB_injlo3)
+         psi = psi_inj(i,j,ipsi_injlo2,ipsi_injlo3)
+         vpar = coords(i,j,k,l,ivp)
+         mu = coords(i,j,k,l,imu)
+         psi_inv = psi + norm*RBtor/B*vpar
+         den = n_val * dexp(-n_kappa * n_width * dtanh((psi_inv-psi_p)/n
+     &_width))
+         temp = T_val * dexp(-T_kappa * T_width * dtanh((psi_inv-psi_p)/
+     &T_width))
+         eparnorm = (0.500d0) * mass * vpar**2 / temp
+         munorm = (0.500d0) * B * mu / temp
+         val = dexp( -( eparnorm + munorm ) )
+         val = val * den / ( factor * dsqrt( temp) * temp )
+         arg = mode_coeff(1)*phi + mode_coeff(2)*theta
+         val = val * ((1.0d0) + mode_coeff(0)*cos(arg))
+         f(i,j,k,l,n) = val
+      enddo
+      enddo
+      enddo
+      enddo
+      enddo
+      return
+      end

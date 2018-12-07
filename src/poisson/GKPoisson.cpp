@@ -29,7 +29,7 @@ GKPoisson::GKPoisson( const ParmParse&   a_pp,
 {
 
    parseParameters( a_pp );
-
+   m_verbosity=1;
    if (m_verbosity>0) {
       printParameters();
    }

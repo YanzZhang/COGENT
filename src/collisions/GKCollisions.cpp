@@ -165,27 +165,10 @@ void GKCollisions::accumulateRHS( KineticSpeciesPtrVect&       a_rhs,
         } else {
           CLS.evalClsRHSExplicit( a_rhs, a_soln, species,species_bkgr, a_time );
         }
-
      }
-  }
+   }
 }
 
-/*void GKCollisions::accumulateApproxRHS( KineticSpeciesPtrVect&       a_rhs,
-                                        const KineticSpeciesPtrVect& a_soln,
-                                        const Real                   a_time )
-{
-  for (int species(0); species<a_rhs.size(); species++) {
-     KineticSpecies& rhs_species( *(a_rhs[species]) );
-     const std::string species_name( rhs_species.name() );
-     for(int species_bkgr(0); species_bkgr<a_rhs.size(); species_bkgr++){
-       KineticSpecies& rhs_species_bkgr( *(a_rhs[species_bkgr]) );
-       const std::string species_name_bkgr( rhs_species_bkgr.name() );
-
-     CLSInterface& CLS( collisionModel( species_name,species_name_bkgr ) );
-     CLS.evalClsApproxRHS( a_rhs, a_soln, species,species_bkgr, a_time );
-   }
-  }
-}*/
 
 
 Real GKCollisions::computeDt( const KineticSpeciesPtrVect& soln )
@@ -194,10 +177,10 @@ Real GKCollisions::computeDt( const KineticSpeciesPtrVect& soln )
   int count(0);
   for (int species(0);species<m_num_species;species++) {
     for (int species_bkgr(0);species_bkgr<m_num_species;species_bkgr++) {
-    Real tmp = m_collision_model[species*m_num_species+species_bkgr]->computeDt(soln,species,species_bkgr);
-    dt = (tmp < dt ? tmp : dt);
-    count++;
-     }
+      Real tmp = m_collision_model[species*m_num_species+species_bkgr]->computeDt(soln,species,species_bkgr);
+      dt = (tmp < dt ? tmp : dt);
+      count++;
+    }
   }
   return (count ? dt : -1);
 }
@@ -208,10 +191,10 @@ Real GKCollisions::computeTimeScale( const KineticSpeciesPtrVect& soln )
   int count = 0;
   for (int species(0);species<m_num_species;species++) {
     for (int species_bkgr(0);species_bkgr<m_num_species;species_bkgr++) {
-    Real tmp = m_collision_model[species*m_num_species+species_bkgr]->TimeScale(soln,species,species_bkgr);
-    scale = (tmp < scale ? tmp : scale);
-    count++;
-     }
+      Real tmp = m_collision_model[species*m_num_species+species_bkgr]->TimeScale(soln,species,species_bkgr);
+      scale = (tmp < scale ? tmp : scale);
+      count++;
+    }
   }
   return (count ? scale : -1);
 }
@@ -233,7 +216,7 @@ int GKCollisions::precondMatrixBands()
   int max_bands = 0;
   for (int species(0);species<m_num_species;species++) {
     for (int species_bkgr(0);species_bkgr<m_num_species;species_bkgr++) {
-    max_bands = std::max(max_bands, m_collision_model[species*m_num_species+species_bkgr]->precondMatrixBands());
+      max_bands = std::max(max_bands, m_collision_model[species*m_num_species+species_bkgr]->precondMatrixBands());
     }
   }
   return max_bands;
@@ -250,13 +233,13 @@ void GKCollisions::assemblePrecondMatrix( void *a_P,
     GlobalDOFKineticSpecies&  gdofs_species(*(a_gdofs[species]));
     const std::string         species_name(soln_species.name());
     for (int species_bkgr(0); species_bkgr<a_soln.size(); species_bkgr++) {
-    KineticSpecies&           soln_species_bkgr(*(a_soln[species_bkgr]));
-    const std::string         species_name_bkgr(soln_species_bkgr.name());
+      KineticSpecies&           soln_species_bkgr(*(a_soln[species_bkgr]));
+      const std::string         species_name_bkgr(soln_species_bkgr.name());
 
-    CLSInterface&             CLS(collisionModel(species_name,species_name_bkgr));
+      CLSInterface&             CLS(collisionModel(species_name,species_name_bkgr));
 
-    CLS.assemblePrecondMatrix(a_P,soln_species,gdofs_species,a_shift);
-   }
+      CLS.assemblePrecondMatrix(a_P,soln_species,gdofs_species,a_shift);
+    }
   }
 }
 
@@ -271,11 +254,11 @@ void GKCollisions::defineMultiPhysicsPC(std::vector<Preconditioner<GKVector,GKOp
                                         bool                                          a_im )
 {
   for (int species(0); species<a_soln.size(); species++) {
-    KineticSpecies&           soln_species(*(a_soln[species]));
-    GlobalDOFKineticSpecies&  gdofs_species(*(a_gdofs[species]));
+    const KineticSpecies&           soln_species(*(a_soln[species]));
+    const GlobalDOFKineticSpecies&  gdofs_species(*(a_gdofs[species]));
     const std::string         species_name(soln_species.name());
     for (int species_bkgr(0); species_bkgr<a_soln.size(); species_bkgr++) {
-      KineticSpecies&           soln_species_bkgr(*(a_soln[species_bkgr]));
+      const KineticSpecies&     soln_species_bkgr(*(a_soln[species_bkgr]));
       const std::string         species_name_bkgr(soln_species_bkgr.name());
 
       CLSInterface&             CLS(collisionModel(species_name,species_name_bkgr));
@@ -293,11 +276,11 @@ void GKCollisions::updateMultiPhysicsPC(std::vector<Preconditioner<GKVector,GKOp
                                         const bool                                    a_im )
 {
   for (int species(0); species<a_soln.size(); species++) {
-    KineticSpecies&           soln_species(*(a_soln[species]));
-    GlobalDOFKineticSpecies&  gdofs_species(*(a_gdofs[species]));
+    const KineticSpecies&           soln_species(*(a_soln[species]));
+    const GlobalDOFKineticSpecies&  gdofs_species(*(a_gdofs[species]));
     const std::string         species_name(soln_species.name());
     for (int species_bkgr(0); species_bkgr<a_soln.size(); species_bkgr++) {
-      KineticSpecies&           soln_species_bkgr(*(a_soln[species_bkgr]));
+      const KineticSpecies&     soln_species_bkgr(*(a_soln[species_bkgr]));
       const std::string         species_name_bkgr(soln_species_bkgr.name());
 
       CLSInterface&             CLS(collisionModel(species_name,species_name_bkgr));
@@ -320,7 +303,7 @@ void GKCollisions::preTimeStep( const KineticSpeciesPtrVect& a_soln,
     const std::string         species_name_bkgr(soln_species_bkgr.name());
 
     CLSInterface&             CLS(collisionModel(species_name,species_name_bkgr));
-    CLS.preTimeStep( a_soln, species,species_bkgr, a_time, a_soln_physical );
+    CLS.preTimeStep( a_soln, species, species_bkgr, a_time, a_soln_physical );
    }
  }
 }
@@ -335,9 +318,9 @@ void GKCollisions::postTimeStage( const KineticSpeciesPtrVect& a_soln, const Rea
     const std::string         species_name_bkgr(soln_species_bkgr.name());
 
     CLSInterface&             CLS(collisionModel(species_name,species_name_bkgr));
-    CLS.postTimeStage( a_soln, species,species_bkgr, a_time, a_stage );
+    CLS.postTimeStage( a_soln, species, species_bkgr, a_time, a_stage );
    }
- }
+  }
 }
 
 #include "NamespaceFooter.H"

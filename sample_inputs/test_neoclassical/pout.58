@@ -49,7 +49,7 @@ GMRESSolver::solve done, status = 0
   Distribution Function Extrema:
     Species 0:	109.292 [max]	3.59163e-07 [min]
 
-Step 1 completed, simulation time is 0.332609, solver wall time is 243.67 seconds
+Step 1 completed, simulation time is 0.332609, solver wall time is 53.9482 seconds
 ----
 maximum step = 2
 maximum time = 1200
@@ -95,7 +95,7 @@ GMRESSolver::solve done, status = 0
   Distribution Function Extrema:
     Species 0:	109.292 [max]	3.59217e-07 [min]
 
-Step 2 completed, simulation time is 0.698478, solver wall time is 483.218 seconds
+Step 2 completed, simulation time is 0.698478, solver wall time is 106.762 seconds
 ----
 maximum step = 2
 maximum time = 1200

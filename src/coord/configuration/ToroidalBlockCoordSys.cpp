@@ -377,11 +377,24 @@ ToroidalBlockCoordSys::getMagneticFlux( const RealVect& a_physical_coordinate ) 
   
   double r = sqrt( pow(R_shift,2) + pow(Z_shift,2) );
   
-  psi = dpsidr(r) * sqrt( pow(R_shift,2) + pow(Z_shift,2) );
+  psi = getMagneticFlux(r);
   
   return psi;
 }
 
+Real
+ToroidalBlockCoordSys::getMagneticFlux( const Real a_r) const
+{
+   
+   if (m_q[2] > 1.0 + m_eps || m_q[2] < 1.0 -m_eps) {
+       MayDay::Error("ToroidalBlockCoordSys:: magneticFluxFunction is currently only defined for q[2] = 1");
+   }
+   
+   Real psi = (m_q[1]*a_r/m_a + m_q[0]*log(m_q[0]/(m_q[0] + m_q[1]*a_r/m_a)))/pow(m_q[1],2);
+   psi *= pow(m_a,2) * m_Btor_scale / m_R0;
+ 
+   return psi;
+}
 
 void
 ToroidalBlockCoordSys::getNodalFieldData(FArrayBox& a_points,
@@ -425,7 +438,7 @@ ToroidalBlockCoordSys::getNodalFieldData(FArrayBox& a_points,
     double theta = atan2(Z_shift, R_shift);
     if (theta < 0.) theta += 2. * Pi;
     
-    psi(iv,0) = dpsidr(r) * r;
+    psi(iv,0) = getMagneticFlux(r);
     
     RB(iv,0) = -dpsidr(r) * sin(theta);  // R*B_R = -dpsi_dZ
     RB(iv,1) =  dpsidr(r) * cos(theta);  // R*B_Z =  dpsi_dR
@@ -462,7 +475,7 @@ double ToroidalBlockCoordSys::getSafetyFactorDerivative( const Real a_r ) const
 double ToroidalBlockCoordSys::dpsidr( const Real a_r ) const
 {
   double rnorm = a_r / m_R0;
-  return m_Btor_scale * rnorm / getSafetyFactorDerivative(rnorm);
+  return m_Btor_scale * rnorm / getSafetyFactor(rnorm);
 }
 
 double ToroidalBlockCoordSys::computePhi( const Real a_x,
@@ -577,7 +590,7 @@ RealVect ToroidalBlockCoordSys::getThetaDerivatives(double a_r,
 }
 
 void ToroidalBlockCoordSys::convertCartesianToToroidal(RealVect& a_vect,
-						       const RealVect& a_coord) const
+                                                       const RealVect& a_coord) const
 {
   //get Cartisian coordinates
   Real x = a_coord[0];
@@ -627,7 +640,7 @@ void ToroidalBlockCoordSys::convertCartesianToToroidal(RealVect& a_coord) const
 }
 
 void ToroidalBlockCoordSys::convertCylindricalToCartesian(RealVect& a_vect,
-							  const RealVect& a_coord) const
+                                                          const RealVect& a_coord) const
 {
   //get toroidal coordinates
   Real x = a_coord[0];
@@ -666,6 +679,29 @@ void ToroidalBlockCoordSys::convertCylindricalToCartesian(FArrayBox& a_vect,
 
     for (int dir=0; dir<SpaceDim; ++dir) {
       a_vect(iv,dir) = vect[dir];
+    }
+  }
+}
+
+void ToroidalBlockCoordSys::getToroidalCoords(FArrayBox& a_coords) const
+{
+  Box box = a_coords.box();
+
+  FArrayBox X(box,SpaceDim);
+  getCellCenteredRealCoords(X);
+
+  RealVect coord;
+  for (BoxIterator bit(box); bit.ok(); ++bit) {
+    IntVect iv = bit();
+
+    for (int dir=0; dir<SpaceDim; ++dir) {       
+      coord[dir] = X(iv,dir);
+    }
+
+    convertCartesianToToroidal(coord);
+
+    for (int dir=0; dir<SpaceDim; ++dir) {
+      a_coords(iv,dir) = coord[dir];
     }
   }
 }

@@ -10,8 +10,8 @@ gksystem.verbosity   = 1
 #gksystem.hdf_parallelHeatFlux = true
 gksystem.hdf_pressure = true
 
-#gksystem.ti_class = "ark"
-#gksystem.ti_method = "4"
+gksystem.ti_class = "ark"
+gksystem.ti_method = "4"
 ark.stage_predictor = false
 
 ark_newton.atol = 1e-3
@@ -28,10 +28,10 @@ ark_pc.type = "multiphysicsPC"
 # Time Stepping Definitions
 #####################################################
 #simulation.max_step            = 10000
-simulation.max_step            = 2 
+simulation.max_step            = 2
 simulation.max_time            = 1300
 simulation.fixed_dt            = 0.1
-simulation.checkpoint_interval = 1
+simulation.checkpoint_interval = 10
 simulation.checkpoint_prefix   = "chk"
 simulation.plot_interval       = 1
 simulation.plot_prefix         = "plt"
@@ -130,14 +130,14 @@ CLS.hydrogen.ref_function = "maxwellian_phase_func"
 CLS.hydrogen.ref_temperature = "T0"
 CLS.hydrogen.ref_density = "N0"
 
-CLS.hydrogen.subtract_background = true 
+CLS.hydrogen.subtract_background = true
 CLS.hydrogen.max_interation_number = 100000
 CLS.hydrogen.convergence_tolerance = 1.e-12
 CLS.hydrogen.multipole_number = 4
-CLS.hydrogen.rosenbluth_skip_stage = true
-CLS.hydrogen.compute_maxwellian = false
+CLS.hydrogen.rosenbluth_skip_stage = false
+CLS.hydrogen.compute_maxwellian =true
 CLS.hydrogen.verbose = true
-CLS.hydrogen.time_implicit = false
+CLS.hydrogen.time_implicit = true
 CLS.hydrogen_basicGKPC.solver_type = "gauss_seidel"
 CLS.hydrogen_basicGKPC_gauss_seidel.its = 80
 

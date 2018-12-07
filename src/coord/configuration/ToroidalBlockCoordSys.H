@@ -116,22 +116,40 @@ class ToroidalBlockCoordSys
                                     FArrayBox&       magnetic_flux ) const;
 
       virtual double getMagneticFlux( const RealVect& a_physical_coordinate ) const;
-
+   
+      Real getMagneticFlux( const Real r ) const;
+   
       virtual void getNodalFieldData(FArrayBox& points, FArrayBox& A, FArrayBox& b, FArrayBox& Bmag) const;
+
+      ///Return toroidal coordinates
+      void getToroidalCoords(FArrayBox& coords) const;
 
       /// Return geometry parameters
       /**
        * Return geometry parameters
        */
-      //Need to include this function, as required by MagBlockCoordSys
       virtual double getRBtoroidal() const {return m_Btor_scale;}
+   
+      /// Returns major radius at center of toroidal cross section (a.k.a. R0)
+      /**
+       * Returns the major radius at the middle of the toroidal cross section (R0)
+       *
+       * @param[in] xi mapped grid coordinate.
+       */
+      Real centralMajorRadius( ) const { return m_R0; }
+   
+      /// Returns average minor radius
+      /**
+       * Returns average minor radius
+       */
+      Real getAvMinorRad () const { return 0.5*(m_rmax + m_rmin); }
 
       //Returns magnetic safety factor as a function of r/R0
       double getSafetyFactor( const Real r ) const;
 
       //Returns safety factor derivative as a function of r/R0
       double getSafetyFactorDerivative( const Real r ) const;
-
+   
       // Object ParmParse name.
       static const std::string pp_name;
 
@@ -155,6 +173,12 @@ class ToroidalBlockCoordSys
       void convertCylindricalToCartesian(FArrayBox& vect,
 					 const FArrayBox& coord) const;
 
+      /// Compute the radial derivative of the flux function
+      /**
+      * Public method to compute the radial derivative of the flux function.
+      */
+      double dpsidr(const Real r) const;
+
 
     private:
 
@@ -172,12 +196,6 @@ class ToroidalBlockCoordSys
        * Private method to print parameters.
        */
       void printParameters();
-
-      /// Compute the radial derivative of the flux function
-      /**
-       * Private method to compute the radial derivative of the flux function.
-       */
-      double dpsidr(const Real r) const;
 
 
       /// Compute toroidal angle from phys coords.

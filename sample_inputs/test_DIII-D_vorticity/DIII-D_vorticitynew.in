@@ -38,9 +38,9 @@ gksystem.ti_method = "2c"
 #gksystem.ti_method = "4"
 
 ark_gmres.atol = 1.e-12
-ark_gmres.rtol = 1.e-3
+ark_gmres.rtol = 1.e-4
 ark_newton.atol = 1.e-10
-ark_newton.rtol = 1.e-6
+ark_newton.rtol = 1.e-10
 
 ark_jacobian.with_pc = true
 ark_pc.type = "multiphysicsPC"
@@ -124,7 +124,7 @@ gksystem.consistent_potential_bcs = true
 #gkpoisson.linear_solver.method = "BiCGStab"
 gkpoisson.linear_solver.method = "GMRES"
 gkpoisson.linear_solver.max_iter = 80
-gkpoisson.linear_solver.tol = 1.e-6
+gkpoisson.linear_solver.tol = 1.e-12
 gkpoisson.linear_solver.verbose = true
 gkpoisson.linear_solver.precond.method = "AMG"
 gkpoisson.linear_solver.precond.max_iter = 20
@@ -195,16 +195,16 @@ BC.potential.radial_pf.value = 0.0
 # Collisions Definitions
 #####################################################
 CLS.hydrogen.hydrogen.max_interation_number = 100000
-CLS.hydrogen.hydrogen.convergence_tolerance = 1.e-6
+CLS.hydrogen.hydrogen.convergence_tolerance = 1.e-16
 CLS.hydrogen.hydrogen.multipole_number = 3
 CLS.hydrogen.hydrogen.ref_function_a = "maxwellian_const"
 CLS.hydrogen.hydrogen.ref_function_b = "maxwellian_const"
 CLS.hydrogen.hydrogen.ref_temperature = "T0"
 CLS.hydrogen.hydrogen.ref_density = "N0"
-CLS.hydrogen.hydrogen.subtract_background = true 
+CLS.hydrogen.hydrogen.subtract_background = true
 CLS.hydrogen.hydrogen.compute_maxwellian = false
 CLS.hydrogen.hydrogen.rosenbluth_skip_stage = true
-CLS.hydrogen.hydrogen.time_implicit = false
+CLS.hydrogen.hydrogen.time_implicit = true
 
 #####################################################
 # Transport Definitions

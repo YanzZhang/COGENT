@@ -84,6 +84,9 @@ MagGeom::MagGeom(ParmParse&                         a_pp,
    m_sheared_mb_geom = false;
    a_pp.query( "sheared_multiblock_geometry", m_sheared_mb_geom);
 
+   m_second_order = false;
+   a_pp.query( "second_order", m_second_order);
+
 #if CFG_DIM ==3
    m_mb_dir = TOROIDAL_DIR;
    if (m_sheared_mb_geom) {
@@ -275,7 +278,15 @@ MagGeom::getCellVolumes( LevelData<FArrayBox>& a_volume ) const
 
          Box grown_box(grow(m_cell_volume[dit].box(),1));
          FluxBox N(grown_box, coord_sys.getNumN());
-         coord_sys.getN(N, grown_box);
+	 // Chombo's getN can be expensive, especially
+	 // if dxdxi is arithmetically intensive 
+	 // (as in field-aliened toroidal geom)
+	 // thus we only compute N if needed. 
+	 // For pointwiseMetrics and sub-grid methods cellVol 
+	 // is not using N, it's just passed for consistency
+         if (!coord_sys.isPointwiseMetrics() && !coord_sys.isSubGridGeom()) {
+	   coord_sys.getN(N, grown_box);
+	 }
          coord_sys.cellVol(m_cell_volume[dit], N, m_cell_volume[dit].box());
       }
 
@@ -411,21 +422,34 @@ MagGeom::divideJonValid( LevelData<FArrayBox>& a_data ) const
    // Multiplies the argument by J on valid cells
 
    const DisjointBoxLayout& grids = a_data.disjointBoxLayout();
-   IntVect grown_vect = IntVect::Unit;
-   LevelData<FArrayBox> J(grids, 1, grown_vect);
-   getJ(J);
+   
+   if (!m_second_order) {
+     IntVect grown_vect = IntVect::Unit;
+     LevelData<FArrayBox> J(grids, 1, grown_vect);
+     getJ(J);
 
-   LevelData<FArrayBox> grown_data(grids, 1, grown_vect);
+     LevelData<FArrayBox> grown_data(grids, 1, grown_vect);
 
-   for (DataIterator dit(grown_data.dataIterator()); dit.ok(); ++dit) {
-      grown_data[dit].copy(a_data[dit]);
-   }
-   grown_data.exchange();
+     for (DataIterator dit(grown_data.dataIterator()); dit.ok(); ++dit) {
+       grown_data[dit].copy(a_data[dit]);
+     }
+     grown_data.exchange();
 
-   // Compute the fourth-order quotient
-   for (DataIterator dit(a_data.dataIterator()); dit.ok(); ++dit) {
-      const MagBlockCoordSys& coord_sys = getBlockCoordSys(grids[dit]);
-      cellFGToCellF(a_data[dit], grown_data[dit], J[dit], grids[dit], coord_sys.domain(), true);
+     // Compute the fourth-order quotient
+     for (DataIterator dit(a_data.dataIterator()); dit.ok(); ++dit) {
+       const MagBlockCoordSys& coord_sys = getBlockCoordSys(grids[dit]);
+       cellFGToCellF(a_data[dit], grown_data[dit], J[dit], grids[dit], coord_sys.domain(), true);
+     }
+   }  
+ 
+   else {
+     LevelData<FArrayBox> J(grids, 1, IntVect::Zero);
+     getJ(J);
+     for (DataIterator dit(a_data.dataIterator()); dit.ok(); ++dit) {
+       for (int n=0; n<a_data.nComp(); ++n) {
+	 a_data[dit].divide(J[dit],0,n,1);
+       }
+     }
    }
 }
 
@@ -437,23 +461,35 @@ MagGeom::multJonValid( LevelData<FArrayBox>& a_data ) const
 
    const DisjointBoxLayout& grids = a_data.disjointBoxLayout();
 
-   IntVect grown_vect = IntVect::Unit;
-   LevelData<FArrayBox> J(grids, 1, grown_vect);
-   getJ(J);
+   if (!m_second_order) {
+     IntVect grown_vect = IntVect::Unit;
+     LevelData<FArrayBox> J(grids, 1, grown_vect);
+     getJ(J);
+     
+     LevelData<FArrayBox> grown_data(grids, 1, grown_vect);
 
-   LevelData<FArrayBox> grown_data(grids, 1, grown_vect);
-
-   for (DataIterator dit(grown_data.dataIterator()); dit.ok(); ++dit) {
-      grown_data[dit].copy(a_data[dit]);
+     for (DataIterator dit(grown_data.dataIterator()); dit.ok(); ++dit) {
+       grown_data[dit].copy(a_data[dit]);
+     }
+     grown_data.exchange();
+     
+     fourthOrderCellProd(a_data, J, grown_data);
+     
+     // Compute the fourth-order product
+     for (DataIterator dit(a_data.dataIterator()); dit.ok(); ++dit) {
+       const MagBlockCoordSys& coord_sys = getBlockCoordSys(grids[dit]);
+       fourthOrderCellProd(a_data[dit], grown_data[dit], J[dit], grids[dit], coord_sys.domain(), true);
+     }
    }
-   grown_data.exchange();
 
-   fourthOrderCellProd(a_data, J, grown_data);
-
-   // Compute the fourth-order product
-   for (DataIterator dit(a_data.dataIterator()); dit.ok(); ++dit) {
-      const MagBlockCoordSys& coord_sys = getBlockCoordSys(grids[dit]);
-      fourthOrderCellProd(a_data[dit], grown_data[dit], J[dit], grids[dit], coord_sys.domain(), true);
+   else {
+     LevelData<FArrayBox> J(grids, 1, IntVect::Zero);
+     getJ(J);
+     for (DataIterator dit(a_data.dataIterator()); dit.ok(); ++dit) {
+       for (int n=0; n<a_data.nComp(); ++n) {
+         a_data[dit].mult(J[dit],0,n,1);
+       }
+     }
    }
 }
 
@@ -3581,7 +3617,7 @@ MagGeom::interpolateFromShearedGhosts(LevelData<FArrayBox>& a_data) const
       
       //iterate over boxes, fill the ghosts at the block boundaries
       for (DataIterator dit(grids.dataIterator()); dit.ok(); ++dit) {
-         
+	
          const MagBlockCoordSys& block_coords = getBlockCoordSys(grids[dit]);
          const ProblemDomain& domain = block_coords.domain();
          const Box& domain_box = domain.domainBox();

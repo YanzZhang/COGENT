@@ -241,6 +241,8 @@ public:
 
   bool shearedMBGeom() const {return m_sheared_mb_geom;}
 
+  bool secondOrder() const {return m_second_order;}
+
 #if CFG_DIM == 3
 
    int shearedInterpOrder() const {return m_sheared_interp_order;}
@@ -378,6 +380,7 @@ private:
    bool m_sheared_mb_geom;
    bool m_dealignment_corrections;
    bool m_model_flux_function; 
+   bool m_second_order;
 
    const string m_pp_prefix;
   

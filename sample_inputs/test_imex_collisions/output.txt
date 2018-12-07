@@ -58,69 +58,69 @@ Done constructing magnetic geometry
    Velocity space box ((-18,12) (17,17) (0,0)) is assigned to process 2
    Velocity space box ((-18,18) (17,23) (0,0)) is assigned to process 3
    Phase space box ((0,0,-18,0) (7,7,17,5) (0,0,0,0)) is assigned to process 0, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((8,16,-18,12) (15,23,17,17) (0,0,0,0)) is assigned to process 38, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((8,8,-18,6) (15,15,17,11) (0,0,0,0)) is assigned to process 21, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((24,16,-18,0) (31,23,17,5) (0,0,0,0)) is assigned to process 44, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((24,8,-18,6) (31,15,17,11) (0,0,0,0)) is assigned to process 29, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((0,16,-18,0) (7,23,17,5) (0,0,0,0)) is assigned to process 32, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((0,16,-18,6) (7,23,17,11) (0,0,0,0)) is assigned to process 33, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((0,16,-18,12) (7,23,17,17) (0,0,0,0)) is assigned to process 34, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((8,16,-18,0) (15,23,17,5) (0,0,0,0)) is assigned to process 36, has 13824 valid cells and 143872 ghost cells
    Phase space box ((0,0,-18,6) (7,7,17,11) (0,0,0,0)) is assigned to process 1, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((8,16,-18,6) (15,23,17,11) (0,0,0,0)) is assigned to process 37, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((8,0,-18,6) (15,7,17,11) (0,0,0,0)) is assigned to process 5, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((8,16,-18,18) (15,23,17,23) (0,0,0,0)) is assigned to process 39, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((16,0,-18,6) (23,7,17,11) (0,0,0,0)) is assigned to process 9, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((24,16,-18,6) (31,23,17,11) (0,0,0,0)) is assigned to process 45, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((24,16,-18,12) (31,23,17,17) (0,0,0,0)) is assigned to process 46, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((16,0,-18,12) (23,7,17,17) (0,0,0,0)) is assigned to process 10, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((24,16,-18,18) (31,23,17,23) (0,0,0,0)) is assigned to process 47, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((16,0,-18,18) (23,7,17,23) (0,0,0,0)) is assigned to process 11, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((0,24,-18,0) (7,31,17,5) (0,0,0,0)) is assigned to process 48, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((24,0,-18,0) (31,7,17,5) (0,0,0,0)) is assigned to process 12, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((24,0,-18,6) (31,7,17,11) (0,0,0,0)) is assigned to process 13, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((0,24,-18,6) (7,31,17,11) (0,0,0,0)) is assigned to process 49, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((24,0,-18,18) (31,7,17,23) (0,0,0,0)) is assigned to process 15, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((0,24,-18,12) (7,31,17,17) (0,0,0,0)) is assigned to process 50, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((0,8,-18,0) (7,15,17,5) (0,0,0,0)) is assigned to process 16, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((0,24,-18,18) (7,31,17,23) (0,0,0,0)) is assigned to process 51, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((8,24,-18,6) (15,31,17,11) (0,0,0,0)) is assigned to process 53, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((0,8,-18,6) (7,15,17,11) (0,0,0,0)) is assigned to process 17, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((8,24,-18,12) (15,31,17,17) (0,0,0,0)) is assigned to process 54, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((16,24,-18,0) (23,31,17,5) (0,0,0,0)) is assigned to process 56, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((0,8,-18,12) (7,15,17,17) (0,0,0,0)) is assigned to process 18, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((16,24,-18,6) (23,31,17,11) (0,0,0,0)) is assigned to process 57, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((8,8,-18,0) (15,15,17,5) (0,0,0,0)) is assigned to process 20, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((16,24,-18,12) (23,31,17,17) (0,0,0,0)) is assigned to process 58, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((16,24,-18,18) (23,31,17,23) (0,0,0,0)) is assigned to process 59, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((8,8,-18,18) (15,15,17,23) (0,0,0,0)) is assigned to process 23, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((24,24,-18,0) (31,31,17,5) (0,0,0,0)) is assigned to process 60, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((16,8,-18,12) (23,15,17,17) (0,0,0,0)) is assigned to process 26, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((24,24,-18,6) (31,31,17,11) (0,0,0,0)) is assigned to process 61, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((24,8,-18,0) (31,15,17,5) (0,0,0,0)) is assigned to process 28, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((24,8,-18,12) (31,15,17,17) (0,0,0,0)) is assigned to process 30, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((8,24,-18,0) (15,31,17,5) (0,0,0,0)) is assigned to process 52, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((16,16,-18,0) (23,23,17,5) (0,0,0,0)) is assigned to process 40, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((16,16,-18,6) (23,23,17,11) (0,0,0,0)) is assigned to process 41, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((16,16,-18,12) (23,23,17,17) (0,0,0,0)) is assigned to process 42, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((24,8,-18,18) (31,15,17,23) (0,0,0,0)) is assigned to process 31, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((16,0,-18,6) (23,7,17,11) (0,0,0,0)) is assigned to process 7, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((16,0,-18,12) (23,7,17,17) (0,0,0,0)) is assigned to process 8, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((16,24,-18,6) (23,31,17,11) (0,0,0,0)) is assigned to process 43, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((24,24,-18,6) (31,31,17,11) (0,0,0,0)) is assigned to process 46, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((24,24,-18,12) (31,31,17,17) (0,0,0,0)) is assigned to process 47, has 13824 valid cells and 143872 ghost cells
    Phase space box ((0,0,-18,12) (7,7,17,17) (0,0,0,0)) is assigned to process 2, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((16,16,-18,18) (23,23,17,23) (0,0,0,0)) is assigned to process 43, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((24,24,-18,18) (31,31,17,23) (0,0,0,0)) is assigned to process 63, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((8,24,-18,18) (15,31,17,23) (0,0,0,0)) is assigned to process 55, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((0,0,-18,18) (7,7,17,23) (0,0,0,0)) is assigned to process 3, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((24,24,-18,12) (31,31,17,17) (0,0,0,0)) is assigned to process 62, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((8,0,-18,0) (15,7,17,5) (0,0,0,0)) is assigned to process 4, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((8,0,-18,12) (15,7,17,17) (0,0,0,0)) is assigned to process 6, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((8,0,-18,18) (15,7,17,23) (0,0,0,0)) is assigned to process 7, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((16,0,-18,0) (23,7,17,5) (0,0,0,0)) is assigned to process 8, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((24,0,-18,12) (31,7,17,17) (0,0,0,0)) is assigned to process 14, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((0,8,-18,18) (7,15,17,23) (0,0,0,0)) is assigned to process 19, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((8,8,-18,12) (15,15,17,17) (0,0,0,0)) is assigned to process 22, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((16,8,-18,0) (23,15,17,5) (0,0,0,0)) is assigned to process 24, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((16,8,-18,6) (23,15,17,11) (0,0,0,0)) is assigned to process 25, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((16,8,-18,18) (23,15,17,23) (0,0,0,0)) is assigned to process 27, has 13824 valid cells and 143872 ghost cells
-   Phase space box ((0,16,-18,18) (7,23,17,23) (0,0,0,0)) is assigned to process 35, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((8,0,-18,0) (15,7,17,5) (0,0,0,0)) is assigned to process 3, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((8,0,-18,18) (15,7,17,23) (0,0,0,0)) is assigned to process 3, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((8,0,-18,6) (15,7,17,11) (0,0,0,0)) is assigned to process 4, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((8,0,-18,12) (15,7,17,17) (0,0,0,0)) is assigned to process 5, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((16,0,-18,0) (23,7,17,5) (0,0,0,0)) is assigned to process 6, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((16,0,-18,18) (23,7,17,23) (0,0,0,0)) is assigned to process 6, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((24,0,-18,0) (31,7,17,5) (0,0,0,0)) is assigned to process 9, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((24,0,-18,18) (31,7,17,23) (0,0,0,0)) is assigned to process 9, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((24,0,-18,6) (31,7,17,11) (0,0,0,0)) is assigned to process 10, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((24,0,-18,12) (31,7,17,17) (0,0,0,0)) is assigned to process 11, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((0,8,-18,0) (7,15,17,5) (0,0,0,0)) is assigned to process 12, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((0,8,-18,18) (7,15,17,23) (0,0,0,0)) is assigned to process 12, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((0,8,-18,6) (7,15,17,11) (0,0,0,0)) is assigned to process 13, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((0,8,-18,12) (7,15,17,17) (0,0,0,0)) is assigned to process 14, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((8,8,-18,0) (15,15,17,5) (0,0,0,0)) is assigned to process 15, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((8,8,-18,18) (15,15,17,23) (0,0,0,0)) is assigned to process 15, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((8,8,-18,6) (15,15,17,11) (0,0,0,0)) is assigned to process 16, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((8,8,-18,12) (15,15,17,17) (0,0,0,0)) is assigned to process 17, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((16,8,-18,0) (23,15,17,5) (0,0,0,0)) is assigned to process 18, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((16,8,-18,18) (23,15,17,23) (0,0,0,0)) is assigned to process 18, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((16,8,-18,6) (23,15,17,11) (0,0,0,0)) is assigned to process 19, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((16,8,-18,12) (23,15,17,17) (0,0,0,0)) is assigned to process 20, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((24,8,-18,0) (31,15,17,5) (0,0,0,0)) is assigned to process 21, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((24,8,-18,18) (31,15,17,23) (0,0,0,0)) is assigned to process 21, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((24,8,-18,6) (31,15,17,11) (0,0,0,0)) is assigned to process 22, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((24,8,-18,12) (31,15,17,17) (0,0,0,0)) is assigned to process 23, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((0,16,-18,0) (7,23,17,5) (0,0,0,0)) is assigned to process 24, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((0,16,-18,18) (7,23,17,23) (0,0,0,0)) is assigned to process 24, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((0,16,-18,6) (7,23,17,11) (0,0,0,0)) is assigned to process 25, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((0,16,-18,12) (7,23,17,17) (0,0,0,0)) is assigned to process 26, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((8,16,-18,0) (15,23,17,5) (0,0,0,0)) is assigned to process 27, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((8,16,-18,18) (15,23,17,23) (0,0,0,0)) is assigned to process 27, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((8,16,-18,6) (15,23,17,11) (0,0,0,0)) is assigned to process 28, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((8,16,-18,12) (15,23,17,17) (0,0,0,0)) is assigned to process 29, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((16,16,-18,0) (23,23,17,5) (0,0,0,0)) is assigned to process 30, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((16,16,-18,18) (23,23,17,23) (0,0,0,0)) is assigned to process 30, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((16,16,-18,6) (23,23,17,11) (0,0,0,0)) is assigned to process 31, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((16,16,-18,12) (23,23,17,17) (0,0,0,0)) is assigned to process 32, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((24,16,-18,0) (31,23,17,5) (0,0,0,0)) is assigned to process 33, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((24,16,-18,18) (31,23,17,23) (0,0,0,0)) is assigned to process 33, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((24,16,-18,6) (31,23,17,11) (0,0,0,0)) is assigned to process 34, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((24,16,-18,12) (31,23,17,17) (0,0,0,0)) is assigned to process 35, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((0,24,-18,0) (7,31,17,5) (0,0,0,0)) is assigned to process 36, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((0,24,-18,18) (7,31,17,23) (0,0,0,0)) is assigned to process 36, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((0,24,-18,6) (7,31,17,11) (0,0,0,0)) is assigned to process 37, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((0,24,-18,12) (7,31,17,17) (0,0,0,0)) is assigned to process 38, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((8,24,-18,0) (15,31,17,5) (0,0,0,0)) is assigned to process 39, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((8,24,-18,18) (15,31,17,23) (0,0,0,0)) is assigned to process 39, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((8,24,-18,6) (15,31,17,11) (0,0,0,0)) is assigned to process 40, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((8,24,-18,12) (15,31,17,17) (0,0,0,0)) is assigned to process 41, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((16,24,-18,0) (23,31,17,5) (0,0,0,0)) is assigned to process 42, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((16,24,-18,18) (23,31,17,23) (0,0,0,0)) is assigned to process 42, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((16,24,-18,12) (23,31,17,17) (0,0,0,0)) is assigned to process 44, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((24,24,-18,0) (31,31,17,5) (0,0,0,0)) is assigned to process 45, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((24,24,-18,18) (31,31,17,23) (0,0,0,0)) is assigned to process 45, has 13824 valid cells and 143872 ghost cells
+   Phase space box ((0,0,-18,18) (7,7,17,23) (0,0,0,0)) is assigned to process 0, has 13824 valid cells and 143872 ghost cells
 Adding species and constructing gyrocenter coordinates...
    hydrogen: kinetic species with mass = 2, charge = 1, velocity renormalization = 0
    Velocity space box ((-18,0) (17,5) (0,0)) is assigned to process 0
@@ -364,51 +364,12 @@ Constant grid function parameters:
 FokkerPlanck collisions parameters:
   cls_freq            = -1
   subtract_background = 1
-  compute_maxwellian  = 0
+  compute_maxwellian  = 1
   conserve_energy     = 0
   energy_conserve_eps = 1e-16
   implicit in time    = 1
   use_limiters        = 0
-Fokker-Planck: C(F0_a,F0_b) is set to zero because of subtract_background is set to ture
-  Reference Function for species a:
-Maxwellian kinetic function parameters:
--- Density --
-Arbitrary grid function parameters:
-  function: (1-0.95/2)+(0.95/2)*tanh((x-pi))
-  function2: UNDEFINED
-  coordinate type: mapped
-
--- Temperature --
-Arbitrary grid function parameters:
-  function: 1.0 + 0.1*cos(y)
-  function2: UNDEFINED
-  coordinate type: mapped
-
--- Vparallel --
-Constant grid function parameters:
-  value: 0
-
-
-  Reference Function for background species:
-Maxwellian kinetic function parameters:
--- Density --
-Arbitrary grid function parameters:
-  function: (1-0.95/2)+(0.95/2)*tanh((x-pi))
-  function2: UNDEFINED
-  coordinate type: mapped
-
--- Temperature --
-Arbitrary grid function parameters:
-  function: 1.0 + 0.1*cos(y)
-  function2: UNDEFINED
-  coordinate type: mapped
-
--- Vparallel --
-Constant grid function parameters:
-  value: 0
-
-
-Collision model for hydrogen with hydrogen	:	FokkerPlanck
+Collision model for 0	hydrogen:	FokkerPlanck
   Kinetic Species 0 - FP collision term:  creating basicGKPC preconditioner  (index = 0).
     Setting up banded matrix with 884736 rows and 9 bands for the preconditioner.
 
@@ -425,157 +386,367 @@ GKPoisson model: GyroPoisson
 Step 1
   Note: Reference distribution function updated (by recomputing Maxwellian).
   Note: Recomputing Rosenbluth potentials for reference distribution function.
-            RosenbluthPotentials PCG max residual = 7.37172e-13 after 16 iterations (max)
-            RosenbluthPotentials PCG max residual = 6.59252e-13 after 16 iterations (max)
-            RosenbluthPotentials PCG max residual = 0 after 0 iterations (max)
-            RosenbluthPotentials PCG max residual = 0 after 0 iterations (max)
+            RosenbluthPotentials PCG max residual = 7.36947e-13 after 16 iterations (max)
+            RosenbluthPotentials PCG max residual = 6.59229e-13 after 16 iterations (max)
+            RosenbluthPotentials PCG max residual = 7.42877e-13 after 16 iterations (max)
+            RosenbluthPotentials PCG max residual = 7.95076e-13 after 16 iterations (max)
   --
   Warning: fixed time step may be higher than the stable time step.
   Stable time step = 0.0787337.
   You may reduce the specified dt or enable subiteration by setting
   simulation.fixed_dt_subiteration = true (default:false).
   --
+            RosenbluthPotentials PCG max residual = 1.67567e-13 after 1 iterations (max)
+            RosenbluthPotentials PCG max residual = 2.605e-13 after 1 iterations (max)
+FP is called 
     ==> Updating basicGKPC preconditioner  for FP collision term of kinetic species 0.
     Note (BandedMatrix.H): nonzero pattern changed.
-    --> (TiARK.i) Newton iteration 0, absolute residual norm 0.0825968, relative residual norm 1
-      --> (TiARK.i.GMRES) iteration 0, residual = 0.0825968
-      --> (TiARK.i.GMRES) iteration 1, residual = 0.00392898
-      --> (TiARK.i.GMRES) iteration 2, residual = 0.000286838
-      --> (TiARK.i.GMRES) iteration 3, residual = 1.90391e-05
-    --> (TiARK.i) Newton iteration 1, absolute residual norm 1.90391e-05, relative residual norm 0.000230507
+            RosenbluthPotentials PCG max residual = 9.98848e-13 after 16 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.99981e-13 after 16 iterations (max)
+FP is called 
+    --> (TiARK.i) Newton iteration 0, absolute residual norm 0.198818, relative residual norm 1
+      --> (TiARK.i.GMRES) iteration 0, residual = 0.198818
+            RosenbluthPotentials PCG max residual = 9.98951e-13 after 12 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.98185e-13 after 13 iterations (max)
+FP is called 
+      --> (TiARK.i.GMRES) iteration 1, residual = 0.0361422
+            RosenbluthPotentials PCG max residual = 9.99404e-13 after 12 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.99286e-13 after 13 iterations (max)
+FP is called 
+      --> (TiARK.i.GMRES) iteration 2, residual = 0.00557229
+            RosenbluthPotentials PCG max residual = 9.99657e-13 after 12 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.97788e-13 after 13 iterations (max)
+FP is called 
+      --> (TiARK.i.GMRES) iteration 3, residual = 0.000763658
+            RosenbluthPotentials PCG max residual = 9.99174e-13 after 12 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.96015e-13 after 13 iterations (max)
+FP is called 
+      --> (TiARK.i.GMRES) iteration 4, residual = 6.69495e-05
+            RosenbluthPotentials PCG max residual = 9.99853e-13 after 15 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.98907e-13 after 15 iterations (max)
+FP is called 
+    --> (TiARK.i) Newton iteration 1, absolute residual norm 6.77064e-05, relative residual norm 0.000340544
+            RosenbluthPotentials PCG max residual = 2.76386e-13 after 1 iterations (max)
+            RosenbluthPotentials PCG max residual = 2.92004e-13 after 1 iterations (max)
+FP is called 
     ==> Updating basicGKPC preconditioner  for FP collision term of kinetic species 0.
     Note (BandedMatrix.H): nonzero pattern changed.
-    --> (TiARK.i) Newton iteration 0, absolute residual norm 0.0640074, relative residual norm 1
-      --> (TiARK.i.GMRES) iteration 0, residual = 0.0640074
-      --> (TiARK.i.GMRES) iteration 1, residual = 0.00306455
-      --> (TiARK.i.GMRES) iteration 2, residual = 0.000225318
-      --> (TiARK.i.GMRES) iteration 3, residual = 1.49212e-05
-    --> (TiARK.i) Newton iteration 1, absolute residual norm 1.49212e-05, relative residual norm 0.000233117
+            RosenbluthPotentials PCG max residual = 9.99655e-13 after 15 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.96155e-13 after 15 iterations (max)
+FP is called 
+    --> (TiARK.i) Newton iteration 0, absolute residual norm 0.121378, relative residual norm 1
+      --> (TiARK.i.GMRES) iteration 0, residual = 0.121378
+            RosenbluthPotentials PCG max residual = 9.98968e-13 after 12 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.98491e-13 after 13 iterations (max)
+FP is called 
+      --> (TiARK.i.GMRES) iteration 1, residual = 0.0246616
+            RosenbluthPotentials PCG max residual = 9.99987e-13 after 12 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.98154e-13 after 13 iterations (max)
+FP is called 
+      --> (TiARK.i.GMRES) iteration 2, residual = 0.00407936
+            RosenbluthPotentials PCG max residual = 9.94652e-13 after 12 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.96403e-13 after 13 iterations (max)
+FP is called 
+      --> (TiARK.i.GMRES) iteration 3, residual = 0.000469496
+            RosenbluthPotentials PCG max residual = 9.99848e-13 after 12 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.99825e-13 after 13 iterations (max)
+FP is called 
+      --> (TiARK.i.GMRES) iteration 4, residual = 4.24725e-05
+            RosenbluthPotentials PCG max residual = 9.99525e-13 after 15 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.993e-13 after 15 iterations (max)
+FP is called 
+    --> (TiARK.i) Newton iteration 1, absolute residual norm 4.19648e-05, relative residual norm 0.000345737
+            RosenbluthPotentials PCG max residual = 2.62341e-13 after 1 iterations (max)
+            RosenbluthPotentials PCG max residual = 3.85684e-13 after 1 iterations (max)
+FP is called 
     ==> Updating basicGKPC preconditioner  for FP collision term of kinetic species 0.
     Note (BandedMatrix.H): nonzero pattern changed.
-    --> (TiARK.i) Newton iteration 0, absolute residual norm 0.0815127, relative residual norm 1
-      --> (TiARK.i.GMRES) iteration 0, residual = 0.0815127
-      --> (TiARK.i.GMRES) iteration 1, residual = 0.00381862
-      --> (TiARK.i.GMRES) iteration 2, residual = 0.000274046
-      --> (TiARK.i.GMRES) iteration 3, residual = 1.84343e-05
-    --> (TiARK.i) Newton iteration 1, absolute residual norm 1.84343e-05, relative residual norm 0.000226153
+            RosenbluthPotentials PCG max residual = 9.98407e-13 after 15 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.99093e-13 after 16 iterations (max)
+FP is called 
+    --> (TiARK.i) Newton iteration 0, absolute residual norm 0.0656806, relative residual norm 1
+      --> (TiARK.i.GMRES) iteration 0, residual = 0.0656806
+            RosenbluthPotentials PCG max residual = 9.9698e-13 after 12 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.99516e-13 after 13 iterations (max)
+FP is called 
+      --> (TiARK.i.GMRES) iteration 1, residual = 0.0139897
+            RosenbluthPotentials PCG max residual = 9.99136e-13 after 12 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.99886e-13 after 13 iterations (max)
+FP is called 
+      --> (TiARK.i.GMRES) iteration 2, residual = 0.00204355
+            RosenbluthPotentials PCG max residual = 9.99595e-13 after 12 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.96882e-13 after 13 iterations (max)
+FP is called 
+      --> (TiARK.i.GMRES) iteration 3, residual = 0.000265994
+            RosenbluthPotentials PCG max residual = 9.98137e-13 after 12 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.97361e-13 after 13 iterations (max)
+FP is called 
+      --> (TiARK.i.GMRES) iteration 4, residual = 2.31317e-05
+            RosenbluthPotentials PCG max residual = 9.99874e-13 after 15 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.99573e-13 after 15 iterations (max)
+FP is called 
+    --> (TiARK.i) Newton iteration 1, absolute residual norm 2.29208e-05, relative residual norm 0.000348974
+            RosenbluthPotentials PCG max residual = 2.63078e-13 after 1 iterations (max)
+            RosenbluthPotentials PCG max residual = 3.09476e-13 after 1 iterations (max)
+FP is called 
     ==> Updating basicGKPC preconditioner  for FP collision term of kinetic species 0.
     Note (BandedMatrix.H): nonzero pattern changed.
-    --> (TiARK.i) Newton iteration 0, absolute residual norm 0.0894366, relative residual norm 1
-      --> (TiARK.i.GMRES) iteration 0, residual = 0.0894366
-      --> (TiARK.i.GMRES) iteration 1, residual = 0.00415609
-      --> (TiARK.i.GMRES) iteration 2, residual = 0.000295913
-      --> (TiARK.i.GMRES) iteration 3, residual = 1.98828e-05
-    --> (TiARK.i) Newton iteration 1, absolute residual norm 1.98828e-05, relative residual norm 0.000222311
+            RosenbluthPotentials PCG max residual = 9.99408e-13 after 15 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.99159e-13 after 16 iterations (max)
+FP is called 
+    --> (TiARK.i) Newton iteration 0, absolute residual norm 0.0683162, relative residual norm 1
+      --> (TiARK.i.GMRES) iteration 0, residual = 0.0683162
+            RosenbluthPotentials PCG max residual = 9.98752e-13 after 12 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.99945e-13 after 13 iterations (max)
+FP is called 
+      --> (TiARK.i.GMRES) iteration 1, residual = 0.0141064
+            RosenbluthPotentials PCG max residual = 9.96984e-13 after 12 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.99635e-13 after 14 iterations (max)
+FP is called 
+      --> (TiARK.i.GMRES) iteration 2, residual = 0.00196602
+            RosenbluthPotentials PCG max residual = 9.97265e-13 after 12 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.98608e-13 after 13 iterations (max)
+FP is called 
+      --> (TiARK.i.GMRES) iteration 3, residual = 0.000259662
+            RosenbluthPotentials PCG max residual = 9.99357e-13 after 12 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.99698e-13 after 13 iterations (max)
+FP is called 
+      --> (TiARK.i.GMRES) iteration 4, residual = 2.35912e-05
+            RosenbluthPotentials PCG max residual = 9.99101e-13 after 15 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.98969e-13 after 15 iterations (max)
+FP is called 
+    --> (TiARK.i) Newton iteration 1, absolute residual norm 2.35896e-05, relative residual norm 0.0003453
+            RosenbluthPotentials PCG max residual = 2.64976e-13 after 1 iterations (max)
+            RosenbluthPotentials PCG max residual = 2.7472e-13 after 1 iterations (max)
+FP is called 
     ==> Updating basicGKPC preconditioner  for FP collision term of kinetic species 0.
     Note (BandedMatrix.H): nonzero pattern changed.
-    --> (TiARK.i) Newton iteration 0, absolute residual norm 0.0822098, relative residual norm 1
-      --> (TiARK.i.GMRES) iteration 0, residual = 0.0822098
-      --> (TiARK.i.GMRES) iteration 1, residual = 0.0037699
-      --> (TiARK.i.GMRES) iteration 2, residual = 0.000265078
-      --> (TiARK.i.GMRES) iteration 3, residual = 1.78673e-05
-    --> (TiARK.i) Newton iteration 1, absolute residual norm 1.78673e-05, relative residual norm 0.000217338
+            RosenbluthPotentials PCG max residual = 9.96381e-13 after 15 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.99633e-13 after 15 iterations (max)
+FP is called 
+    --> (TiARK.i) Newton iteration 0, absolute residual norm 0.0683577, relative residual norm 1
+      --> (TiARK.i.GMRES) iteration 0, residual = 0.0683577
+            RosenbluthPotentials PCG max residual = 9.98539e-13 after 12 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.9923e-13 after 13 iterations (max)
+FP is called 
+      --> (TiARK.i.GMRES) iteration 1, residual = 0.0122947
+            RosenbluthPotentials PCG max residual = 9.97996e-13 after 12 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.98287e-13 after 14 iterations (max)
+FP is called 
+      --> (TiARK.i.GMRES) iteration 2, residual = 0.00155592
+            RosenbluthPotentials PCG max residual = 9.98868e-13 after 12 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.96211e-13 after 13 iterations (max)
+FP is called 
+      --> (TiARK.i.GMRES) iteration 3, residual = 0.000193732
+            RosenbluthPotentials PCG max residual = 9.97122e-13 after 12 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.99493e-13 after 13 iterations (max)
+FP is called 
+      --> (TiARK.i.GMRES) iteration 4, residual = 2.01963e-05
+            RosenbluthPotentials PCG max residual = 9.99885e-13 after 15 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.95946e-13 after 14 iterations (max)
+FP is called 
+    --> (TiARK.i) Newton iteration 1, absolute residual norm 2.2809e-05, relative residual norm 0.000333671
+            RosenbluthPotentials PCG max residual = 2.67786e-13 after 1 iterations (max)
+            RosenbluthPotentials PCG max residual = 4.56479e-13 after 1 iterations (max)
+FP is called 
   ----
   dt: 0.1
     Vlasov    : 0.0909166 (time scale), 1.09991 (CFL)
-    Collisions: 0.00423602 (time scale), 23.6071 (CFL)
+    Collisions: 0.00422118 (time scale), 23.6901 (CFL)
   ----
   Distribution Function Extrema:
-    Species 0:	0.0264541 [max]	9.38212e-14 [min]
+    Species 0:	0.0264176 [max]	1.14053e-13 [min]
 
-Step 1 completed, simulation time is 0.1, solver wall time is 81.3139 seconds
+Step 1 completed, simulation time is 0.1, solver wall time is 64.4463 seconds
 ----
-----
-  Function counts:-
-    Vlasov     : 6
-    Collision  : 37
-    Transport  : 0
-    Fluids     : 74
-    Scalars    : 0
-    Neutrals   : 0
-----
-  Time integrator counts:-
-    Time steps          : 1
-    Nonlinear iterations: 5
-    Linear iterations   : 15
-----
-Writing checkpoint file
-Writing history file
 
 Step 2
-            RosenbluthPotentials PCG max residual = 9.997e-13 after 17 iterations (max)
-            RosenbluthPotentials PCG max residual = 9.96863e-13 after 17 iterations (max)
+  Note: Reference distribution function updated (by recomputing Maxwellian).
+  Note: Recomputing Rosenbluth potentials for reference distribution function.
+            RosenbluthPotentials PCG max residual = 9.9956e-13 after 12 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.98613e-13 after 11 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.99573e-13 after 15 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.98107e-13 after 16 iterations (max)
   --
   Warning: fixed time step may be higher than the stable time step.
   Stable time step = 0.0787337.
   You may reduce the specified dt or enable subiteration by setting
   simulation.fixed_dt_subiteration = true (default:false).
   --
+            RosenbluthPotentials PCG max residual = 2.55932e-13 after 1 iterations (max)
+            RosenbluthPotentials PCG max residual = 3.15753e-13 after 1 iterations (max)
+FP is called 
     ==> Updating basicGKPC preconditioner  for FP collision term of kinetic species 0.
     Note (BandedMatrix.H): nonzero pattern changed.
-    --> (TiARK.i) Newton iteration 0, absolute residual norm 0.0924311, relative residual norm 1
-      --> (TiARK.i.GMRES) iteration 0, residual = 0.0924311
-      --> (TiARK.i.GMRES) iteration 1, residual = 0.00420127
-      --> (TiARK.i.GMRES) iteration 2, residual = 0.000284719
-      --> (TiARK.i.GMRES) iteration 3, residual = 1.92373e-05
-    --> (TiARK.i) Newton iteration 1, absolute residual norm 1.92373e-05, relative residual norm 0.000208126
+            RosenbluthPotentials PCG max residual = 9.94057e-13 after 15 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.98785e-13 after 16 iterations (max)
+FP is called 
+    --> (TiARK.i) Newton iteration 0, absolute residual norm 0.062107, relative residual norm 1
+      --> (TiARK.i.GMRES) iteration 0, residual = 0.062107
+            RosenbluthPotentials PCG max residual = 9.9968e-13 after 12 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.97611e-13 after 13 iterations (max)
+FP is called 
+      --> (TiARK.i.GMRES) iteration 1, residual = 0.012276
+            RosenbluthPotentials PCG max residual = 9.86879e-13 after 12 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.96575e-13 after 14 iterations (max)
+FP is called 
+      --> (TiARK.i.GMRES) iteration 2, residual = 0.00155605
+            RosenbluthPotentials PCG max residual = 9.9678e-13 after 12 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.9961e-13 after 13 iterations (max)
+FP is called 
+      --> (TiARK.i.GMRES) iteration 3, residual = 0.000191703
+            RosenbluthPotentials PCG max residual = 9.99668e-13 after 12 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.99833e-13 after 13 iterations (max)
+FP is called 
+      --> (TiARK.i.GMRES) iteration 4, residual = 2.16455e-05
+            RosenbluthPotentials PCG max residual = 9.9901e-13 after 15 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.98868e-13 after 15 iterations (max)
+FP is called 
+    --> (TiARK.i) Newton iteration 1, absolute residual norm 2.245e-05, relative residual norm 0.000361473
+            RosenbluthPotentials PCG max residual = 2.60439e-13 after 1 iterations (max)
+            RosenbluthPotentials PCG max residual = 3.16052e-13 after 1 iterations (max)
+FP is called 
     ==> Updating basicGKPC preconditioner  for FP collision term of kinetic species 0.
     Note (BandedMatrix.H): nonzero pattern changed.
-    --> (TiARK.i) Newton iteration 0, absolute residual norm 0.0766842, relative residual norm 1
-      --> (TiARK.i.GMRES) iteration 0, residual = 0.0766842
-      --> (TiARK.i.GMRES) iteration 1, residual = 0.00348313
-      --> (TiARK.i.GMRES) iteration 2, residual = 0.000236405
-      --> (TiARK.i.GMRES) iteration 3, residual = 1.58071e-05
-    --> (TiARK.i) Newton iteration 1, absolute residual norm 1.58071e-05, relative residual norm 0.000206133
+            RosenbluthPotentials PCG max residual = 9.97272e-13 after 14 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.99762e-13 after 15 iterations (max)
+FP is called 
+    --> (TiARK.i) Newton iteration 0, absolute residual norm 0.0549157, relative residual norm 1
+      --> (TiARK.i.GMRES) iteration 0, residual = 0.0549157
+            RosenbluthPotentials PCG max residual = 9.99667e-13 after 11 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.99531e-13 after 12 iterations (max)
+FP is called 
+      --> (TiARK.i.GMRES) iteration 1, residual = 0.00945442
+            RosenbluthPotentials PCG max residual = 9.99288e-13 after 12 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.99824e-13 after 14 iterations (max)
+FP is called 
+      --> (TiARK.i.GMRES) iteration 2, residual = 0.00116853
+            RosenbluthPotentials PCG max residual = 9.99077e-13 after 12 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.98533e-13 after 13 iterations (max)
+FP is called 
+      --> (TiARK.i.GMRES) iteration 3, residual = 0.000144751
+            RosenbluthPotentials PCG max residual = 9.99759e-13 after 12 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.99471e-13 after 13 iterations (max)
+FP is called 
+      --> (TiARK.i.GMRES) iteration 4, residual = 1.81373e-05
+            RosenbluthPotentials PCG max residual = 9.99658e-13 after 15 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.97353e-13 after 15 iterations (max)
+FP is called 
+    --> (TiARK.i) Newton iteration 1, absolute residual norm 1.92966e-05, relative residual norm 0.000351387
+            RosenbluthPotentials PCG max residual = 2.55723e-13 after 1 iterations (max)
+            RosenbluthPotentials PCG max residual = 3.01601e-13 after 1 iterations (max)
+FP is called 
     ==> Updating basicGKPC preconditioner  for FP collision term of kinetic species 0.
     Note (BandedMatrix.H): nonzero pattern changed.
-    --> (TiARK.i) Newton iteration 0, absolute residual norm 0.0882125, relative residual norm 1
-      --> (TiARK.i.GMRES) iteration 0, residual = 0.0882125
-      --> (TiARK.i.GMRES) iteration 1, residual = 0.00405811
-      --> (TiARK.i.GMRES) iteration 2, residual = 0.000285605
-      --> (TiARK.i.GMRES) iteration 3, residual = 1.90579e-05
-    --> (TiARK.i) Newton iteration 1, absolute residual norm 1.90579e-05, relative residual norm 0.000216045
+            RosenbluthPotentials PCG max residual = 9.99442e-13 after 15 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.99011e-13 after 16 iterations (max)
+FP is called 
+    --> (TiARK.i) Newton iteration 0, absolute residual norm 0.0558051, relative residual norm 1
+      --> (TiARK.i.GMRES) iteration 0, residual = 0.0558051
+            RosenbluthPotentials PCG max residual = 9.97163e-13 after 11 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.99655e-13 after 12 iterations (max)
+FP is called 
+      --> (TiARK.i.GMRES) iteration 1, residual = 0.00668799
+            RosenbluthPotentials PCG max residual = 9.89789e-13 after 12 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.93056e-13 after 13 iterations (max)
+FP is called 
+      --> (TiARK.i.GMRES) iteration 2, residual = 0.000785645
+            RosenbluthPotentials PCG max residual = 9.999e-13 after 12 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.99684e-13 after 14 iterations (max)
+FP is called 
+      --> (TiARK.i.GMRES) iteration 3, residual = 0.000106909
+            RosenbluthPotentials PCG max residual = 9.97646e-13 after 12 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.98071e-13 after 13 iterations (max)
+FP is called 
+      --> (TiARK.i.GMRES) iteration 4, residual = 1.43383e-05
+            RosenbluthPotentials PCG max residual = 9.9847e-13 after 15 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.9893e-13 after 15 iterations (max)
+FP is called 
+    --> (TiARK.i) Newton iteration 1, absolute residual norm 1.68317e-05, relative residual norm 0.000301615
+            RosenbluthPotentials PCG max residual = 2.63639e-13 after 1 iterations (max)
+            RosenbluthPotentials PCG max residual = 3.37789e-13 after 1 iterations (max)
+FP is called 
     ==> Updating basicGKPC preconditioner  for FP collision term of kinetic species 0.
     Note (BandedMatrix.H): nonzero pattern changed.
-    --> (TiARK.i) Newton iteration 0, absolute residual norm 0.0932497, relative residual norm 1
-      --> (TiARK.i.GMRES) iteration 0, residual = 0.0932497
-      --> (TiARK.i.GMRES) iteration 1, residual = 0.00427259
-      --> (TiARK.i.GMRES) iteration 2, residual = 0.000299329
-      --> (TiARK.i.GMRES) iteration 3, residual = 2.00583e-05
-    --> (TiARK.i) Newton iteration 1, absolute residual norm 2.00583e-05, relative residual norm 0.000215103
+            RosenbluthPotentials PCG max residual = 9.99785e-13 after 15 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.99053e-13 after 16 iterations (max)
+FP is called 
+    --> (TiARK.i) Newton iteration 0, absolute residual norm 0.0579833, relative residual norm 1
+      --> (TiARK.i.GMRES) iteration 0, residual = 0.0579833
+            RosenbluthPotentials PCG max residual = 9.98801e-13 after 11 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.99962e-13 after 12 iterations (max)
+FP is called 
+      --> (TiARK.i.GMRES) iteration 1, residual = 0.00681133
+            RosenbluthPotentials PCG max residual = 9.9238e-13 after 12 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.97575e-13 after 13 iterations (max)
+FP is called 
+      --> (TiARK.i.GMRES) iteration 2, residual = 0.000790723
+            RosenbluthPotentials PCG max residual = 9.97173e-13 after 12 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.99507e-13 after 14 iterations (max)
+FP is called 
+      --> (TiARK.i.GMRES) iteration 3, residual = 0.000107335
+            RosenbluthPotentials PCG max residual = 9.99359e-13 after 12 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.9874e-13 after 13 iterations (max)
+FP is called 
+      --> (TiARK.i.GMRES) iteration 4, residual = 1.44694e-05
+            RosenbluthPotentials PCG max residual = 9.99186e-13 after 15 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.98323e-13 after 15 iterations (max)
+FP is called 
+    --> (TiARK.i) Newton iteration 1, absolute residual norm 1.75027e-05, relative residual norm 0.000301857
+            RosenbluthPotentials PCG max residual = 2.50166e-13 after 1 iterations (max)
+            RosenbluthPotentials PCG max residual = 3.29296e-13 after 1 iterations (max)
+FP is called 
     ==> Updating basicGKPC preconditioner  for FP collision term of kinetic species 0.
     Note (BandedMatrix.H): nonzero pattern changed.
-    --> (TiARK.i) Newton iteration 0, absolute residual norm 0.0847404, relative residual norm 1
-      --> (TiARK.i.GMRES) iteration 0, residual = 0.0847404
-      --> (TiARK.i.GMRES) iteration 1, residual = 0.00387531
-      --> (TiARK.i.GMRES) iteration 2, residual = 0.000273897
-      --> (TiARK.i.GMRES) iteration 3, residual = 1.85073e-05
-    --> (TiARK.i) Newton iteration 1, absolute residual norm 1.85073e-05, relative residual norm 0.0002184
+            RosenbluthPotentials PCG max residual = 9.99653e-13 after 15 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.98729e-13 after 15 iterations (max)
+FP is called 
+    --> (TiARK.i) Newton iteration 0, absolute residual norm 0.0592008, relative residual norm 1
+      --> (TiARK.i.GMRES) iteration 0, residual = 0.0592008
+            RosenbluthPotentials PCG max residual = 9.97707e-13 after 11 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.99731e-13 after 12 iterations (max)
+FP is called 
+      --> (TiARK.i.GMRES) iteration 1, residual = 0.00643524
+            RosenbluthPotentials PCG max residual = 9.93168e-13 after 12 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.97038e-13 after 13 iterations (max)
+FP is called 
+      --> (TiARK.i.GMRES) iteration 2, residual = 0.000764177
+            RosenbluthPotentials PCG max residual = 9.9659e-13 after 12 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.97931e-13 after 13 iterations (max)
+FP is called 
+      --> (TiARK.i.GMRES) iteration 3, residual = 7.82337e-05
+            RosenbluthPotentials PCG max residual = 9.99479e-13 after 14 iterations (max)
+            RosenbluthPotentials PCG max residual = 9.9743e-13 after 14 iterations (max)
+FP is called 
+    --> (TiARK.i) Newton iteration 1, absolute residual norm 7.8302e-05, relative residual norm 0.00132265
+            RosenbluthPotentials PCG max residual = 2.51793e-13 after 1 iterations (max)
+            RosenbluthPotentials PCG max residual = 3.80197e-13 after 1 iterations (max)
+FP is called 
   ----
   dt: 0.1
     Vlasov    : 0.0909166 (time scale), 1.09991 (CFL)
-    Collisions: 0.00423534 (time scale), 23.6109 (CFL)
+    Collisions: 0.00422106 (time scale), 23.6907 (CFL)
   ----
   Distribution Function Extrema:
-    Species 0:	0.0264529 [max]	9.60098e-14 [min]
+    Species 0:	0.0263996 [max]	1.33941e-13 [min]
 
-Step 2 completed, simulation time is 0.2, solver wall time is 163.459 seconds
+Step 2 completed, simulation time is 0.2, solver wall time is 127.134 seconds
 ----
 ----
   Function counts:-
     Vlasov     : 12
-    Collision  : 74
+    Collision  : 83
     Transport  : 0
-    Fluids     : 148
+    Fluids     : 166
     Scalars    : 0
     Neutrals   : 0
 ----
   Time integrator counts:-
     Time steps          : 2
     Nonlinear iterations: 10
-    Linear iterations   : 30
+    Linear iterations   : 39
 ----
 Writing checkpoint file
 Writing history file
-Solve wall time (in seconds): 163.741
-Total wall time (in seconds): 166.59
+Solve wall time (in seconds): 127.28
+Total wall time (in seconds): 128.021

@@ -210,6 +210,8 @@ void VorticityOp::preOpEval( const PS::KineticSpeciesPtrVect&   a_kinetic_specie
 {
    CH_TIME("VorticityOp::preOpEval");
 
+   preSolutionOpEval(a_kinetic_species, a_fluid_species, a_scalars, a_E_field, a_time);
+
    // Make sure there are enough ghost cells to compute the charge density in the ghost cells
    // of m_ion_charge_density
    for (int species(0); species<a_kinetic_species.size(); species++) {
@@ -219,12 +221,10 @@ void VorticityOp::preOpEval( const PS::KineticSpeciesPtrVect&   a_kinetic_specie
    }
 
    computeIonChargeDensity( m_ion_charge_density, a_kinetic_species );
-   computeIonMassDensity( m_ion_mass_density, a_kinetic_species );
 
    m_parallel_current_divergence_op->setOperatorCoefficients( m_ion_charge_density,
-                                                              *m_parallel_current_divergence_op_bcs, false );
-
-   m_gyropoisson_op->setOperatorCoefficients( m_ion_mass_density, *m_gyropoisson_op_bcs, true );
+                                                              *m_parallel_current_divergence_op_bcs,
+                                                              false );
 
    computeDivPerpIonMagCurrentDensity(m_divJperp_mag, a_E_field, a_kinetic_species, a_time);
 }

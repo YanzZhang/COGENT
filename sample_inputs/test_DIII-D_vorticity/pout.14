@@ -1,110 +1,164 @@
 maximum step = 2
 maximum time = 20000
 checkpoint interval = 2
-plot interval = 1
+plot interval = 20
   Distribution Function Extrema:
     Species 0:	8.84746 [max]	6.15997e-20 [min]
 
 maximum step = 2
 maximum time = 20000
 checkpoint interval = 2
-plot interval = 1
+plot interval = 20
 
 Step 0
 GMRESSolver::solve
 0) GMRES residual = 13541.8
-1) GMRES residual = 1.2825
+1) GMRES residual = 395.497
+2) GMRES residual = 23.0538
+3) GMRES residual = 4.00172
+4) GMRES residual = 0.704653
 GMRESSolver::solve done, status = 0
 GMRESSolver::solve
-0) GMRES residual = 1.2825
-1) GMRES residual = 0.268808
-2) GMRES residual = 0.0265148
-3) GMRES residual = 0.00143997
-4) GMRES residual = 0.000153011
+0) GMRES residual = 0.704648
+1) GMRES residual = 0.107318
+2) GMRES residual = 0.0124361
+3) GMRES residual = 0.00142735
+4) GMRES residual = 0.000226407
+5) GMRES residual = 5.13566e-05
 GMRESSolver::solve done, status = 0
 GMRESSolver::solve
-0) GMRES residual = 3.2279
-1) GMRES residual = 0.853017
-2) GMRES residual = 0.127316
-3) GMRES residual = 0.0113181
-4) GMRES residual = 0.0011606
+0) GMRES residual = 5.13567e-05
+1) GMRES residual = 6.12091e-06
+2) GMRES residual = 8.10704e-07
+3) GMRES residual = 8.75801e-08
+4) GMRES residual = 7.7099e-09
+5) GMRES residual = 6.36117e-10
 GMRESSolver::solve done, status = 0
 GMRESSolver::solve
-0) GMRES residual = 0.0011606
-1) GMRES residual = 0.000143727
-2) GMRES residual = 1.89681e-05
-3) GMRES residual = 2.63488e-06
-4) GMRES residual = 2.66507e-07
+0) GMRES residual = 3.22789
+1) GMRES residual = 0.914944
+2) GMRES residual = 0.251787
+3) GMRES residual = 0.0416109
+4) GMRES residual = 0.0056467
+5) GMRES residual = 0.000532524
+6) GMRES residual = 4.57424e-05
 GMRESSolver::solve done, status = 0
 GMRESSolver::solve
-0) GMRES residual = 0.120875
-1) GMRES residual = 2.9022e-05
+0) GMRES residual = 4.57556e-05
+1) GMRES residual = 5.65503e-06
+2) GMRES residual = 9.67625e-07
+3) GMRES residual = 1.8221e-07
+4) GMRES residual = 2.41614e-08
+5) GMRES residual = 2.4772e-09
 GMRESSolver::solve done, status = 0
 GMRESSolver::solve
-0) GMRES residual = 2.9022e-05
-1) GMRES residual = 1.86927e-06
-2) GMRES residual = 2.76616e-07
-3) GMRES residual = 3.20863e-08
-4) GMRES residual = 2.9149e-09
+0) GMRES residual = 2.47744e-09
+1) GMRES residual = 3.30144e-10
+2) GMRES residual = 9.75184e-11
+3) GMRES residual = 1.65279e-11
+4) GMRES residual = 1.98729e-12
+5) GMRES residual = 2.0515e-13
+GMRESSolver::solve done, status = 0
+GMRESSolver::solve
+0) GMRES residual = 0.120092
+1) GMRES residual = 2.90207e-05
+2) GMRES residual = 1.86918e-06
+GMRESSolver::solve done, status = 0
+GMRESSolver::solve
+0) GMRES residual = 1.86966e-06
+1) GMRES residual = 2.91724e-07
+2) GMRES residual = 3.22861e-08
+3) GMRES residual = 3.04189e-09
+4) GMRES residual = 2.85892e-10
+5) GMRES residual = 1.3021e-11
+GMRESSolver::solve done, status = 0
+GMRESSolver::solve
+0) GMRES residual = 1.3178e-09
+1) GMRES residual = 1.76364e-12
+2) GMRES residual = 1.17265e-13
 GMRESSolver::solve done, status = 0
   Look Ma!  No hands!
   Distribution Function Extrema:
     Species 0:	8.84735 [max]	0 [min]
 
-Step 1 completed, simulation time is 0.0733033, solver wall time is 48.7773 seconds
+Step 1 completed, simulation time is 0.0733033, solver wall time is 66.7013 seconds
 ----
-maximum step = 2
-maximum time = 20000
-checkpoint interval = 2
-plot interval = 1
 
 Step 1
 GMRESSolver::solve
-0) GMRES residual = 13.2493
-1) GMRES residual = 0.856159
-2) GMRES residual = 0.129164
-3) GMRES residual = 0.0113488
+0) GMRES residual = 16.1279
+1) GMRES residual = 1.66488
+2) GMRES residual = 0.348946
+3) GMRES residual = 0.0645668
+4) GMRES residual = 0.00792694
+5) GMRES residual = 0.000853317
 GMRESSolver::solve done, status = 0
 GMRESSolver::solve
-0) GMRES residual = 0.0113488
-1) GMRES residual = 0.00125844
-2) GMRES residual = 0.000116437
-3) GMRES residual = 2.35652e-05
-4) GMRES residual = 2.45259e-06
+0) GMRES residual = 0.000853318
+1) GMRES residual = 9.10619e-05
+2) GMRES residual = 1.08461e-05
+3) GMRES residual = 1.59279e-06
+4) GMRES residual = 1.46357e-07
+5) GMRES residual = 1.97983e-08
 GMRESSolver::solve done, status = 0
 GMRESSolver::solve
-0) GMRES residual = 3.37123
-1) GMRES residual = 0.857827
-2) GMRES residual = 0.12655
-3) GMRES residual = 0.0114316
-4) GMRES residual = 0.00114761
+0) GMRES residual = 1.98025e-08
+1) GMRES residual = 6.36234e-09
+2) GMRES residual = 9.16108e-10
+3) GMRES residual = 1.35059e-10
+4) GMRES residual = 1.58683e-11
+5) GMRES residual = 1.45775e-12
 GMRESSolver::solve done, status = 0
 GMRESSolver::solve
-0) GMRES residual = 0.00114761
-1) GMRES residual = 0.000141475
-2) GMRES residual = 1.91502e-05
-3) GMRES residual = 2.64431e-06
-4) GMRES residual = 2.58968e-07
+0) GMRES residual = 3.3712
+1) GMRES residual = 0.916383
+2) GMRES residual = 0.25863
+3) GMRES residual = 0.0425954
+4) GMRES residual = 0.00571674
+5) GMRES residual = 0.000530965
+6) GMRES residual = 4.69257e-05
 GMRESSolver::solve done, status = 0
 GMRESSolver::solve
-0) GMRES residual = 0.129463
-1) GMRES residual = 5.2876e-06
+0) GMRES residual = 4.69381e-05
+1) GMRES residual = 5.70809e-06
+2) GMRES residual = 9.73607e-07
+3) GMRES residual = 1.87328e-07
+4) GMRES residual = 2.4715e-08
+5) GMRES residual = 2.47251e-09
 GMRESSolver::solve done, status = 0
 GMRESSolver::solve
-0) GMRES residual = 5.28759e-06
-1) GMRES residual = 6.98814e-07
-2) GMRES residual = 5.8336e-08
-3) GMRES residual = 9.85292e-09
-4) GMRES residual = 8.10403e-10
+0) GMRES residual = 2.47253e-09
+1) GMRES residual = 3.35034e-10
+2) GMRES residual = 1.00262e-10
+3) GMRES residual = 1.69765e-11
+4) GMRES residual = 2.03113e-12
+5) GMRES residual = 2.08559e-13
+GMRESSolver::solve done, status = 0
+GMRESSolver::solve
+0) GMRES residual = 0.126313
+1) GMRES residual = 5.28114e-06
+GMRESSolver::solve done, status = 0
+GMRESSolver::solve
+0) GMRES residual = 5.28113e-06
+1) GMRES residual = 6.98297e-07
+2) GMRES residual = 5.83761e-08
+3) GMRES residual = 9.85411e-09
+4) GMRES residual = 8.10778e-10
+5) GMRES residual = 5.01755e-11
+GMRESSolver::solve done, status = 0
+GMRESSolver::solve
+0) GMRES residual = 6.35249e-10
+1) GMRES residual = 6.77036e-12
+2) GMRES residual = 5.11968e-13
 GMRESSolver::solve done, status = 0
   Look Ma!  No hands!
   Distribution Function Extrema:
     Species 0:	8.84725 [max]	0 [min]
 
-Step 2 completed, simulation time is 0.146612, solver wall time is 98.8066 seconds
+Step 2 completed, simulation time is 0.146611, solver wall time is 131.019 seconds
 ----
+writing checkpoint file
 maximum step = 2
 maximum time = 20000
 checkpoint interval = 2
-plot interval = 1
-writing checkpoint file
+plot interval = 20

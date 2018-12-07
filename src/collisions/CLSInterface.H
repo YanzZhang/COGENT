@@ -1,6 +1,8 @@
 #ifndef  _CLSINTERFACE_H_
 #define  _CLSINTERFACE_H_
+
 #include <string>
+
 #include "REAL.H"
 #include "ParmParse.H"
 #include "KineticSpecies.H"
@@ -43,16 +45,7 @@ class CLSInterface
                                const int                    species_b,
                                const Real                   time ) = 0;
 
-    /*  virtual void evalClsApproxRHS(  KineticSpeciesPtrVect&       rhs,
-                                      const KineticSpeciesPtrVect& soln,
-                                      const int                    species_a,
-                                      const int                    species_b,
-                                      const Real                   time )
-      {
-
-        evalClsRHS(rhs, soln, species_a, species_b, time);
-      }*/
-
+    
       virtual void evalClsRHSImplicit( KineticSpeciesPtrVect&       rhs,
                                        const KineticSpeciesPtrVect& soln,
                                        const int                    species_a,
@@ -69,7 +62,7 @@ class CLSInterface
       virtual inline bool isLinear() { return false; }
 
       virtual Real computeDt(const KineticSpeciesPtrVect& soln, const int i, const int j) { return DBL_MAX; }
-      virtual Real TimeScale(const KineticSpeciesPtrVect& soln, const int i,const int j) { return -1; }
+      virtual Real TimeScale(const KineticSpeciesPtrVect& soln, const int i, const int j) { return -1; }
 
       virtual int precondMatrixBands() { return(0); }
 
